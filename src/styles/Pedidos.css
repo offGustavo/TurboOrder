@@ -1,0 +1,9 @@
+.display-flex{
+  display: flex;
+}
+.space-between{
+  justify-content: space-between;
+}
+.p-10{
+  padding: 15px;
+}
