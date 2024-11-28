@@ -12,8 +12,8 @@ const Sidebar = () => {
       </div>
       <nav>
         <ul>
-          <li className="active">
-            <FaHome /> Home
+          <li>
+            <a><FaHome /> Home</a>
           </li>
           <li>
             <BiFoodMenu /> Cardápio

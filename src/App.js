@@ -2,7 +2,7 @@ import React from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Pedidos from "./components/Pedidos";
-import "./App.css"; // Importando o CSS de layout geral
+import "./App.css"; 
 
 function App() {
   return (
