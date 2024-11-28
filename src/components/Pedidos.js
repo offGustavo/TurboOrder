@@ -14,9 +14,9 @@ const Pedidos = () => {
         <button onClick={printPedido} className="btn-add">Finalizar</button>
       </header>
 
-      <div className="section">
+      <section className="section">
         <h3>Cliente</h3>
-        <div className="grid-3">
+        <div className="grid-2">
           <input
             type="text"
             placeholder="Nome"
@@ -33,8 +33,68 @@ const Pedidos = () => {
             className="search-input"
           />
         </div>
-      </div>
-      </main>
+      </section>
+      <section>
+        <h3>Pedido</h3>
+        <div className="grid-2 pedido-section">
+          <div>
+            <label> Quantidade</label>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+          <div>
+            <label> Arroz</label>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+          <div>
+            <label> Feijão</label>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+          <div>
+            <label> Salada</label>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+          <div>
+            <label> Escolha de Carne 01</label>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+
+          <div>
+            <label> Escolha de Carne 02</label>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 };
 
