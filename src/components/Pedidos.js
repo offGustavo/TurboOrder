@@ -13,7 +13,28 @@ const Pedidos = () => {
         <h1>Cadastro De Pedidos</h1>
         <button onClick={printPedido} className="btn-add">Finalizar</button>
       </header>
-    </main>
+
+      <div className="section">
+        <h3>Cliente</h3>
+        <div className="grid-3">
+          <input
+            type="text"
+            placeholder="Nome"
+            className="search-input"
+          />
+          <input
+            type="text"
+            placeholder="Sobrenome"
+            className="search-input"
+          />
+          <input
+            type="text"
+            placeholder="Telefone"
+            className="search-input"
+          />
+        </div>
+      </div>
+      </main>
   );
 };
 
