@@ -5,7 +5,7 @@
   justify-content: space-between;
 }
 .align-center{
-  
+  align-items: center;
 }
 .p-10{
   padding: 15px;
