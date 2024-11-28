@@ -1,6 +1,6 @@
-// Sidebar.js
 import React from "react";
 import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt } from "react-icons/fa";
+import { BiFoodMenu } from "react-icons/bi";
 import "./../styles/Sidebar.css";
 import logo from "../image/logo.png";
 
@@ -8,7 +8,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="logo">
-      <img src={logo} alt="" className="sidebar-logo" />
+        <img src={logo} alt="" className="sidebar-logo" />
       </div>
       <nav>
         <ul>
@@ -16,7 +16,7 @@ const Sidebar = () => {
             <FaHome /> Home
           </li>
           <li>
-            <FaUtensils /> Cardápio
+            <BiFoodMenu /> Cardápio
           </li>
           <li>
             <FaUtensils /> Produtos
