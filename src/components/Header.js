@@ -1,7 +1,7 @@
 import React from "react";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import "./../styles/Header.css";
+import "../styles/Header.css";
 
 const createPedido = () => {
 console.log("teste")
