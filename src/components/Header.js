@@ -3,6 +3,9 @@ import { FaBell, FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import "./../styles/Header.css";
 
+const createPedido = () => {
+console.log("teste")
+};
 const Header = () => {
   return (
     <header className="header">
@@ -16,9 +19,8 @@ const Header = () => {
           />
         </div>
 
-        {/* Ações do Usuário */}
         <div className="user-actions">
-          <button className="add-order-btn"><FaPlus /> Pedido</button>
+          <button className="add-order-btn" onClick={createPedido}><FaPlus /> Pedido</button>
           <button className="notification-btn">
             <FaBell />
           </button>
