@@ -25,10 +25,9 @@ const Header = () => {
           <NavLink
             to="/pedidos"
             className={({ isActive }) => (isActive ? "active" : "")}
-          >
-            <button className="add-order-btn" onClick={createPedido}>
+            className="add-order-btn" 
+            onClick={createPedido}>
               <FaPlus /> Pedido
-            </button>
           </NavLink>
           <span className="user-name">Funcionário</span>
           <div className="user-avatar"></div>
