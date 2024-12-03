@@ -105,7 +105,7 @@ export default function Calendar() {
         <div className="CalendarContainer" style={{ marginBottom: '20px' }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DateCalendar']}>
-              <DemoItem label="Selecionar Data">
+              <DemoItem label="">
                 <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
               </DemoItem>
             </DemoContainer>

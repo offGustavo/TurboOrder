@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import DeliverySelect from "../components/DeliverySelect.js";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import "../styles/Pedidos.css";
+import "../styles/AddOrder.css";
 import "../styles/Global.css"
 import TextField from '@mui/material/TextField';
 import ComboBox from "../components/ComboBox.js";
+import ProgressBar from "../components/ProgressBar.js";
 
 function printPedido() {
   console.log("Pedido")
@@ -42,11 +44,36 @@ const addOrder = () => {
     {'id': 29, 'nome': 'Carne Picanha', 'tipo': 'Carne'},
     {'id': 30, 'nome': 'Carne Carne Moída', 'tipo': 'Carne'}
   ];
+
+const AlreadyRegistered = styled.button`
+  height: auto;
+  margin: 0 15px;
+  color: #fd1f4a;
+  font-weight: bold;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #fd1f4a;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #fd1f4a;
+    color: #ffffff;
+  }
+`;
   return (
+
     <main className="p-10">
+      <ProgressBar />
       <header className="display-flex space-between ">
+
         <h1>Cadastro De Pedidos</h1>
+
+        <div>
+        <AlreadyRegistered>Cliente não cadastrado</AlreadyRegistered>
         <button onClick={printPedido} className="btn-add">Finalizar</button>
+        </div>
       </header>
 
       <section className="section">
@@ -78,6 +105,14 @@ const addOrder = () => {
             <ComboBox
               options={options}
               tipoSelecionado="Arroz"
+              sx={{
+                marginRight: 2,
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+              }}
+              className="ComboBox"
             />
           </div>
 

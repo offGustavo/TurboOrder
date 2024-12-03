@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from "styled-components";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -7,10 +8,20 @@ import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import SelectTime from './SelectTime.js';
+import Address from '../components/Address.js'
 
 export default function DeliverySelect() {
   const [selectedOption, setSelectedOption] = React.useState("delivery"); // Estado para rastrear a seleção
   const [selectedTime, setSelectedTime] = React.useState(null);
+
+  const SubText = styled.h2`
+margin: 40px 0px 20px 0px;
+font-size: 16px;
+`;
+
+  const Form = styled.div`
+display: flex;
+`;
 
   return (
     <FormControl>
@@ -35,12 +46,7 @@ export default function DeliverySelect() {
           {/* Exibe a seção de Entrega se a opção for "delivery" */}
           {selectedOption === "delivery" && (
             <div className="EntregaSection">
-              <TextField id="cep" label="CEP" variant="outlined" />
-              <TextField id="cidade" label="Cidade" variant="outlined" />
-              <TextField id="bairro" label="Bairro" variant="outlined" />
-              <TextField id="rua" label="Rua" variant="outlined" />
-              <TextField id="numero" label="Número" variant="outlined" />
-              <TextField id="complemento" label="Complemento" variant="outlined" />
+              <Address />
             </div>
           )}
 

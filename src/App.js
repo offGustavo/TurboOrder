@@ -31,6 +31,7 @@ function App() {
               <Route path="/cadastro-de-cliente" element={<AddCliente />} />
               <Route path="/cardapio" element={<Calendar />} />
               <Route path="/pedidos" element={<AddOrder />} />
+              <Route path="/clientes" element={<AddCliente /> } />
             </Routes>
           </div>
         </main>
