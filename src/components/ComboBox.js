@@ -2,15 +2,6 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-// Exemplo de objeto 
-// const options = [
-//   {
-//     id: 1,
-//     nome: "Arroz Soltinho",
-//     tipo: "Arroz"
-//   },
-// ];
-
 export default function ComboBox({ options, tipoSelecionado }) {
   const filteredOptions = options.filter((option) => option.tipo === tipoSelecionado); // Filtra pelo tipo
 

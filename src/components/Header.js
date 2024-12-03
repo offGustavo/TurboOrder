@@ -23,7 +23,7 @@ const Header = () => {
 
         <div className="user-actions">
           <NavLink
-            to="/cadastro-de-cliente"
+            to="/pedidos"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             <button className="add-order-btn" onClick={createPedido}>

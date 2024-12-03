@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import DeliverySelect from "./DeliverySelect.js";
+import DeliverySelect from "../components/DeliverySelect.js";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/Pedidos.css";
 import "../styles/Global.css"
 import TextField from '@mui/material/TextField';
-import ComboBox from "./ComboBox.js";
+import ComboBox from "../components/ComboBox.js";
 
 function printPedido() {
   console.log("Pedido")
