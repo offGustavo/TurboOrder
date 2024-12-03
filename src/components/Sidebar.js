@@ -9,7 +9,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="logo">
-        <img src={logo} alt="" className="sidebar-logo" />
+        <img src={logo} alt="Logo Restaurante Da Lucia" className="sidebar-logo" />
       </div>
       <nav>
         <ul>
@@ -39,6 +39,8 @@ const Sidebar = () => {
             </NavLink >
           </li>
           <li>
+
+            {/* TODO modificar isso pra um link/button  */}
             <NavLink  to="/sair">
               <FaSignOutAlt /> Sair
             </NavLink >
