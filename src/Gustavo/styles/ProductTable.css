@@ -1,0 +1,290 @@
+.product-table table {
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.Mui-focused .MuiInputLabel-root {
+    color: #FD1F4A !important; 
+  }
+  
+  .MuiInputLabel-root.MuiInputLabel-shrink {
+    color: #FD1F4A !important;
+  }
+
+.product-table table th,
+.product-table table td {
+    padding: 15px;
+    text-align: center;
+}
+
+.product-table table th {
+    background-color: #f4f4f4; 
+    font-weight: bold;
+    color: #333;
+}
+
+.product-table table td {
+    font-size: 1rem;
+    border: none;
+}
+
+.product-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9; 
+}
+
+.product-table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.product-table .actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.product-table button.edit-btn,
+.product-table button.delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.product-table button.edit-btn svg {
+    color: black;
+}
+
+.product-table button.delete-btn svg {
+    color: #e74c3c;
+}
+
+.top-search {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    padding: 10px 15px;
+    border-radius: 20px; 
+    border: 1px solid #ccc;
+    max-width: 300px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.top-search  {
+    font-size: 1.2rem;
+    color: #333;
+    margin-right: 10px;
+}
+
+.top-search .top-input {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+}
+
+.productsType{
+    display: flex;
+    align-items: flex-start;
+
+    gap: 20px;
+    margin: 30px 0px;
+}
+
+.btn-salvar {
+    font-weight: bold;
+    background-color: #FFBD0D;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: auto;
+    transition: background 0.3s ease;
+}
+
+.btn-salvar:hover {
+    background-color: #e4aa0a;
+}
+
+.filter-buttons {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .filter-buttons .filter-label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+  }
+  
+  .filter-buttons .filter-btn {
+    margin-right: 10px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background 0.3s ease;
+  }
+  
+  .filter-buttons .filter-btn.active {
+    background-color: #FFBD0D;
+    color: rgb(0, 0, 0);
+  }
+  
+  .filter-buttons .filter-btn:hover {
+    background-color: #fcbf4e;
+  }
+
+/* Botões no cabeçalho */
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-buttons .profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: black; /* Simboliza a foto do usuário */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.header-buttons .notification-btn,
+.header-buttons .add-order-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+}
+
+.header-buttons .add-order-btn {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.header-buttons .notification-btn svg {
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.header-buttons .add-order-btn:hover,
+.header-buttons .notification-btn:hover {
+    color: #FFBD0D;
+}
+
+/* Container geral do título e barra de pesquisa */
+.product-header {
+    display: flex;
+    justify-content: space-between; /* Espaça o título e a barra */
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Título "Produtos" */
+.product-header h1 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
+/* Barra de pesquisa no topo */
+.top-search {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    padding: 10px 15px;
+    border-radius: 20px; /* Mais arredondado */
+    border: 1px solid #ccc;
+    max-width: 300px;
+    width: 100%;
+}
+
+.top-search .search-icon-top {
+    font-size: 1.2rem; /* Ajusta o tamanho do ícone */
+    color: #333;
+    margin-right: 10px;
+}
+
+.top-search .top-input {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+}
+
+/* Restante do CSS permanece o mesmo */
+/* Estilização do contêiner do filtro */
+.filter {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 5px;
+    max-width: 200px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Rótulo do filtro */
+  .filter-label {
+    font-size: 0.9rem;
+    color: #ff0055; /* Cor do texto */
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* Campo select */
+  .select-filter {
+    appearance: none; /* Remove estilo padrão */
+    border: 2px solid #ff0055; /* Borda rosa */
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    color: #333; /* Cor do texto */
+    background-color: white;
+    position: relative;
+    outline: none;
+    cursor: pointer;
+  }
+  
+  /* Adicionando ícone no select */
+  .select-filter::after {
+    content: '▼'; /* Ícone de seta */
+    font-size: 1rem;
+    color: #ff0055;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  /* Alterar cor ao passar o mouse */
+  .select-filter:hover {
+    border-color: #ff4080;
+  }
+  
+  /* Cor de destaque ao selecionar */
+  .select-filter:focus {
+    border-color: #ff4080;
+    box-shadow: 0 0 4px rgba(255, 64, 128, 0.5);
+  }
+  

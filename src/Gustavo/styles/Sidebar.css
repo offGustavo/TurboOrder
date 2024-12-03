@@ -1,0 +1,42 @@
+.sidebar {
+    width: 220px; /* Aumentar a largura */
+    height: 100vh;
+    background-color: #2D2C2E;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 25px;
+  }
+  
+  .sidebar-logo {
+    width: 200px; /* Ajuste proporcional ao aumento */
+    height: auto;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 16px; /* Aumentar o texto */
+    display: flex;
+    align-items: center;
+  }
+  
+  nav ul li:hover {
+    color: #ffc107; /* Apenas o texto muda de cor */
+  }
+  
+  nav ul li svg {
+    margin-right: 10px;
+  }
+  
