@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink  } from "react-router-dom";
 import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import "./../styles/Sidebar.css";
@@ -13,22 +14,34 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <a><FaHome /> Home</a>
+            <NavLink  to="/">
+              <FaHome /> Home
+            </NavLink >
           </li>
           <li>
-            <BiFoodMenu /> Cardápio
+            <NavLink  to="/cardapio">
+              <BiFoodMenu /> Cardápio
+            </NavLink >
           </li>
           <li>
-            <FaUtensils /> Produtos
+            <NavLink  to="/produtos">
+              <FaUtensils /> Produtos
+            </NavLink >
           </li>
           <li>
-            <FaUsers /> Clientes
+            <NavLink  to="/clientes">
+              <FaUsers /> Clientes
+            </NavLink >
           </li>
           <li>
-            <FaHistory /> Histórico de Pedidos
+            <NavLink  to="/historico">
+              <FaHistory /> Histórico de Pedidos
+            </NavLink >
           </li>
           <li>
-            <FaSignOutAlt /> Sair
+            <NavLink  to="/sair">
+              <FaSignOutAlt /> Sair
+            </NavLink >
           </li>
         </ul>
       </nav>

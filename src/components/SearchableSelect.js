@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import "../styles/SearchableSelect.css";
 
-const SearchableSelect = ({ options, label, tipoSelecionado }) => {
+const SearchableSelect = ({ options, tipoSelecionado }) => {
   const [query, setQuery] = useState(""); // Valor digitado pelo usuário
   const [isOpen, setIsOpen] = useState(false); // Controle da lista aberta/fechada
   const [selectedOption, setSelectedOption] = useState(null); // Opção selecionada
@@ -14,7 +15,7 @@ const SearchableSelect = ({ options, label, tipoSelecionado }) => {
       option.nome.toLowerCase().includes(query.toLowerCase()) // Filtra pelo nome
     );
 
-  // Função para lidar com a mudança no campo de pesquisa
+  // Função para lidar com a mudança no campo de pesquisa'
   const handleChange = (event) => {
     setQuery(event.target.value);
   };
@@ -50,17 +51,23 @@ const SearchableSelect = ({ options, label, tipoSelecionado }) => {
   }, []);
 
   return (
+
     <div
       className="select-container"
       style={{ position: "relative", width: "300px" }}
     >
-      <label>{label}</label>
+
+      <label>
+        Escolha de {tipoSelecionado}
+      </label>
+
       <input
         ref={inputRef}
         type="text"
         value={query}
         onChange={handleChange}
         onClick={handleToggleDropdown}
+        // TODO Tornar o placeholder variavel
         placeholder="Pesquisar por nome..."
         style={{
           width: "100%",

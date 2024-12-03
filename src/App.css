@@ -1,6 +1,6 @@
 .app {
-    display: flex; /* Define que os elementos filhos (sidebar e main) fiquem lado a lado */
-    height: 100vh; /* Garante que o layout ocupe toda a altura da tela */
+    display: flex;
+    height: 100vh;
   }
   
   .sidebar {
@@ -11,14 +11,14 @@
   }
   
   main {
-    flex: 1; /* Faz com que o conteúdo ao lado da sidebar ocupe o restante do espaço */
+    flex: 1;
     display: flex;
-    flex-direction: column; /* Organiza o header e o conteúdo verticalmente */
+    flex-direction: column;
   }
   
   .header {
-    flex-shrink: 0; /* Impede que o header diminua de tamanho */
-    background-color: #f5f5f5;
+    flex-shrink: 0;
+    background-color: #ffffff;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
@@ -26,8 +26,8 @@
   }
   
   .content {
-    flex: 1; /* Permite que o conteúdo cresça para ocupar o restante do espaço */
-    padding: 20px;
-    overflow-y: auto; /* Adiciona scroll no conteúdo, se necessário */
+    flex: 1;
+    padding: 20px 50px;
+    overflow-y: auto;
   }
   

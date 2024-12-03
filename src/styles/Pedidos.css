@@ -1,9 +1,10 @@
-.display-flex{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.display-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.p-10{
+
+.p-10 {
   padding: 15px;
 }
 
@@ -12,8 +13,15 @@
   grid-template-columns: 1fr 1fr;
   gap: 5px;
 }
+
 .grid-3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
+}
+
+.meuInput {
+  border-radius: 10px;
+  background: #fff;
+  height: 30px;
 }
