@@ -9,7 +9,7 @@ import ComboBox from "./ComboBox.js";
 function printPedido() {
   console.log("Pedido")
 }
-const Pedidos = () => {
+const addOrder = () => {
   const options = [
     {'id': 1,  'nome': 'Arroz Soltinho', 'tipo': 'Arroz'},
     {'id': 2,  'nome': 'Arroz Integral', 'tipo': 'Arroz'},
@@ -135,4 +135,4 @@ const Pedidos = () => {
   );
 };
 
-export default Pedidos;
+export default addOrder;
