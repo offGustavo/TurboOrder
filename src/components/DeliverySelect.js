@@ -15,14 +15,9 @@ export default function DeliverySelect() {
   const [selectedTime, setSelectedTime] = React.useState(null);
 
   // NÃO REMOVER ISSO, CAUSA BUG 
-  const SubText = styled.h2`
-margin: 40px 0px 20px 0px;
-font-size: 16px;
-`;
+  const SubText = styled.h2` margin: 40px 0px 20px 0px; font-size: 16px; `;
 
-  const Form = styled.div`
-display: flex;
-`;
+  const Form = styled.div` display: flex; `;
 
   return (
     <FormControl>

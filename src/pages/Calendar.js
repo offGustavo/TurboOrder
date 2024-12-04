@@ -1,40 +1,119 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import '../styles/Calendar.css';
-import { FaMinus } from "react-icons/fa6";
-import { FaPlus } from "react-icons/fa6";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 
 export default function Calendar() {
   const [value, setValue] = useState(dayjs());
   const [selectedTipo, setSelectedTipo] = useState(null);
   const [selectedDia, setSelectedDia] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [produtos, setProdutos] = useState([]);
+  const [menu, setMenu] = useState({});
+  const [currentCardapio, setCurrentCardapio] = useState(null);
 
-  const [menu, setMenu] = useState({
-    Segunda: [],
-    Terça: [],
-    Quarta: [],
-    Quinta: [],
-    Sexta: [],
-    Sábado: [],
-  });
-
-  const produtos = [
-    { id: 1, nome: 'Arroz Integral', tipo: 'Arroz', ativo: true },
-    { id: 2, nome: 'Arroz Branco', tipo: 'Arroz', ativo: true },
-    { id: 3, nome: 'Feijão Preto', tipo: 'Feijão', ativo: true },
-    { id: 4, nome: 'Feijão Carioca', tipo: 'Feijão', ativo: false },
-    { id: 5, nome: 'Macarrão', tipo: 'Massa', ativo: true },
-    { id: 6, nome: 'Frango', tipo: 'Carne', ativo: true },
-    { id: 7, nome: 'Salada Verde', tipo: 'Salada', ativo: true },
-    { id: 8, nome: 'Batata Frita', tipo: 'Acompanhamento', ativo: true },
+  const tiposProdutos = [
+    "Arroz",
+    "Feijão",
+    "Massa",
+    "Carne",
+    "Acompanhamento",
+    "Salada",
   ];
 
   const diasDaSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
+  // Carregar produtos ativos do banco de dados
+  useEffect(() => {
+    fetch('/produtos?ativo=true')
+      .then((res) => res.json())
+      .then((data) => setProdutos(data))
+      .catch((err) => console.error('Erro ao carregar produtos:', err));
+  }, []);
+
+  // Carregar cardápio atual baseado na data
+  useEffect(() => {
+    const dataAtual = value.format('YYYY-MM-DD');
+    fetch(`/cardapios?data=${dataAtual}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setCurrentCardapio(data);
+          carregarMenu(data.car_id);
+        } else {
+          criarCardapio(dataAtual);
+        }
+      })
+      .catch((err) => console.error('Erro ao carregar cardápio:', err));
+  }, [value]);
+
+  const carregarMenu = (carId) => {
+    fetch(`/cardapios/dia?car_fk=${carId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const novoMenu = diasDaSemana.reduce((acc, dia) => {
+          acc[dia] = data.filter((item) => item.dia_dia === dia);
+          return acc;
+        }, {});
+        setMenu(novoMenu);
+      })
+      .catch((err) => console.error('Erro ao carregar menu:', err));
+  };
+
+  const criarCardapio = (data) => {
+    fetch('/cardapios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ car_data: data }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCurrentCardapio(data);
+        setMenu({});
+      })
+      .catch((err) => console.error('Erro ao criar cardápio:', err));
+  };
+
+  const adicionarItem = (item) => {
+    if (!currentCardapio) return;
+
+    const novoItem = {
+      pro_fk: item.pro_id,
+      car_fk: currentCardapio.car_id,
+      dia_dia: selectedDia,
+    };
+
+    fetch('/cardapios/dia', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(novoItem),
+    })
+      .then(() => {
+        setMenu((prevMenu) => ({
+          ...prevMenu,
+          [selectedDia]: [...(prevMenu[selectedDia] || []), item],
+        }));
+        closeModal();
+      })
+      .catch((err) => console.error('Erro ao adicionar item:', err));
+  };
+
+  const removerItem = (dia, itemId) => {
+    fetch(`/cardapios/dia/${itemId}`, {
+      method: 'DELETE',
+    })
+      .then(() => {
+        setMenu((prevMenu) => ({
+          ...prevMenu,
+          [dia]: prevMenu[dia].filter((item) => item.pro_id !== itemId),
+        }));
+      })
+      .catch((err) => console.error('Erro ao remover item:', err));
+  };
 
   const openModal = (tipo, dia) => {
     setSelectedTipo(tipo);
@@ -48,26 +127,11 @@ export default function Calendar() {
     setShowModal(false);
   };
 
-  const adicionarItem = (item) => {
-    setMenu((prevMenu) => ({
-      ...prevMenu,
-      [selectedDia]: [...prevMenu[selectedDia], item],
-    }));
-    closeModal();
-  };
-
-  const removerItem = (dia, itemId) => {
-    setMenu((prevMenu) => ({
-      ...prevMenu,
-      [dia]: prevMenu[dia].filter((item) => item.id !== itemId),
-    }));
-  };
-
   const renderModal = () => {
     if (!showModal) return null;
 
     const itensFiltrados = produtos.filter(
-      (produto) => produto.tipo === selectedTipo && produto.ativo
+      (produto) => produto.pro_tipo === selectedTipo && produto.pro_ativo
     );
 
     return (
@@ -76,11 +140,10 @@ export default function Calendar() {
         {itensFiltrados.length > 0 ? (
           <ul>
             {itensFiltrados.map((item) => (
-              <li key={item.id}>
-                {item.nome}
+              <li key={item.pro_id}>
+                {item.pro_titulo}
                 <button
                   onClick={() => adicionarItem(item)}
-                  // style={styles.button}
                   className="clean-btn"
                 >
                   +
@@ -117,17 +180,17 @@ export default function Calendar() {
             <div key={dia} className="WeekDay">
               <div className="WeekDay-Day"><h3>{dia}</h3></div>
               <div style={styles.cardsContainer} className="DayCard">
-                {['Arroz', 'Feijão', 'Massa', 'Carne', 'Salada', 'Acompanhamento'].map((tipo) => (
+                {tiposProdutos.map((tipo) => (
                   <div key={tipo} style={styles.card}>
                     <p>{tipo}</p>
                     <ul>
-                      {menu[dia]
-                        .filter((item) => item.tipo === tipo)
+                      {(menu[dia] || [])
+                        .filter((item) => item.pro_tipo === tipo)
                         .map((item) => (
-                          <li key={item.id}>
-                            {item.nome}
+                          <li key={item.pro_id}>
+                            {item.pro_titulo}
                             <button
-                              onClick={() => removerItem(dia, item.id)}
+                              onClick={() => removerItem(dia, item.pro_id)}
                               className="clean-btn"
                             >
                               <FaMinus />
@@ -170,15 +233,6 @@ const styles = {
     borderRadius: '10px',
     textAlign: 'center',
     background: '#fff',
-  },
-  button: {
-    marginTop: '10px',
-    padding: '5px 10px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
   },
   modal: {
     position: 'fixed',
