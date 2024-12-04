@@ -31,11 +31,24 @@
   padding: 0px;
   margin: 0px;
 }
-
-.DayCard{
+.DayContainer{
   margin: 5px;
+.DayCard {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
 }
+.DayCard ul{
+  padding: 10px;
+}
+.btn-border-top {
+border-top: 1px solid rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out; /* Transição suave */
+}
+.btn-border-top:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 
+}
 
 .add-container{
   border-top: 1px black solid;

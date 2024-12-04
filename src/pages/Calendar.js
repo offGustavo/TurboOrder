@@ -25,6 +25,15 @@ export default function Calendar() {
     "Salada",
   ];
 
+  const cores = {
+    "Arroz": " #E8EFF0", // Cor amarela para Arroz
+    "Feijão": "#F0E8ED", // Cor marrom para Feijão
+    "Massa": "#EBE8F0", // Cor tomate para Massa
+    "Carne": "#E8F0E9", // Cor vermelha para Carne
+    "Acompanhamento": "#FFF3F0", // Cor verde para Acompanhamento
+    "Salada": "#F9E3E3", // Cor verde claro para Salada
+  };
+
   const diasDaSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
   // Carregar produtos ativos do banco de dados
@@ -152,8 +161,8 @@ export default function Calendar() {
             ))}
           </ul>
         ) : (
-          <p>Não há itens disponíveis para este tipo.</p>
-        )}
+            <p>Não há itens disponíveis para este tipo.</p>
+          )}
         <button onClick={closeModal} style={styles.button}>
           Fechar
         </button>
@@ -179,9 +188,16 @@ export default function Calendar() {
           {diasDaSemana.map((dia) => (
             <div key={dia} className="WeekDay">
               <div className="WeekDay-Day"><h3>{dia}</h3></div>
-              <div style={styles.cardsContainer} className="DayCard">
+              <div style={styles.cardsContainer} className="DayContainer">
                 {tiposProdutos.map((tipo) => (
-                  <div key={tipo} style={styles.card}>
+                  <div
+                    key={tipo}
+                    style={{
+                      ...styles.card, 
+                      backgroundColor: cores[tipo] // Aplica a cor baseada no tipo
+                    }}
+                    className="DayCard"
+                  >
                     <p>{tipo}</p>
                     <ul>
                       {(menu[dia] || [])
@@ -191,15 +207,15 @@ export default function Calendar() {
                             {item.pro_titulo}
                             <button
                               onClick={() => removerItem(dia, item.pro_id)}
-                              className="clean-btn"
+                              className="clean-btn "
                             >
                               <FaMinus />
                             </button>
                           </li>
                         ))}
                     </ul>
-                    <div className="add-container">
-                      <button className="clean-btn" onClick={() => openModal(tipo, dia)}>
+                    <div className="add-container btn-border-top" >
+                      <button className="clean-btn " onClick={() => openModal(tipo, dia)}>
                         Adicionar <FaPlus />
                       </button>
                     </div>
@@ -228,11 +244,6 @@ const styles = {
     gap: '10px',
   },
   card: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '10px',
-    textAlign: 'center',
-    background: '#fff',
   },
   modal: {
     position: 'fixed',
