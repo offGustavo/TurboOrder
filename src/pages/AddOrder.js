@@ -87,7 +87,7 @@ const AlreadyRegistered = styled.button`
             <TextField id="outlined-basic" label="Sobrenome" variant="outlined" />
           </div>
           <div>
-            <TextField id="outlined-basic" label="Telefone" variant="outlined" />
+            <TextField id="outlined-basic" label="Telefone" variant="outlined" placeholder="(99) 99999-9999"/>
           </div>
         </div>
       </section>

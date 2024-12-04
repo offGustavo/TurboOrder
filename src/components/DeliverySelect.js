@@ -14,6 +14,7 @@ export default function DeliverySelect() {
   const [selectedOption, setSelectedOption] = React.useState("delivery"); // Estado para rastrear a seleção
   const [selectedTime, setSelectedTime] = React.useState(null);
 
+  // NÃO REMOVER ISSO, CAUSA BUG 
   const SubText = styled.h2`
 margin: 40px 0px 20px 0px;
 font-size: 16px;
