@@ -1,3 +1,6 @@
+nav {
+  width: 100%;
+}
 .breadcrumb {
     display: flex;
     gap: 0.5rem;

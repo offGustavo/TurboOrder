@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from "styled-components";
 import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -15,6 +16,7 @@ export default function Calendar() {
   const [produtos, setProdutos] = useState([]);
   const [menu, setMenu] = useState({});
   const [currentCardapio, setCurrentCardapio] = useState(null);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const tiposProdutos = [
     "Arroz",
@@ -26,17 +28,16 @@ export default function Calendar() {
   ];
 
   const cores = {
-    "Arroz": " #E8EFF0", // Cor amarela para Arroz
-    "Feijão": "#F0E8ED", // Cor marrom para Feijão
-    "Massa": "#EBE8F0", // Cor tomate para Massa
-    "Carne": "#E8F0E9", // Cor vermelha para Carne
-    "Acompanhamento": "#FFF3F0", // Cor verde para Acompanhamento
-    "Salada": "#F9E3E3", // Cor verde claro para Salada
+    "Arroz": " #E8EFF0",
+    "Feijão": "#F0E8ED",
+    "Massa": "#EBE8F0",
+    "Carne": "#E8F0E9",
+    "Acompanhamento": "#FFF3F0",
+    "Salada": "#F9E3E3",
   };
 
   const diasDaSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
-  // Carregar produtos ativos do banco de dados
   useEffect(() => {
     fetch('/produtos?ativo=true')
       .then((res) => res.json())
@@ -44,7 +45,6 @@ export default function Calendar() {
       .catch((err) => console.error('Erro ao carregar produtos:', err));
   }, []);
 
-  // Carregar cardápio atual baseado na data
   useEffect(() => {
     const dataAtual = value.format('YYYY-MM-DD');
     fetch(`/cardapios?data=${dataAtual}`)
@@ -124,7 +124,12 @@ export default function Calendar() {
       .catch((err) => console.error('Erro ao remover item:', err));
   };
 
-  const openModal = (tipo, dia) => {
+  const openModal = (tipo, dia, event) => {
+    const buttonRect = event.target.getBoundingClientRect();
+    setModalPosition({
+      top: buttonRect.bottom + window.scrollY + 10,
+      left: buttonRect.left + window.scrollX,
+    });
     setSelectedTipo(tipo);
     setSelectedDia(dia);
     setShowModal(true);
@@ -136,6 +141,25 @@ export default function Calendar() {
     setShowModal(false);
   };
 
+
+const AlreadyRegistered = styled.button`
+  height: auto;
+  margin: 5px 15px;
+  color: #fd1f4a;
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid #fd1f4a;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #fd1f4a;
+    color: #ffffff;
+  }
+`;
+
   const renderModal = () => {
     if (!showModal) return null;
 
@@ -144,7 +168,7 @@ export default function Calendar() {
     );
 
     return (
-      <div style={styles.modal}>
+      <div style={{ ...styles.modal, top: modalPosition.top, left: modalPosition.left }}>
         <h3>Adicionar {selectedTipo} para {selectedDia}</h3>
         {itensFiltrados.length > 0 ? (
           <ul>
@@ -161,14 +185,17 @@ export default function Calendar() {
             ))}
           </ul>
         ) : (
-            <p>Não há itens disponíveis para este tipo.</p>
-          )}
-        <button onClick={closeModal} style={styles.button}>
-          Fechar
-        </button>
+          <p>Não há itens disponíveis para este tipo.</p>
+        )}
+        <div className="Container flex-end">
+        <AlreadyRegistered onClick={closeModal} style={styles.button} className="clean-btn modal-btn">
+            Fechar
+          </AlreadyRegistered>
+        </div>
       </div>
     );
   };
+
 
   return (
     <main>
@@ -193,8 +220,8 @@ export default function Calendar() {
                   <div
                     key={tipo}
                     style={{
-                      ...styles.card, 
-                      backgroundColor: cores[tipo] // Aplica a cor baseada no tipo
+                      ...styles.card,
+                      backgroundColor: cores[tipo]
                     }}
                     className="DayCard"
                   >
@@ -214,8 +241,8 @@ export default function Calendar() {
                           </li>
                         ))}
                     </ul>
-                    <div className="add-container btn-border-top" >
-                      <button className="clean-btn " onClick={() => openModal(tipo, dia)}>
+                    <div className="add-container btn-border-top">
+                      <button className="clean-btn" onClick={(e) => openModal(tipo, dia, e)}>
                         Adicionar <FaPlus />
                       </button>
                     </div>
@@ -232,28 +259,21 @@ export default function Calendar() {
   );
 }
 
-// Estilos inline
 const styles = {
-  container: {
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-  },
+  container: {},
   cardsContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
   },
-  card: {
-  },
+  card: {},
   modal: {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: 'absolute',
     background: '#fff',
     padding: '20px',
     borderRadius: '10px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     zIndex: 1000,
+    transform: 'none',
   },
 };

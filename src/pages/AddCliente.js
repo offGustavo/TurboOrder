@@ -1,8 +1,10 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
+import ClientInfo from "../components/ClientInfo.js";
+import Address from "../components/Address.js";
 import ProgressBar from "./../components/ProgressBar.js";
 
 const ContainerCliente = styled.div`
@@ -83,170 +85,44 @@ const addCliente = () => {
       <HeaderCliente>
         <TitleCliente>Cadastro de Cliente</TitleCliente>
         <ActionsCliente>
-          <AlreadyRegistered>Cliente já cadastrado</AlreadyRegistered>
+
+          <NavLink to="/pedidos">
+            <AlreadyRegistered>Cliente já cadastrado</AlreadyRegistered>
+          </NavLink >
           <Registerbtn>Cadastrar</Registerbtn>
         </ActionsCliente>
       </HeaderCliente>
       <ProgressBar />
       <FormConteiner>
-        <div>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Nome"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-            <TextField
-              id="outlined-basic"
-              label="Sobrenome"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Telefone"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "30px 0px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          <hr />
+        <Form>
+          <div>
+            <SubText>Cliente</SubText>
+            <ClientInfo />
+            <hr />
 
-          <SubText>Endereço</SubText>
-          <Form>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "20ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="CEP"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 0px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Cidade"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 15px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          </Form>
-          <Form>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Bairro"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 0px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "50ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Rua"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 15px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "20ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Número"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 15px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          </Form>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="Complemento"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 0px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-          <hr />
+            <div>
+              <Address />
+            </div>
+            <hr />
 
-          <SubText>Empresa</SubText>
-          <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
-            <TextField
-              id="outlined-basic"
-              label="CNPJ"
-              variant="outlined"
-              sx={{
-                marginRight: 2,
-                margin: "10px 0px 30px 0px",
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-          </Box>
-        </div>
+            <SubText>Empresa</SubText>
+            <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
+              <TextField
+                id="outlined-basic"
+                label="CNPJ"
+                variant="outlined"
+                sx={{
+                  marginRight: 2,
+                  margin: "10px 0px 30px 0px",
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover fieldset": { borderColor: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                  },
+                }}
+              />
+            </Box>
+          </div>
+        </Form>
       </FormConteiner>
     </ContainerCliente>
   );

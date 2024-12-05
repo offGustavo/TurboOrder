@@ -1,19 +1,22 @@
 .Container {
   display: flex;
 }
+.flex-end {
+  justify-content: flex-end;
+}
 
-.Week{
+.Week {
   display: flex;
   width: 100%;
+  overflow-x: auto;
 
   border: 1px black solid;
   /* border-radius: 10px; */
   padding: 0px;
   margin: 0px;
-
 }
 
-.WeekDay{
+.WeekDay {
   width: 100%;
 }
 
@@ -25,13 +28,12 @@
   height: 53px;
   background-color: black;
 }
-.WeekDay-Day h3{
-
+.WeekDay-Day h3 {
   color: white;
   padding: 0px;
   margin: 0px;
 }
-.DayContainer{
+.DayContainer {
   margin: 5px;
 }
 .DayCard {
@@ -39,31 +41,34 @@
   border-radius: 10px;
   text-align: center;
 }
-.DayCard ul{
+.DayCard ul {
   padding: 10px;
 }
 .btn-border-top {
-border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease-in-out; /* Transição suave */
 }
 .btn-border-top:hover {
   background-color: rgba(0, 0, 0, 0.1);
-
 }
 
-.add-container{
+.add-container {
   border-top: 1px black solid;
-	padding: 0;
+  padding: 0;
 }
 
-.clean-btn{
-	background: none;
-	color: inherit;
-	border: none;
-	font: inherit;
-	outline: inherit;
+.clean-btn {
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
   width: 100%;
   text-align: end;
-  padding:  5px;
+  padding: 5px;
   cursor: pointer;
+}
+
+.modal-btn {
+  width: auto;
 }
