@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import DeliverySelect from "../components/DeliverySelect.js";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/AddOrder.css";
 import "../styles/Global.css"
 import { Box, TextField } from '@mui/material';
@@ -67,6 +66,7 @@ const addOrder = () => {
   return (
 
     <main className="p-10">
+      
       <ProgressBar />
       <header className="display-flex space-between ">
 

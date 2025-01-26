@@ -9,11 +9,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./../styles/ProductTable.css";
 
-const Title = styled.h1`
-  color: #000000;
-  font-size: 18px;
-  padding: 20px 0px;`
-;
 
 const FormContainer = styled.div`
   display: flex;
@@ -92,15 +87,13 @@ const ProductTable = () => {
 
   const handleDelete = async (pro_id) => {
     await axios
-      .delete(`http://localhost:8800/produtos/${pro_id}`)
-      .then(({ data }) => {
-        const newArray = products.filter((product) => product.pro_id !== pro_id);
-        setProducts(newArray);
-        toast.success(data);
-      })
-      .catch(({ data }) => toast.error(data));
-
-    setOnEdit(null);
+        .delete(`http://localhost:8800/produtos/${pro_id}`)
+        .then(({ data }) => {
+            const newArray = products.filter((product) => product.pro_id !== pro_id);
+            setProducts(newArray);
+            toast.success(data);
+        })
+        .catch(({ response }) => toast.error(response.data));
   };
 
   const handleEdit = (product) => {
@@ -115,7 +108,7 @@ const ProductTable = () => {
 
   return (
     <div className="product-table">
-      <Title>Cadastro de Produtos</Title>
+      <h1 className="title">Cadastro de Produtos</h1>
 
       <div className="filter-section">
         <Box component="form" noValidate autoComplete="off" sx={{ marginBottom: 2 }}>

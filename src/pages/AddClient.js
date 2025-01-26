@@ -1,11 +1,11 @@
+import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import ClientInfo from "../components/ClientInfo.js";
-import Address from "../components/Address.js";
-import ProgressBar from "./../components/ProgressBar.js";
+import ClientInfo from "../components/ClientInfo";
+import Address from "../components/Address";
+import ProgressBar from "../components/ProgressBar";
 
 const ContainerCliente = styled.div`
   background-color: #ffffff;
@@ -29,22 +29,6 @@ const ActionsCliente = styled.div``;
 const TitleCliente = styled.h1`
   margin: 0px;
   font-size: 18px;
-`;
-
-const Registerbtn = styled.button`
-  height: auto;
-  color: #000000;
-  font-weight: bold;
-  padding: 10px;
-  background-color: #ffbd0d;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: #e4aa0a;
-  }
 `;
 
 const AlreadyRegistered = styled.button`
@@ -76,56 +60,46 @@ const SubText = styled.h2`
 `;
 
 const Form = styled.div`
-    display: flex;
+  display: flex;
 `;
 
-const addCliente = () => {
+const AddClient = () => {
   return (
     <ContainerCliente>
       <HeaderCliente>
         <TitleCliente>Cadastro de Cliente</TitleCliente>
         <ActionsCliente>
-
-          <NavLink to="/pedidos">
+          <NavLink to="/cadastro-de-cliente/pedidos">
             <AlreadyRegistered>Cliente já cadastrado</AlreadyRegistered>
-          </NavLink >
-          <Registerbtn>Cadastrar</Registerbtn>
+          </NavLink>
         </ActionsCliente>
       </HeaderCliente>
       <ProgressBar />
       <FormConteiner>
-        <Form>
-          <div>
-            <SubText>Cliente</SubText>
-            <ClientInfo />
-            <hr />
-
+        <form>
+          <Form>
             <div>
+              <SubText>Cliente</SubText>
+              <ClientInfo />
+              <hr />
+              <SubText>Endereço</SubText>
               <Address />
+              <hr />
+              <SubText>Empresa</SubText>
+              <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
+                <TextField
+                  label="CNPJ"
+                  variant="outlined"
+                  sx={{ margin: "10px 0px 30px 0px" }}
+                />
+              </Box>
+              <button type="button">Cadastrar</button>
             </div>
-            <hr />
-
-            <SubText>Empresa</SubText>
-            <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
-              <TextField
-                id="outlined-basic"
-                label="CNPJ"
-                variant="outlined"
-                sx={{
-                  marginRight: 2,
-                  margin: "10px 0px 30px 0px",
-                  "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                  },
-                }}
-              />
-            </Box>
-          </div>
-        </Form>
+          </Form>
+        </form>
       </FormConteiner>
     </ContainerCliente>
   );
 };
 
-export default addCliente;
+export default AddClient;

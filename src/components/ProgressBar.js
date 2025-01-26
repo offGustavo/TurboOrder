@@ -58,7 +58,7 @@ const ProgressBar = () => {
   const steps = [
     { path: "/adicionar-pedido", label: "Adicionar Pedido" },
     { path: "/cadastro-de-cliente", label: "Cadastrar Cliente" },
-    { path: "/cadastrar-pedido", label: "Cadastrar Pedido" },
+    { path: "/pedidos", label: "Cadastrar Pedido" },
     { path: "/finalizar", label: "Finalizar" },
   ];
 

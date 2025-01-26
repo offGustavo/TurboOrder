@@ -92,7 +92,6 @@ a {
 
 @media (max-width: 768px) {
   .header-content {
-    flex-direction: column; 
     gap: 10px; 
   }
 
@@ -105,8 +104,20 @@ a {
     padding: 6px 12px;
     font-size: 0.9rem;
     gap: 10px;
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    border-radius: 50%;
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-
+  .btn-pedido{
+    display: none;
+  }
   .user-actions {
     gap: 10px;
     justify-content: center;
@@ -148,6 +159,6 @@ a {
   }
 
   .user-name {
-    font-size: 0.9rem;
+    display: none;
   }
 }

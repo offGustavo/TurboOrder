@@ -1,118 +1,42 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Box, TextField } from '@mui/material';
-import "../styles/Address.css";
+import React from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
-// Estilos com styled-components
-const SubText = styled.h2`
-  margin: 20px 0px 20px 0px;
-  font-size: 16px;
-`;
-
-const Form = styled.div`
-  display: flex;
-  margin-bottom: 0px;
-`;
-
-const AddressForm = () => {
+const Address = ({ formData, handleChange }) => {
   return (
-    <div>
-      <SubText>Endereço</SubText>
-
-      <div className='addressFrom'>
-        <Box sx={{ "& .MuiOutlinedInput-root": { width: "20ch" } }}>
-          <TextField
-            id="outlined-basic"
-            label="CEP"
-            variant="outlined"
-            sx={{
-              marginRight: 2,
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
-          <TextField
-            id="outlined-basic"
-            label="Cidade"
-            variant="outlined"
-            sx={{
-              marginRight: 2,
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
-          <TextField
-            id="outlined-basic"
-            label="Bairro"
-            variant="outlined"
-            sx={{
-              marginRight: 2,
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ "& .MuiOutlinedInput-root": { width: "50ch" } }}>
-          <TextField
-            id="outlined-basic"
-            label="Rua"
-            variant="outlined"
-            sx={{
-              marginRight: 2,
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ "& .MuiOutlinedInput-root": { width: "20ch" } }}>
-          <TextField
-            id="outlined-basic"
-            label="Número"
-            variant="outlined"
-            sx={{
-              marginRight: 2,
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-            }}
-          />
-        </Box>
-
-      <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
-        <TextField
-          id="outlined-basic"
-          label="Complemento"
-          variant="outlined"
-          sx={{
-            marginRight: 2,
-            "& .MuiOutlinedInput-root": {
-              "&:hover fieldset": { borderColor: "#FD1F4A" },
-              "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-            },
-          }}
-        />
-      </Box>
-
-      </div>
-    </div>
+    <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}>
+      <TextField
+        label="Endereço"
+        variant="outlined"
+        sx={{ margin: "10px 0px" }}
+      />
+      <TextField
+        label="Cidade"
+        variant="outlined"
+        sx={{ margin: "10px 0px" }}
+      />
+      <TextField
+        label="Bairro"
+        variant="outlined"
+        sx={{ margin: "10px 0px" }}
+      />
+      <TextField
+        label="Rua"
+        variant="outlined"
+        sx={{ margin: "10px 0px" }}
+      />
+      <TextField
+        label="Número"
+        variant="outlined"
+        sx={{ margin: "10px 0px" }}
+      />
+      <TextField
+        label="Complemento"
+        variant="outlined"
+        sx={{ margin: "10px 0px" }}
+      />
+    </Box>
   );
 };
 
-export default AddressForm;
+export default Address;

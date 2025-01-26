@@ -8,10 +8,11 @@ import Sidebar from "./components/Sidebar.js";
 import Header from "./components/Header.js";
 import ProductTable from "./pages/ProductTable.js";
 import Dashboard from "./pages/Dashboard.js";
-import AddCliente  from "./pages/AddCliente.js";
+import AddClient  from "./pages/AddClient.js";
 import Breadcrumb from "./components/Breadcrumb.js";
 import Calendar from "./pages/Calendar.js";
 import AddOrder from "./pages/AddOrder.js";
+import ClientTable from "./pages/ClientTable.js";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -28,10 +29,10 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/produtos" element={<ProductTable products={products} setProducts={setProducts} />} />
               <Route path="*" element={<div>Página não encontrada</div>} />
-              <Route path="/cadastro-de-cliente" element={<AddCliente />} />
+              <Route path="/cadastro-de-cliente" element={<AddClient />} />
               <Route path="/cardapio" element={<Calendar />} />
-              <Route path="/pedidos" element={<AddOrder />} />
-              <Route path="/clientes" element={<AddCliente /> } />
+              <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
+              <Route path="/clientes" element={<ClientTable /> } />
             </Routes>
           </div>
         </main>

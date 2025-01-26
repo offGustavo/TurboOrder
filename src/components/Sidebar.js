@@ -15,34 +15,34 @@ const Sidebar = () => {
         <ul>
           <li>
             <NavLink  to="/">
-              <FaHome /> Home
+              <FaHome /> <p className="NavLinkText">Home</p>
             </NavLink >
           </li>
           <li>
             <NavLink  to="/cardapio">
-              <BiFoodMenu /> Cardápio
+              <BiFoodMenu /> <p className="NavLinkText">Cardápio</p>
             </NavLink >
           </li>
           <li>
             <NavLink  to="/produtos">
-              <FaUtensils /> Produtos
+              <FaUtensils /> <p className="NavLinkText">Produtos</p>
             </NavLink >
           </li>
           <li>
             <NavLink  to="/clientes">
-              <FaUsers /> Clientes
+              <FaUsers /> <p className="NavLinkText">Clientes</p>
             </NavLink >
           </li>
           <li>
             <NavLink  to="/historico">
-              <FaHistory /> Histórico de Pedidos
+              <FaHistory /> <p className="NavLinkText">Histórico de Pedidos</p>
             </NavLink >
           </li>
           <li>
 
             {/* TODO modificar isso pra um link/button  */}
             <NavLink  to="/sair">
-              <FaSignOutAlt /> Sair
+              <FaSignOutAlt /> <p className="NavLinkText">Sair</p>
             </NavLink >
           </li>
         </ul>

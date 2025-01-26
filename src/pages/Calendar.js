@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import styled from "styled-components";
 import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import '../styles/Calendar.css';
 import { FaMinus, FaPlus } from "react-icons/fa6";
+import '../styles/Calendar.css';
 
 export default function Calendar() {
   const [value, setValue] = useState(dayjs());
@@ -28,26 +27,29 @@ export default function Calendar() {
   ];
 
   const cores = {
-    "Arroz": " #E8EFF0",
-    "Feijão": "#F0E8ED",
-    "Massa": "#EBE8F0",
-    "Carne": "#E8F0E9",
-    "Acompanhamento": "#FFF3F0",
-    "Salada": "#F9E3E3",
+    Arroz: "#E8EFF0",
+    Feijão: "#F0E8ED",
+    Massa: "#EBE8F0",
+    Carne: "#E8F0E9",
+    Acompanhamento: "#FFF3F0",
+    Salada: "#F9E3E3",
   };
 
-  const diasDaSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  const diasDaSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
   useEffect(() => {
-    fetch('/produtos?ativo=true')
+    fetch('http://localhost:8800/produtos')
       .then((res) => res.json())
-      .then((data) => setProdutos(data))
+      .then((data) => {
+        console.log("Produtos carregados:", data);
+        setProdutos(data);
+      })
       .catch((err) => console.error('Erro ao carregar produtos:', err));
   }, []);
 
   useEffect(() => {
     const dataAtual = value.format('YYYY-MM-DD');
-    fetch(`/cardapios?data=${dataAtual}`)
+    fetch(`http://localhost:8800/cardapio?data=${dataAtual}`)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
@@ -61,7 +63,7 @@ export default function Calendar() {
   }, [value]);
 
   const carregarMenu = (carId) => {
-    fetch(`/cardapios/dia?car_fk=${carId}`)
+    fetch(`http://localhost:8800/cardapio/dia?car_fk=${carId}`)
       .then((res) => res.json())
       .then((data) => {
         const novoMenu = diasDaSemana.reduce((acc, dia) => {
@@ -74,7 +76,7 @@ export default function Calendar() {
   };
 
   const criarCardapio = (data) => {
-    fetch('/cardapios', {
+    fetch('http://localhost:8800/cardapio', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ car_data: data }),
@@ -96,7 +98,7 @@ export default function Calendar() {
       dia_dia: selectedDia,
     };
 
-    fetch('/cardapios/dia', {
+    fetch('http://localhost:8800/cardapio/dia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(novoItem),
@@ -112,7 +114,7 @@ export default function Calendar() {
   };
 
   const removerItem = (dia, itemId) => {
-    fetch(`/cardapios/dia/${itemId}`, {
+    fetch(`http://localhost:8800/cardapio/dia/${itemId}`, { 
       method: 'DELETE',
     })
       .then(() => {
@@ -133,6 +135,8 @@ export default function Calendar() {
     setSelectedTipo(tipo);
     setSelectedDia(dia);
     setShowModal(true);
+    
+    console.log('Tipo selecionado:', tipo);
   };
 
   const closeModal = () => {
@@ -141,44 +145,24 @@ export default function Calendar() {
     setShowModal(false);
   };
 
-
-const AlreadyRegistered = styled.button`
-  height: auto;
-  margin: 5px 15px;
-  color: #fd1f4a;
-  font-weight: bold;
-  padding: 5px 10px;
-  background-color: #ffffff;
-  border: 1px solid #fd1f4a;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: #fd1f4a;
-    color: #ffffff;
-  }
-`;
-
   const renderModal = () => {
     if (!showModal) return null;
 
     const itensFiltrados = produtos.filter(
-      (produto) => produto.pro_tipo === selectedTipo && produto.pro_ativo
+      (produto) => produto.pro_tipo === selectedTipo && produto.pro_ativo === 1
     );
 
+    console.log('Itens filtrados:', itensFiltrados);
+
     return (
-      <div style={{ ...styles.modal, top: modalPosition.top, left: modalPosition.left }}>
+      <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
         <h3>Adicionar {selectedTipo} para {selectedDia}</h3>
         {itensFiltrados.length > 0 ? (
           <ul>
             {itensFiltrados.map((item) => (
               <li key={item.pro_id}>
-                {item.pro_titulo}
-                <button
-                  onClick={() => adicionarItem(item)}
-                  className="clean-btn"
-                >
+                {item.pro_nome}
+                <button onClick={() => adicionarItem(item)} className="add-btn">
                   +
                 </button>
               </li>
@@ -187,65 +171,50 @@ const AlreadyRegistered = styled.button`
         ) : (
           <p>Não há itens disponíveis para este tipo.</p>
         )}
-        <div className="Container flex-end">
-        <AlreadyRegistered onClick={closeModal} style={styles.button} className="clean-btn modal-btn">
-            Fechar
-          </AlreadyRegistered>
-        </div>
+        <button onClick={closeModal} className="close-btn">
+          Fechar
+        </button>
       </div>
     );
   };
 
-
   return (
     <main>
-      <h1>Cardápio Semanal</h1>
-      <div style={styles.container} className="Container">
-        <div className="CalendarContainer" style={{ marginBottom: '20px' }}>
+      <h1 className='title'>Cardápio Semanal</h1>
+      <div className="container">
+        <div className="calendar-container">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DateCalendar']}>
-              <DemoItem label="">
+              <DemoItem>
                 <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
               </DemoItem>
             </DemoContainer>
           </LocalizationProvider>
         </div>
 
-        <div className="Week">
+        <div className="week">
           {diasDaSemana.map((dia) => (
-            <div key={dia} className="WeekDay">
-              <div className="WeekDay-Day"><h3>{dia}</h3></div>
-              <div style={styles.cardsContainer} className="DayContainer">
+            <div key={dia} className="weekday">
+              <h3>{dia}</h3>
+              <div className="day-container">
                 {tiposProdutos.map((tipo) => (
-                  <div
-                    key={tipo}
-                    style={{
-                      ...styles.card,
-                      backgroundColor: cores[tipo]
-                    }}
-                    className="DayCard"
-                  >
+                  <div key={tipo} className="day-card" style={{ backgroundColor: cores[tipo] }}>
                     <p>{tipo}</p>
                     <ul>
                       {(menu[dia] || [])
                         .filter((item) => item.pro_tipo === tipo)
                         .map((item) => (
                           <li key={item.pro_id}>
-                            {item.pro_titulo}
-                            <button
-                              onClick={() => removerItem(dia, item.pro_id)}
-                              className="clean-btn "
-                            >
+                            {item.pro_nome}
+                            <button onClick={() => removerItem(dia, item.pro_id)} className="remove-btn">
                               <FaMinus />
                             </button>
                           </li>
                         ))}
                     </ul>
-                    <div className="add-container btn-border-top">
-                      <button className="clean-btn" onClick={(e) => openModal(tipo, dia, e)}>
-                        Adicionar <FaPlus />
-                      </button>
-                    </div>
+                    <button className="add-btn" onClick={(e) => openModal(tipo, dia, e)}>
+                      Adicionar <FaPlus />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -258,22 +227,3 @@ const AlreadyRegistered = styled.button`
     </main>
   );
 }
-
-const styles = {
-  container: {},
-  cardsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  card: {},
-  modal: {
-    position: 'absolute',
-    background: '#fff',
-    padding: '20px',
-    borderRadius: '10px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    zIndex: 1000,
-    transform: 'none',
-  },
-};

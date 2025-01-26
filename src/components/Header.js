@@ -23,11 +23,10 @@ const Header = () => {
 
         <div className="user-actions">
           <NavLink
-            to="/pedidos"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            className="add-order-btn" 
+            to="/cadastro-de-cliente"
+            className={({ isActive }) => (isActive ? "active" : "") + " add-order-btn" }
             onClick={createPedido}>
-              <FaPlus /> Pedido
+              <FaPlus /> <span className="btn-pedido">Pedido</span>
           </NavLink>
           <span className="user-name">Funcionário</span>
           <div className="user-avatar"></div>
