@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css"; 
+import "./App.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,7 +8,7 @@ import Sidebar from "./components/Sidebar.js";
 import Header from "./components/Header.js";
 import ProductTable from "./pages/ProductTable.js";
 import Dashboard from "./pages/Dashboard.js";
-import AddClient  from "./pages/AddClient.js";
+import AddClient from "./pages/AddClient.js";
 import Breadcrumb from "./components/Breadcrumb.js";
 import Calendar from "./pages/Calendar.js";
 import AddOrder from "./pages/AddOrder.js";
@@ -32,7 +32,7 @@ function App() {
               <Route path="/cadastro-de-cliente" element={<AddClient />} />
               <Route path="/cardapio" element={<Calendar />} />
               <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
-              <Route path="/clientes" element={<ClientTable /> } />
+              <Route path="/clientes" element={<ClientTable />} />
             </Routes>
           </div>
         </main>
