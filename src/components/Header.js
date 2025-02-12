@@ -24,7 +24,7 @@ const Header = () => {
         <div className="user-actions">
           <NavLink
             to="/cadastro-de-cliente"
-            className={({ isActive }) => (isActive ? "active" : "") + " add-order-btn" }
+            className={" add-order-btn"}
             onClick={createPedido}>
               <FaPlus /> <span className="btn-pedido">Pedido</span>
           </NavLink>
