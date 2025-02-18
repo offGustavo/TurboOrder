@@ -38,5 +38,4 @@ const Address = ({ formData, handleChange }) => {
     </Box>
   );
 };
-
 export default Address;

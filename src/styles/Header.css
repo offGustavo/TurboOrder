@@ -166,3 +166,12 @@ a {
     display: none;
   }
 }
+
+
+/* FIX: O Tamanho da header ultrapassa o tamanho total da largura da tela  */
+@media (max-width: 959px) {
+  .header {
+    width: 100%;
+  }
+}
+

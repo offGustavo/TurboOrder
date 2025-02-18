@@ -9,6 +9,10 @@ body {
   background-color: #ffffff;
 }
 
+main{
+  margin-top: 20px;
+}
+
 .btn-add {
   background-color: #FFBD0D;
   color: black;

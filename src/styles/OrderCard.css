@@ -1,5 +1,6 @@
 .order-card {
     background: white;
+   /*FIXME: Tamanho do Card não está o ideal */
     width: 22vw;
     padding: 15px;
     border-radius: 8px;
