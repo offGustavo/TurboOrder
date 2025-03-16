@@ -2,6 +2,8 @@ import React from 'react';
 import './../styles/OrderCard.css';
 import { NavLink } from "react-router-dom";
 import { FaPen } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrderCard = ({ id, name, details, status, data }) => {
   const getStatusClass = (status) => {
@@ -11,17 +13,22 @@ const OrderCard = ({ id, name, details, status, data }) => {
     return '';
   };
 
-  const createPedido = () => {
-    console.log("Pedido criado");
+  const editarPedido = () => {
+    console.log("Editand Pedido");
+  };
+
+  const changeStatus = () => {
+    console.log("changeStatus")
+    toast.success("Produto atualizado com sucesso!");
   };
 
   return (
     <div className="order-card">
       <div className="orderDetails">
         <p className="idCard">Id: <strong>{id}</strong></p>
-        <p style={{ backgroundColor: getStatusClass(status), padding: '5px 15px', borderRadius: '30px', fontWeight: 'bold', fontSize: '12px' }}>
+        <button onClick={changeStatus} style={{ backgroundColor: getStatusClass(status), padding: '5px 15px', borderRadius: '30px', fontWeight: 'bold', fontSize: '12px' }}>
           {status}
-        </p>
+        </button>
       </div>
       <p><strong>{name}</strong></p>
       <p>{details}</p>
@@ -29,7 +36,7 @@ const OrderCard = ({ id, name, details, status, data }) => {
       <div className="infoOrder">
         <p>{data}</p>
         <NavLink to="/" activeClassName="active">
-          <button className="edit-btn" onClick={createPedido}>
+          <button className="edit-btn" onClick={editarPedido}>
             <FaPen /> Editar
           </button>
         </NavLink>
