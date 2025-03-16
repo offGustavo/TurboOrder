@@ -133,23 +133,12 @@
   color: #000000;
 }
 
-.filter-buttons {
-  border: 5px solid red;
-}
 .order-cards {
   /* display: flex; */
   /* flex-wrap: wrap; */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-}
-
-{/* FIXME: Modificar desing do menu hamburge e da lista de filtro */}
-@media (max-width: 959px) {
-  .filter-buttons {
-    border: 5px solid blue;
-    display: flex;
-  }
 }
 
 /* Estiliza o botão hambúrguer */
@@ -184,7 +173,7 @@ button.hamburger:hover{
     flex-direction: column;
     position: relative;
     background: white;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     padding: 10px;
     /* top: 50px; */
     /* left: 10px; */
