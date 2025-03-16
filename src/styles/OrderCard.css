@@ -1,12 +1,14 @@
 .order-card {
     background: white;
-   /*FIXME: Tamanho do Card não está o ideal */
-    width: 22vw;
+    min-width: 150px;
+    /* max-width: 500px; */
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.269);
     font-size: 14px;
+
 }
+
   
 .order-card p {
   margin: 5px 0;
@@ -45,4 +47,7 @@ hr {
   align-items: center;
   gap: 10px;
   margin-bottom: 5px;
+}
+
+@media (max-width: 959px) {
 }
