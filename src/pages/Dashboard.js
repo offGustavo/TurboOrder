@@ -3,9 +3,11 @@ import OrderCard from './../components/OrderCard';
 import './../styles/Dashboard.css';
 import styled from 'styled-components';
 import { FaDollarSign, FaMoneyBillTransfer } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DolarGreen = styled(FaDollarSign)`
-  font-size: 30px;
+  font-size: 60px;
   background-color: #098A52;
   color: #ffffff;
   border-radius: 50%;
@@ -76,6 +78,8 @@ const Dashboard = () => {
     return order.status === filter;
   });
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <main className="dashboard">
       <div className="revenue-section">
@@ -83,6 +87,7 @@ const Dashboard = () => {
           <div className="revenue-header revenue-green">
             <DolarGreen />
             <div className="revenue-info">
+              {/* TODO: Modificar de faturamento para receita */}
               <h3>Faturamento de Hoje</h3>
               <p>R$ 460,00</p>
             </div>
@@ -123,19 +128,28 @@ const Dashboard = () => {
       <section className="orders">
         <h2>Pedidos</h2>
         
-        <div className="filter-buttons filter-section">
-          <span className="filter-label">Filtro</span>
-          {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
-            <button
-              key={type}
-              className={`filter-btn ${filter === type ? "active" : ""}`}
-              onClick={() => setFilter(type)}
-            >
-              {type}
-            </button>
-          ))}
+        {/* FIXME: Tranformar os botões em um menu hamburger quando o tamanho da tela for menor que o determinado */}
+        <div className="filter-section">
+          {/* Botão Hambúrguer */}
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            ☰
+          </button>
+
+          {/* Menu de filtros */}
+          <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
+            <span className="filter-label">Filtro</span>
+            {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
+              <button
+                key={type}
+                className={`filter-btn ${filter === type ? "active" : ""}`}
+                onClick={() => setFilter(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
         </div>
-      
+
         <div className="order-cards">
           {filteredOrders.map(order => (
             <OrderCard key={order.id} {...order} />
