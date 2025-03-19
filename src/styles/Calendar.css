@@ -1,4 +1,11 @@
 
+:root {
+  --bg-white: #ffffff;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+}
+
 /* Contêineres principais */
 .container {
   display: flex;
@@ -112,6 +119,27 @@
   color: white;
 }
 
+.product-list-ul {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.product-list-li {
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.header-product-list{
+display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-product-list-buttons {
+display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px
+}
 
 main {
 
