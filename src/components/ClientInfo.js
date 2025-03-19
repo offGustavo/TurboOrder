@@ -1,16 +1,17 @@
 import React from 'react';
 import { Box, TextField } from '@mui/material';
+import "../styles/ClientInfo.css";
 
 const ClientInfo = () => {
   return (
-    <div className="CliFrom">
-      <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+    <div className="CliForm">
+      {/* <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}> */}
         <TextField
-          id="generic-input"
+          id="clientInfo-name"
           label="Nome"
           variant="outlined"
           sx={{
-            marginRight: 2,
+            // marginRight: 2,
             "& .MuiOutlinedInput-root": {
               "&:hover fieldset": { borderColor: "#FD1F4A" },
               "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
@@ -21,11 +22,11 @@ const ClientInfo = () => {
           }}
         />
         <TextField
-          id="generic-input"
+          id="clientInfo-surname"
           label="Sobrenome"
           variant="outlined"
           sx={{
-            marginRight: 2,
+            // marginRight: 2,
             "& .MuiOutlinedInput-root": {
               "&:hover fieldset": { borderColor: "#FD1F4A" },
               "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
@@ -35,14 +36,14 @@ const ClientInfo = () => {
             },
           }}
         />
-      </Box>
-      <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+      {/* </Box> */}
+      {/* <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}> */}
         <TextField
-          id="generic-input"
+          id="clientInfo-phone"
           label="Telefone"
           variant="outlined"
           sx={{
-            marginRight: 2,
+            // marginRight: 2,
             "& .MuiOutlinedInput-root": {
               "&:hover fieldset": { borderColor: "#FD1F4A" },
               "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
@@ -52,7 +53,7 @@ const ClientInfo = () => {
             },
           }}
         />
-      </Box>
+      {/* </Box> */}
     </div>
   );
 };

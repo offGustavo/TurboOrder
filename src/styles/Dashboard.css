@@ -144,6 +144,7 @@
 /* Estiliza o botão hambúrguer */
 .hamburger {
   background: #FFBD0D;
+  margin: 10px 0;
   border: none;
   border-radius: 5px;
   padding: 3px 10px;
