@@ -106,8 +106,7 @@ export default function Calendar() {
                 <li> * Arroz Sotinho -</li>
                 <li> * Arroz Rosa -</li>
                 {/* NOTE: Aqui deve ser feito o filtro do tipo do produto */}
-                {/* FIXME: Botão não está ativando a função ao clicar */}
-                <button className="btn-add" onClick={showAddMenu(tipo)}>Adcionar +</button>
+                <button className="btn-add" onClick={() => showAddMenu(tipo)}>Adicionar +</button>
               </li>
             ))}
           </ul>
