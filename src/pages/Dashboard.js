@@ -95,7 +95,7 @@ const Dashboard = () => {
 
           <div className="revenue-transfer">
             <div className="vertical-divider"></div>
-            <TransferGreen/>
+            <TransferGreen />
 
             <div className="transfer-details">
               <Statistic>Média Estatística</Statistic>
@@ -127,7 +127,7 @@ const Dashboard = () => {
 
       <section className="orders">
         <h2>Pedidos</h2>
-        
+
         {/* FIXME: Tranformar os botões em um menu hamburger quando o tamanho da tela for menor que o determinado */}
         <div className="filter-section">
           {/* Botão Hambúrguer */}
