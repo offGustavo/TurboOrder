@@ -1,9 +1,16 @@
-
 :root {
   --bg-white: #ffffff;
+  --bg-white-alt: #f5f5f5;
   --bg-yellow: #FFBD0D;
   --bg-yellow-alt: #e59400;
   --fg-black: #000000;
+  --bg-grey: #e6e6e6;
+  --fg-red: #f44336;
+  --bg-red: #f44336;
+  /* TODO: Change color to red */
+  --bg-red-alt: #e59400;
+  --btn-border-radius: 20px;
+  --btn-border-size: 1px;
 }
 
 /* Contêineres principais */
@@ -20,7 +27,7 @@
   flex: 1;
   max-width: 300px;
   min-width: 250px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-white-alt);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -73,24 +80,52 @@
   cursor: pointer;
 }
 
-.add-btn {
-  color: #333;
+.calendar-add-btn {
+  font-size: .7rem;
+  background-color: #FFBD0D;
+  color: var(--fg-black);
+  border: none;
+  /* FIXME: border-radius var not working */
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.remove-btn {
-  color: #333;
+.calendar-add-btn:hover {
+  background-color: #e59400;
+}
+
+.calendar-remove-btn {
+  margin: 0 5px;
+  background-color: var(--fg-red);
+  color: var(--bg-white);
+  border-radius: 8px;
+  padding: 0px 8px;
+  border: var(--btn-border-size) var(--bg-red) solid;
+}
+
+.calendar-close-btn {
+  background-color: var(--bg-red);
+  color: var(--bg-white);
+}
+
+.calendar-remove-btn:hover {
+  background-color: #e59400;
 }
 
 /* Modal */
 .modal {
   position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  background-color: var(--bg-white);
+  border: 1px solid var(--bg-white-alt);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   z-index: 1000;
   border-radius: 8px;
   width: 300px;
+  height: 200px;
 }
 
 .modal h3 {
@@ -100,6 +135,7 @@
 .modal ul {
   list-style: none;
   padding: 0;
+  overflow-x: scroll;
 }
 
 .modal li {
@@ -114,14 +150,18 @@
   cursor: pointer;
 }
 
-.close-btn {
-  background-color: #f44336;
-  color: white;
+.calendar-search-produtos{
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 20px;
+  padding: 5px 10px;
+  border: 1px var(--bg-grey);
+  background-color: var(--bg-grey);
 }
 
 .product-list-ul {
   list-style: none;
-  margin-top: 10px;
+  margin: 15px 10px;
 }
 
 .product-list-li {
@@ -130,18 +170,18 @@
 }
 
 .header-product-list{
-display: flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .header-product-list-buttons {
-display: flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px
 }
 
 main {
-
   padding-top: 20px;
 }
