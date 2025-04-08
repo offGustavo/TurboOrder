@@ -26,7 +26,7 @@ const Header = () => {
             to="/cadastro-de-cliente"
             className={" add-order-btn"}
             onClick={createPedido}>
-              <FaPlus /> <span className="btn-pedido">Pedido</span>
+            <FaPlus /> <span className="btn-pedido">Pedido</span>
           </NavLink>
           <span className="user-name">Funcionário</span>
           <div className="user-avatar"></div>
