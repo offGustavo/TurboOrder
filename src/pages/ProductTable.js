@@ -87,13 +87,13 @@ const ProductTable = () => {
 
   const handleDelete = async (pro_id) => {
     await axios
-        .delete(`http://localhost:8800/produtos/${pro_id}`)
-        .then(({ data }) => {
-            const newArray = products.filter((product) => product.pro_id !== pro_id);
-            setProducts(newArray);
-            toast.success(data);
-        })
-        .catch(({ response }) => toast.error(response.data));
+      .delete(`http://localhost:8800/produtos/${pro_id}`)
+      .then(({ data }) => {
+        const newArray = products.filter((product) => product.pro_id !== pro_id);
+        setProducts(newArray);
+        toast.success(data);
+      })
+      .catch(({ response }) => toast.error(response.data));
   };
 
   const handleEdit = (product) => {
@@ -105,6 +105,8 @@ const ProductTable = () => {
   const filteredProducts = filter === "Tudo"
     ? products
     : products.filter((product) => product.pro_tipo === filter);
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="product-table">
@@ -150,17 +152,26 @@ const ProductTable = () => {
           </FormContainer>
         </Box>
 
-        <div className="filter-buttons">
-          <span className="filter-label">Filtro</span>
-          {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
-            <button
-              key={type}
-              className={`filter-btn ${filter === type ? "active" : ""}`}
-              onClick={() => setFilter(type)}
-            >
-              {type}
-            </button>
-          ))}
+        {/* FIXME: Create componente for filter */}
+        {/* FIXME: Tranformar os botões em um menu hamburger quando o tamanho da tela for menor que o determinado */}
+        <div className="filter-section">
+          {/* Botão Hambúrguer */}
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            ☰
+          </button>
+          {/* Menu de filtros */}
+          <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
+            <span className="filter-label">Filtro</span>
+            {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
+              <button
+                key={type}
+                className={`filter-btn ${filter === type ? "active" : ""}`}
+                onClick={() => setFilter(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
