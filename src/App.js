@@ -28,7 +28,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/produtos" element={<ProductTable products={products} setProducts={setProducts} />} />
-              <Route path="*" element={<div>Página não encontrada</div>} />
+              <Route path="*" element={<div className="pagina-nao-encontrada">Página não encontrada</div>} />
               <Route path="/cadastro-de-cliente" element={<AddClient />} />
               <Route path="/cardapio" element={<Calendar />} />
               <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
