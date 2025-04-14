@@ -4,17 +4,24 @@
   font-family: "Poppins", serif;
 }
 
+:root {
+  --bg-white: #ffffff;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+}
+
 body {
   /* height: 100vh; */
-  background-color: #ffffff;
 }
+background-color: var(--bg-white);
 
 main{
   margin-top: 35 px;
 }
 
 .btn-add {
-  background-color: #FFBD0D;
+  background-color: var(--bg-yellow);
   color: black;
   border: none;
   border-radius: 5px;
@@ -25,7 +32,7 @@ main{
 }
 
 .btn-add:hover {
-  background-color: #e59400;
+  background-color: var(--bg-yellow-alt);
 }
 
 .title {
@@ -40,13 +47,13 @@ main{
   color: #000000;
   font-weight: bold;
   padding: 10px;
-  background-color: #ffbd0d;
+  background-color: var(--bg-yellow);
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 
   &:hover {
-    background-color: #e4aa0a;
+  background-color: var(--bg-yellow-alt);
   }
 }

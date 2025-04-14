@@ -106,6 +106,8 @@ const ProductTable = () => {
     ? products
     : products.filter((product) => product.pro_tipo === filter);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="product-table">
       <h1 className="title">Cadastro de Produtos</h1>
@@ -150,17 +152,26 @@ const ProductTable = () => {
           </FormContainer>
         </Box>
 
-        <div className="filter-buttons">
-          <span className="filter-label">Filtro</span>
-          {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
-            <button
-              key={type}
-              className={`filter-btn ${filter === type ? "active" : ""}`}
-              onClick={() => setFilter(type)}
-            >
-              {type}
-            </button>
-          ))}
+        {/* FIXME: Create componente for filter */}
+        {/* FIXME: Tranformar os botões em um menu hamburger quando o tamanho da tela for menor que o determinado */}
+        <div className="filter-section">
+          {/* Botão Hambúrguer */}
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            ☰
+          </button>
+          {/* Menu de filtros */}
+          <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
+            <span className="filter-label">Filtro</span>
+            {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
+              <button
+                key={type}
+                className={`filter-btn ${filter === type ? "active" : ""}`}
+                onClick={() => setFilter(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

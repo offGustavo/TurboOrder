@@ -134,7 +134,6 @@ const Dashboard = () => {
           <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
             ☰
           </button>
-
           {/* Menu de filtros */}
           <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
             <span className="filter-label">Filtro</span>
