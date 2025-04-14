@@ -8,7 +8,7 @@
   --fg-red: #f44336;
   --bg-red: #f44336;
   /* TODO: Change color to red */
-  --bg-red-alt: #e59400;
+  --bg-red-alt: #ab180e;
   --btn-border-radius: 20px;
   --btn-border-size: 1px;
 }
@@ -106,13 +106,23 @@
   border: var(--btn-border-size) var(--bg-red) solid;
 }
 
+.calendar-remove-btn:hover {
+  background-color: var(--bg-red-alt);
+  border: var(--btn-border-size) var(--bg-red-alt) solid;
+}
+
 .calendar-close-btn {
   background-color: var(--bg-red);
   color: var(--bg-white);
 }
 
-.calendar-remove-btn:hover {
-  background-color: #e59400;
+.calendar-ul-produtos{
+  border: 1px  red solid;
+}
+
+/* FIXME: Tamanho da lista ultrapassando o tamanho do modal */
+.modal-list-container{
+  overflow-x: scroll;
 }
 
 /* Modal */

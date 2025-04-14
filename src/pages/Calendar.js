@@ -108,13 +108,15 @@ export default function Calendar() {
           <h3>Adicionar produto para {selectedTipo}</h3>
           {/* TODO: Confirmar a palavra mantimentos  */}
           <input className='calendar-search-produtos' placeholder='Pesquisar Mantimentos...' type="text" />
-          <ul>
-            {produtos.filter(produto => produto.pro_tipo === selectedTipo && !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)).map(produto => (
-              <li key={produto.pro_id}>
-                {produto.pro_nome} <button onClick={() => addProductToMenu(produto)} className='btn-add calendar-add-btn'>Adicionar</button>
-              </li>
-            ))}
-          </ul>
+          <div className='modal-list-container'>
+            <ul className='calendar-ul-produtos'>
+              {produtos.filter(produto => produto.pro_tipo === selectedTipo && !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)).map(produto => (
+                <li key={produto.pro_id}>
+                  {produto.pro_nome} <button onClick={() => addProductToMenu(produto)} className='btn-add calendar-add-btn'>Adicionar</button>
+                </li>
+              ))}
+            </ul>
+          </div>
           <button className='calendar-close-btn' onClick={() => setSelectedTipo(null)}>Fechar</button>
         </div>
       )}

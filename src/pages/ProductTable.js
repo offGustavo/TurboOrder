@@ -87,13 +87,13 @@ const ProductTable = () => {
 
   const handleDelete = async (pro_id) => {
     await axios
-        .delete(`http://localhost:8800/produtos/${pro_id}`)
-        .then(({ data }) => {
-            const newArray = products.filter((product) => product.pro_id !== pro_id);
-            setProducts(newArray);
-            toast.success(data);
-        })
-        .catch(({ response }) => toast.error(response.data));
+      .delete(`http://localhost:8800/produtos/${pro_id}`)
+      .then(({ data }) => {
+        const newArray = products.filter((product) => product.pro_id !== pro_id);
+        setProducts(newArray);
+        toast.success(data);
+      })
+      .catch(({ response }) => toast.error(response.data));
   };
 
   const handleEdit = (product) => {
