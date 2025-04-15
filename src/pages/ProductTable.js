@@ -153,7 +153,6 @@ const ProductTable = () => {
         </Box>
 
         {/* FIXME: Create componente for filter */}
-        {/* FIXME: Tranformar os botões em um menu hamburger quando o tamanho da tela for menor que o determinado */}
         <div className="filter-section">
           {/* Botão Hambúrguer */}
           <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
