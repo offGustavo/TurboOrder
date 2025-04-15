@@ -204,6 +204,7 @@ ${getProdutosPorTipo("Salada") || "nenhum arroz disponivel para hoje"}
         <div className="modal">
           <h3>Adicionar produto para {selectedTipo}</h3>
           {/* TODO: Confirmar a palavra mantimentos  */}
+          {/* TODO: Criar Pesquisa pelos produtos  */}
           <input className='calendar-search-produtos' placeholder='Pesquisar Mantimentos...' type="text" />
           <div className='modal-list-container'>
             <ul className='calendar-ul-produtos'>
