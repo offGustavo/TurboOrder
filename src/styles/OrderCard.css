@@ -1,0 +1,52 @@
+.order-card {
+    background: white;
+    min-width: 150px;
+    /* max-width: 500px; */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.269);
+    font-size: 14px;
+}
+
+  
+.order-card p {
+  margin: 5px 0;
+}
+  
+.edit-btn {
+    background-color: #2D2C2E;
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+hr {
+  margin: 15px 0px;
+  border: 1px solid #E6E6E6;
+}
+
+.idCard {
+  color: #B5B5B5;
+}
+
+.idCard strong {
+  color: #000000;
+}
+
+.infoOrder{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orderDetails{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 959px) {
+}

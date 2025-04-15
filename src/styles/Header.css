@@ -1,0 +1,178 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: calc(100% - 260px);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #E6E6E6;
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: none;
+  width: 50%;
+}
+
+.search-bar .search-icon {
+  font-size: 1rem;
+  color: #333;
+  margin-right: 10px;
+}
+
+.search-bar .search-input {
+  border: none;
+  background: none;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.add-order-btn {
+  background-color: #FFBD0D;
+  text-decoration: none;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.add-order-btn:hover {
+  background-color: #f1b204;
+}
+
+.add-order-btn a {
+  text-decoration: none; 
+  color: inherit; 
+}
+
+.add-order-btn svg {
+  margin-right: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: black;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    gap: 10px; 
+  }
+
+  .search-bar {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .add-order-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    gap: 10px;
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    border-radius: 50%;
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .btn-pedido{
+    display: none;
+  }
+  .user-actions {
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .search-bar .search-input {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px;
+  }
+
+  .header-content {
+    padding: 0 10px;
+  }
+
+  .search-bar {
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  .add-order-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    gap: 8px;
+  }
+
+  .user-avatar {
+    width: 25px;
+    height: 25px;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
+
+
+/* FIX: O Tamanho da header ultrapassa o tamanho total da largura da tela  */
+/* FIX: Header está sobrepondo os itens na tela  */
+@media (max-width: 959px) {
+  .header {
+    width: 100%;
+  }
+}
+

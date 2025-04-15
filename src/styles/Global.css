@@ -1,0 +1,66 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", serif;
+}
+
+:root {
+  --bg-white: #ffffff;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+}
+
+body {
+  /* height: 100vh; */
+  background-color: var(--bg-white);
+}
+
+
+main{
+  margin-top: 35 px;
+}
+
+.btn-add {
+  background-color: var(--bg-yellow);
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-add:hover {
+  background-color: var(--bg-yellow-alt);
+}
+
+.title {
+  color: #000000;
+  font-size: 1.5rem;
+  padding: 20px 0px;
+  margin-bottom: 20px;
+}
+
+.RegisterBtn {
+  height: auto;
+  color: #000000;
+  font-weight: bold;
+  padding: 10px;
+  background-color: var(--bg-yellow);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+  background-color: var(--bg-yellow-alt);
+  }
+}
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #000 !important;
+}

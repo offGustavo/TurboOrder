@@ -1,0 +1,60 @@
+.client-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.client-table .infoClient {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.client-table .infoClient h1.title {
+    margin: 0; 
+    font-size: 24px; 
+}
+
+.client-table table th,
+.client-table table td {
+    padding: 15px;
+    text-align: center;
+}
+
+.client-table table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+}
+
+.client-table table td {
+    font-size: 1rem;
+    border: none;
+}
+
+.client-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.client-table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.client-table button.edit-btn,
+.client-table button.delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.client-table button.edit-btn svg {
+    color: black;
+
+}
+
+.client-table button.delete-btn svg {
+    color: #FD1F4A;
+}

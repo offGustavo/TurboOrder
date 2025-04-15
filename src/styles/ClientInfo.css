@@ -1,0 +1,14 @@
+.CliForm{
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.tel{
+    margin-top: 15px;
+}
+
+
+@media (max-width: 959px) {
+}

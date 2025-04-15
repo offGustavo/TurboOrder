@@ -1,0 +1,197 @@
+:root {
+  --bg-white: #ffffff;
+  --bg-white-alt: #f5f5f5;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+  --bg-grey: #e6e6e6;
+  --fg-red: #f44336;
+  --bg-red: #f44336;
+  /* TODO: Change color to red */
+  --bg-red-alt: #ab180e;
+  --btn-border-radius: 20px;
+  --btn-border-size: 1px;
+}
+
+/* Contêineres principais */
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Calendário */
+.calendar-container {
+  flex: 1;
+  max-width: 300px;
+  min-width: 250px;
+  background-color: var(--bg-white-alt);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Semana como tabela */
+.week {
+  flex: 2;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.week h3{
+  margin-bottom: 20px;
+}
+
+/* Cards como células */
+.day-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.day-card h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.day-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.day-card button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calendar-add-btn {
+  font-size: .7rem;
+  background-color: #FFBD0D;
+  color: var(--fg-black);
+  border: none;
+  /* FIXME: border-radius var not working */
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.calendar-add-btn:hover {
+  background-color: #e59400;
+}
+
+.calendar-remove-btn {
+  margin: 0 5px;
+  background-color: var(--fg-red);
+  color: var(--bg-white);
+  border-radius: 8px;
+  padding: 0px 8px;
+  border: var(--btn-border-size) var(--bg-red) solid;
+}
+
+.calendar-remove-btn:hover {
+  background-color: var(--bg-red-alt);
+  border: var(--btn-border-size) var(--bg-red-alt) solid;
+}
+
+.calendar-close-btn {
+  background-color: var(--bg-red);
+  color: var(--bg-white);
+}
+
+.calendar-ul-produtos{
+  border: 1px  red solid;
+}
+
+/* FIXME: Tamanho da lista ultrapassando o tamanho do modal */
+.modal-list-container{
+  overflow-x: scroll;
+}
+
+/* Modal */
+.modal {
+  position: absolute;
+  background-color: var(--bg-white);
+  border: 1px solid var(--bg-white-alt);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1000;
+  border-radius: 8px;
+  width: 300px;
+  height: 200px;
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal ul {
+  list-style: none;
+  padding: 0;
+  overflow-x: scroll;
+}
+
+.modal li {
+  margin-bottom: 10px;
+}
+
+.modal button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calendar-search-produtos{
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 20px;
+  padding: 5px 10px;
+  border: 1px var(--bg-grey);
+  background-color: var(--bg-grey);
+}
+
+.product-list-ul {
+  list-style: none;
+  margin: 15px 10px;
+}
+
+.product-list-li {
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.header-product-list{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-product-list-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px
+}
+
+main {
+  padding-top: 20px;
+}

@@ -1,0 +1,81 @@
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background-color: #262626;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  text-align: center;
+  margin: 30px 0px;
+  padding: 20px 10px 0px 10px;
+}
+
+.sidebar-logo {
+  width: 180px;
+  height: auto;
+  border-radius: 10px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+nav ul li a:hover {
+  color: #ffbd0d;
+}
+
+nav ul li a.active {
+  color: #ffbd0d;
+}
+
+nav ul li a svg {
+  margin-right: 10px;
+}
+
+nav ul li a svg {
+  font-size: 20px;
+}
+
+@media (max-width: 959px) {
+  .sidebar {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: auto;
+    position: fixed;
+    bottom: 0; /* Alinha o elemento ao fundo do contêiner */
+    left: 0; /* Opcional: Alinha à esquerda */
+    z-index: 1000;
+  }
+  .logo {
+    display: none;
+  }
+  nav ul {
+    display: flex;
+    justify-content: center;
+  }
+  .NavLinkText {
+    display: none;
+  }
+}

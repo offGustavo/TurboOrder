@@ -1,0 +1,190 @@
+.dashboard {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  z-index: -1;
+}
+
+.revenue-section {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.daily-revenue, .monthly-revenue {
+  width: 25%;
+  height: 20vh;
+}
+
+.revenue-header {
+  width: 105%;
+  height: 13vh;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding-left: 10px;
+  color: #ffffff;
+}
+
+.revenue-green {
+  background-color: #21B977;
+}
+
+.revenue-red {
+  background-color: #FD1F4A;
+}
+
+.revenue-header p {
+  font-size: 1rem;
+}
+
+.revenue-header .dollar-sign {
+  font-size: 1.57rem;
+  background-color: #098A52;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.revenue-info h3 {
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+}
+
+.revenue-info p {
+  padding: 0px;
+  margin: 0px;
+}
+
+.revenue-transfer {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+  color: #000000;
+}
+
+.card-green .vertical-divider {
+  height: 8vh;
+  width: 5px;
+  background-color: #21B977;
+}
+
+.card-red .vertical-divider {
+  height: 8vh;
+  width: 5px;
+  background-color: #FD1F4A;
+}
+
+.revenue-transfer{
+  font-size: 1.57rem;
+  color: #21B977;
+}
+
+.transfer-details .statistic-label {
+  font-weight: 600;
+}
+
+.transfer-details .amount {
+  color: #098A52;
+}
+
+.header {
+  display: flex;
+  gap: 20px;
+}
+
+.header-card {
+  padding: 10px;
+  margin-right: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.orders {
+  margin-top: 30px;
+}
+
+.filter {
+  margin-bottom: 20px;
+}
+
+.filter button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #E8E8E8;
+  cursor: pointer;
+}
+
+.filter button.active {
+  background-color: #FFBD0D;
+  color: #000000;
+}
+
+.order-cards {
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Estiliza o botão hambúrguer */
+.hamburger {
+  background: #FFBD0D;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-size: 24px;
+  cursor: pointer;
+  display: none; /* Ocultar por padrão */
+}
+
+button.hamburger:hover{
+  background: #e59400;
+}
+
+/* Oculta o menu em telas menores */
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Modo responsivo: mostra o botão e esconde os botões */
+@media (max-width: 959px) {
+  .hamburger {
+    display: block;
+  }
+
+  .filter-buttons {
+    display: none;
+    flex-direction: column;
+    position: relative;
+    background: white;
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+    /* top: 50px; */
+    /* left: 10px; */
+    /* right: 10px; */
+    z-index: 1000;
+  }
+
+  /* Exibir quando o menu estiver aberto */
+  .filter-buttons.open {
+    display: flex;
+  }
+}
+
