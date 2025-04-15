@@ -86,4 +86,5 @@ const ClientInfo = ({ formData, handleChange }) => {
   );
 };
 
+
 export default ClientInfo;
