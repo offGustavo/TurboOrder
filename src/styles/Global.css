@@ -42,6 +42,30 @@ main{
   margin-bottom: 20px;
 }
 
+.infoClient {
+  position: relative;
+  top: 2em;
+}
+
+.client-table  table {
+  position: relative;
+  top:2em;
+}
+
+
+.product-table  {
+  position:relative;
+  top: 2em;
+}
+
+.pagina-nao-encontrada {
+  position:relative;
+  top:2em;
+}
+
+
+
+
 .RegisterBtn {
   height: auto;
   color: #000000;
