@@ -153,7 +153,7 @@ const AddClient = () => {
             rua: ""
           }
         });
-        navigate("/addOrder");
+        navigate("/cadastro-de-cliente/pedidos");
       } else {
         console.warn("Resposta inesperada:", response);
         alert("Erro inesperado ao cadastrar o cliente.");
@@ -198,9 +198,9 @@ const AddClient = () => {
               handleChange={handleChange}
             />
             <div className="addClient-btn-add">
-              <button type="submit" className="btn-add">
+            <NavLink to="/cadastro-de-cliente/pedidos" className={"btn-add"} onClick={handleSubmit}>
                 Cadastrar
-              </button>
+            </NavLink>
             </div>
           </Form>
         </form>
