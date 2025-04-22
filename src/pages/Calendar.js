@@ -14,6 +14,7 @@ export default function Calendar() {
   const [selectedTipo, setSelectedTipo] = useState(null);
   const [selectedProdutos, setSelectedProdutos] = useState({});
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [isModified, setIsModified] = useState(false); // Novo estado
 
   const h3Refs = useRef({});
   const tiposProdutos = ["Arroz", "Feijão", "Massa", "Carne", "Acompanhamento", "Salada"];
@@ -47,12 +48,29 @@ export default function Calendar() {
         } else {
           setSelectedProdutos({});
         }
+        setIsModified(false); // Resetar ao carregar
       })
       .catch((err) => {
         console.error('Erro ao carregar cardápio:', err);
         setSelectedProdutos({});
+        setIsModified(false);
       });
   }, [currentDate]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isModified) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isModified]);
 
   const saveCardapio = () => {
     const dataAtual = currentDate.format('YYYY-MM-DD');
@@ -76,6 +94,7 @@ export default function Calendar() {
       .then(data => {
         console.log(data.message);
         alert("Cardápio salvo com sucesso!");
+        setIsModified(false); // Resetar após salvar
       })
       .catch(err => {
         console.error("Erro ao salvar cardápio:", err);
@@ -121,10 +140,9 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
 *Da Lúcia Restaurante* agradece seu pedido, bom apetite!!
     `.trim();
 
-    // console.log(cardapioTexto);
     navigator.clipboard.writeText(cardapioTexto)
       .then(() => toast.success("Cardápio copiado para área de transferência!"))
-      .catch((err) => toast.error("Cardápio gerado, mas falha ao copiar: " + err));
+      .catch((err) => console.log("Cardápio gerado, mas falha ao copiar: " + err));
   };
 
   const showAddMenu = (tipo) => {
@@ -144,6 +162,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
       ...prev,
       [selectedTipo]: [...(prev[selectedTipo] || []), produto]
     }));
+    setIsModified(true);
   };
 
   const removeProductFromMenu = (tipo, index) => {
@@ -155,6 +174,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         [tipo]: updatedList,
       };
     });
+    setIsModified(true);
   };
 
   return (
@@ -174,7 +194,6 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         </div>
 
         <div className="product-list">
-          {/* TODO: Modificar a palavra produto/mentimentos */}
           <h2 className='day-header'>Mantimentos para {currentDate.format('DD/MM/YYYY')}</h2>
           <ul className="product-list-ul">
             {tiposProdutos.map((tipo) => (
@@ -196,13 +215,15 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
       </div>
 
       {selectedTipo && (
-        <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left, }} >
+        <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
           <h3>Adicionar produto para {selectedTipo}</h3>
-          {/* TODO: Adicionar função para filtrar produtos pelo nome */}
-          {/* <input className='calendar-search-produtos' placeholder='Pesquisar mantimentos...' type="text" /> */}
+          <input className='calendar-search-produtos' placeholder='Pesquisar mantimentos...' type="text" />
           <div className='modal-list-container'>
             <ul className='calendar-ul-produtos'>
-              {produtos.filter(produto => produto.pro_tipo === selectedTipo && !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)).map(produto => (
+              {produtos.filter(produto =>
+                produto.pro_tipo === selectedTipo &&
+                !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)
+              ).map(produto => (
                 <li key={produto.pro_id} className='modal-list-item'>
                   {produto.pro_nome}
                   <button onClick={() => addProductToMenu(produto)} className='btn-add calendar-add-btn'>Adicionar</button>
@@ -210,7 +231,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
               ))}
             </ul>
           </div>
-          <div clasaName='calendar-close-div'>
+          <div className='calendar-close-div'>
             <button className='calendar-close-btn' onClick={() => setSelectedTipo(null)}>Fechar</button>
           </div>
         </div>
