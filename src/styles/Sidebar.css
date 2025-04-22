@@ -60,7 +60,7 @@ nav ul li a svg {
 @media (max-width: 959px) {
   .sidebar {
     margin: 0;
-    padding: 0;
+    padding: 0 40px;
     width: 100%;
     height: auto;
     position: fixed;

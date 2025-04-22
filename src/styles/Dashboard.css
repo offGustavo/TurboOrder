@@ -144,10 +144,10 @@
 /* Estiliza o botão hambúrguer */
 .hamburger {
   background: #FFBD0D;
-  margin: 10px 0;
+  /* margin: 10px 0; */
   border: none;
   border-radius: 5px;
-  padding: 3px 10px;
+  padding: 7px 13px 3px 13px;
   font-size: 24px;
   cursor: pointer;
   display: none; /* Ocultar por padrão */

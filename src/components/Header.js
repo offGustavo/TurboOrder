@@ -24,14 +24,18 @@ const Header = () => {
         <div className="user-actions">
           <NavLink
             to="/cadastro-de-cliente"
-            className={" add-order-btn"}
+            className={"add-order-btn"}
             onClick={createPedido}>
-            <FaPlus /> <span className="btn-pedido">Pedido</span>
+            <FaPlus className="btn-plus" /> <span className="btn-pedido">Pedido</span>
           </NavLink>
           <span className="user-name">Funcionário</span>
           <div className="user-avatar"></div>
         </div>
       </div>
+
+      <NavLink className="floating-btn" to="/cadastro-de-cliente">
+        <FaPlus />
+      </NavLink>
     </header>
   );
 };

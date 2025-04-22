@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -156,7 +157,7 @@ const ProductTable = () => {
         <div className="filter-section">
           {/* Botão Hambúrguer */}
           <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-            ☰
+            <FaBars size={24} />
           </button>
           {/* Menu de filtros */}
           <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
@@ -172,7 +173,7 @@ const ProductTable = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div >
 
       <table>
         <thead>
@@ -201,7 +202,7 @@ const ProductTable = () => {
           ))}
         </tbody>
       </table>
-    </div>
+    </div >
   );
 };
 

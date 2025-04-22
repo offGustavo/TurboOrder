@@ -57,6 +57,13 @@ export default function Calendar() {
   const saveCardapio = () => {
     const dataAtual = currentDate.format('YYYY-MM-DD');
 
+    // Validação: todos os tipos de produtos devem estar preenchidos
+    const tiposFaltando = tiposProdutos.filter(tipo => !selectedProdutos[tipo] || selectedProdutos[tipo].length === 0);
+    if (tiposFaltando.length > 0) {
+      toast.error(`Preencha todos os campos antes de salvar o cardápio`, { position: "top-right" });
+      return;
+    }
+
     const produtosParaSalvar = [];
     Object.keys(selectedProdutos).forEach(tipo => {
       selectedProdutos[tipo].forEach(produto => {
@@ -121,10 +128,9 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
 *Da Lúcia Restaurante* agradece seu pedido, bom apetite!!
     `.trim();
 
-    // console.log(cardapioTexto);
     navigator.clipboard.writeText(cardapioTexto)
-      .then(() => toast.success("Cardápio copiado para área de transferência!"))
-      .catch((err) => toast.error("Cardápio gerado, mas falha ao copiar: " + err));
+      .then(() => toast.success("Cardápio copiado para área de transferência!", { position: "top-right" }))
+      .catch((err) => toast.error("Cardápio gerado, mas falha ao copiar: " + err, { position: "top-right" }));
   };
 
   const showAddMenu = (tipo) => {
@@ -174,7 +180,6 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         </div>
 
         <div className="product-list">
-          {/* TODO: Modificar a palavra produto/mentimentos */}
           <h2 className='day-header'>Mantimentos para {currentDate.format('DD/MM/YYYY')}</h2>
           <ul className="product-list-ul">
             {tiposProdutos.map((tipo) => (
@@ -192,17 +197,20 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
               </li>
             ))}
           </ul>
-        </div>
-      </div>
+        </div >
+      </div >
 
       {selectedTipo && (
-        <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left, }} >
+        <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
           <h3>Adicionar produto para {selectedTipo}</h3>
           {/* TODO: Adicionar função para filtrar produtos pelo nome */}
           {/* <input className='calendar-search-produtos' placeholder='Pesquisar mantimentos...' type="text" /> */}
           <div className='modal-list-container'>
             <ul className='calendar-ul-produtos'>
-              {produtos.filter(produto => produto.pro_tipo === selectedTipo && !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)).map(produto => (
+              {produtos.filter(produto =>
+                produto.pro_tipo === selectedTipo &&
+                !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)
+              ).map(produto => (
                 <li key={produto.pro_id} className='modal-list-item'>
                   {produto.pro_nome}
                   <button onClick={() => addProductToMenu(produto)} className='btn-add calendar-add-btn'>Adicionar</button>
@@ -210,7 +218,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
               ))}
             </ul>
           </div>
-          <div clasaName='calendar-close-div'>
+          <div className='calendar-close-div'>
             <button className='calendar-close-btn' onClick={() => setSelectedTipo(null)}>Fechar</button>
           </div>
         </div>
