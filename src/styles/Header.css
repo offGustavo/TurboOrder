@@ -167,12 +167,9 @@ a {
   }
 }
 
-
-/* FIX: O Tamanho da header ultrapassa o tamanho total da largura da tela  */
-/* FIX: Header está sobrepondo os itens na tela  */
 @media (max-width: 959px) {
   .header {
-    width: 100%;
+    width: 95%;
   }
 }
 
