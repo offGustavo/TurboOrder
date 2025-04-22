@@ -3,6 +3,7 @@ import OrderCard from './../components/OrderCard';
 import './../styles/Dashboard.css';
 import styled from 'styled-components';
 import { FaDollarSign, FaMoneyBillTransfer } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -132,7 +133,7 @@ const Dashboard = () => {
         <div className="filter-section">
           {/* Botão Hambúrguer */}
           <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-            ☰
+            <FaBars size={24} />
           </button>
           {/* Menu de filtros */}
           <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
