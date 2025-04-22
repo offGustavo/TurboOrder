@@ -82,7 +82,8 @@ export default function Calendar() {
       .then(res => res.json())
       .then(data => {
         console.log(data.message);
-        alert("Cardápio salvo com sucesso!");
+        // alert("Cardápio salvo com sucesso!");
+        toast.success("Cardápio salvo com sucesso!", { position: "top-right" });
       })
       .catch(err => {
         console.error("Erro ao salvar cardápio:", err);
