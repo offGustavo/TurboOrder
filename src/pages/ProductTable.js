@@ -172,7 +172,7 @@ const ProductTable = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div >
 
       <table>
         <thead>
@@ -201,7 +201,7 @@ const ProductTable = () => {
           ))}
         </tbody>
       </table>
-    </div>
+    </div >
   );
 };
 
