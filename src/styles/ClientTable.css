@@ -42,3 +42,18 @@
 .client-table tbody tr:nth-child(even) {
     background-color: #fff;
 }
+
+.client-table button.edit-btn,
+.client-table button.delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.client-table button.edit-btn svg {
+    color: black;
+}
+
+.client-table button.delete-btn svg {
+    color: #FD1F4A;
+}

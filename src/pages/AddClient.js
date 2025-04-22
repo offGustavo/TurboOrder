@@ -138,31 +138,31 @@ const AddClient = () => {
     try {
       const response = await axios.post("http://localhost:8800/clientes", dataToSend);
 
-        if (response.status === 200 || response.status === 201) {
-          alert("Cliente cadastrado com sucesso!");
-          setFormData({
-            cli_nome: "",
-            cli_sobrenome: "",
-            con_telefone: "",
-            cli_numero: "",
-            cli_complemento: "",
-            cli_endereco: {
-              cep: "",
-              cidade: "",
-              bairro: "",
-              rua: ""
-            }
-          });
-          navigate("/cadastro-de-cliente/pedidos", { state: { client: response.data } });
-        } else {
-          console.warn("Resposta inesperada:", response);
-          alert("Erro inesperado ao cadastrar o cliente.");
-        }
+      if (response.status === 200 || response.status === 201) {
+        alert("Cliente cadastrado com sucesso!");
+        setFormData({
+          cli_nome: "",
+          cli_sobrenome: "",
+          con_telefone: "",
+          cli_numero: "",
+          cli_complemento: "",
+          cli_endereco: {
+            cep: "",
+            cidade: "",
+            bairro: "",
+            rua: ""
+          }
+        });
+        navigate("/cadastro-de-cliente/pedidos");
+      } else {
+        console.warn("Resposta inesperada:", response);
+        alert("Erro inesperado ao cadastrar o cliente.");
+      }
     } catch (error) {
       console.error("Erro ao cadastrar cliente:", error);
 
       const mensagemErro =
-        error?.response?.data?.message || 
+        error?.response?.data?.message ||
         error?.response?.data ||
         error?.message ||
         "Erro ao cadastrar o cliente.";
@@ -192,16 +192,15 @@ const AddClient = () => {
             />
             <hr />
             <SubText>Endereço</SubText>
-            <Address 
-              formData={formData} 
-              handleChange={handleChange} 
-              setFormData={setFormData} 
+            <Address
+              formData={formData}
+              handleChange={handleChange}
             />
-          <div className="addClient-btn-add">
-            <button type="submit" className="btn-add">
-              Cadastrar
-            </button>
-          </div>
+            <div className="addClient-btn-add">
+              <NavLink to="/cadastro-de-cliente/pedidos" className={"btn-add"} onClick={handleSubmit}>
+                Cadastrar
+              </NavLink>
+            </div>
           </Form>
         </form>
       </FormConteiner>

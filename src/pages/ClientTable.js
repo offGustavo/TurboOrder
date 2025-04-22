@@ -46,7 +46,6 @@ const ClientTable = () => {
     }
     return phone;
   };
-  
 
   return (
     <div className="client-table">
@@ -64,7 +63,7 @@ const ClientTable = () => {
         <thead>
           <tr>
             <th>Código</th>
-            <th>Nome</th>
+            <th>Nome do Cliente</th>
             <th>Sobrenome</th>
             <th>Telefone</th>
             <th>Endereço</th>
@@ -86,7 +85,7 @@ const ClientTable = () => {
               <td>
                 <NavLink to={`/clientes/${cliente.cli_id}/edit`}>
                   <button className="edit-btn">
-                    <FaEdit/>
+                    <FaEdit />
                   </button>
                 </NavLink>
                 <button className="delete-btn">
@@ -100,6 +99,5 @@ const ClientTable = () => {
     </div>
   );
 };
-
 
 export default ClientTable;

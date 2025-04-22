@@ -6,7 +6,6 @@ import Address from "../components/Address";
 import "../styles/EditClient.css"
 
 const EditClient = () => {
-
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -88,7 +87,7 @@ const EditClient = () => {
         }
       }
     };
-  
+
     fetchAddressByCep();
   }, [formData.cli_endereco.cep]);
 
@@ -151,6 +150,5 @@ const EditClient = () => {
     </div>
   );
 };
-
 
 export default EditClient;

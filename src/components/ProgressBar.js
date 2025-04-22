@@ -47,10 +47,8 @@ const FilledCircle = styled.div`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: white; /* Cor da bolinha preenchida */
+  background-color: white;
 `;
-
-
 
 const ProgressBar = () => {
   const location = useLocation();
@@ -58,7 +56,7 @@ const ProgressBar = () => {
   const steps = [
     { path: "/adicionar-pedido", label: "Adicionar Pedido" },
     { path: "/cadastro-de-cliente", label: "Cadastrar Cliente" },
-    { path: "/pedidos", label: "Cadastrar Pedido" },
+    { path: "/cadastro-de-cliente/pedidos", label: "Cadastrar Pedidos" },
     { path: "/finalizar", label: "Finalizar" },
   ];
 
@@ -70,10 +68,13 @@ const ProgressBar = () => {
     }
   }, [location.pathname]);
 
-  const currentStepIndex =
-    location.pathname === "/cadastro-de-cliente" ? subStepIndex : steps.findIndex((step) =>
-        location.pathname.startsWith(step.path)
+  const currentStepIndex = (() => {
+    const orderedSteps = [...steps].sort((a, b) => b.path.length - a.path.length);
+    const matchedStep = orderedSteps.find((step) =>
+      location.pathname.startsWith(step.path)
     );
+    return steps.findIndex((step) => step.path === matchedStep?.path);
+  })();
 
   return (
     <StepContainer>
@@ -101,5 +102,6 @@ const ProgressBar = () => {
     </StepContainer>
   );
 };
+
 
 export default ProgressBar;

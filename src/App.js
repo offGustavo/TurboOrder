@@ -13,6 +13,10 @@ import Breadcrumb from "./components/Breadcrumb.js";
 import Calendar from "./pages/Calendar.js";
 import AddOrder from "./pages/AddOrder.js";
 import ClientTable from "./pages/ClientTable.js";
+<<<<<<< HEAD
+=======
+import EditClient from "./pages/EditClient.js";
+>>>>>>> 23603d86fc0f27e80e90520ef0c242b794a67d29
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -28,11 +32,19 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/produtos" element={<ProductTable products={products} setProducts={setProducts} />} />
+<<<<<<< HEAD
               <Route path="*" element={<div className="pagina-nao-encontrada">Página não encontrada</div>} />
+=======
+              <Route path="*" element={<div>Página não encontrada</div>} />
+>>>>>>> 23603d86fc0f27e80e90520ef0c242b794a67d29
               <Route path="/cadastro-de-cliente" element={<AddClient />} />
               <Route path="/cardapio" element={<Calendar />} />
               <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
               <Route path="/clientes" element={<ClientTable />} />
+<<<<<<< HEAD
+=======
+              <Route path="/clientes/:id/edit" element={<EditClient />} />
+>>>>>>> 23603d86fc0f27e80e90520ef0c242b794a67d29
             </Routes>
           </div>
         </main>
@@ -44,4 +56,8 @@ function App() {
   );
 }
 
+<<<<<<< HEAD
 export default App;
+=======
+export default App;
+>>>>>>> 23603d86fc0f27e80e90520ef0c242b794a67d29

@@ -8,11 +8,10 @@
     font-size: 14px;
 }
 
-  
 .order-card p {
   margin: 5px 0;
 }
-  
+
 .edit-btn {
     background-color: #2D2C2E;
     color: white;
@@ -35,13 +34,13 @@ hr {
   color: #000000;
 }
 
-.infoOrder{
+.infoOrder {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.orderDetails{
+.orderDetails {
   display: flex;
   align-items: center;
   gap: 10px;
