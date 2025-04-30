@@ -26,7 +26,7 @@ const OrderCard = ({ id, name, details, status, data }) => {
     <div className="order-card">
       <div className="orderDetails">
         <p className="idCard">Id: <strong>{id}</strong></p>
-        <button onClick={changeStatus} style={{ backgroundColor: getStatusClass(status), padding: '5px 15px', borderRadius: '30px', fontWeight: 'bold', fontSize: '12px' }}>
+        <button onClick={changeStatus} className="cardButton" style={{ backgroundColor: getStatusClass(status) }}>
           {status}
         </button>
       </div>

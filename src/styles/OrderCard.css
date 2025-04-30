@@ -34,6 +34,15 @@ hr {
   color: #000000;
 }
 
+.cardButton {
+  border: none;
+  box-shadow: none;
+  padding: 5px 15px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
 .infoOrder {
   display: flex;
   justify-content: space-between;
