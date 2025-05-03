@@ -2,18 +2,16 @@ import React from "react";
 import { Box, TextField } from "@mui/material";
 import "../styles/Address.css";
 
+// FIXME: Bug on AddClient
 const Address = ({ formData, handleChange }) => {
-  // if (!formData) {
-  //   return null;
-  // }
   return (
     <Box sx={{ "& .MuiOutlinedInput-root": { width: "100%" } }}>
       <div className="addressForm">
         <TextField
           label="CEP"
           variant="outlined"
-          name="cli_endereco.cep"
-          value={formData.cli_endereco?.cep || ""}
+          name="cli_cep"
+          value={formData.cli_cep || ""}
           onChange={handleChange}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -29,8 +27,8 @@ const Address = ({ formData, handleChange }) => {
         <TextField
           label="Cidade"
           variant="outlined"
-          name="cli_endereco.cidade"
-          value={formData.cli_endereco?.cidade || ""}
+          name="cli_cidade"
+          value={formData.cli_cidade || ""}
           onChange={handleChange}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -48,8 +46,8 @@ const Address = ({ formData, handleChange }) => {
         <TextField
           label="Bairro"
           variant="outlined"
-          name="cli_endereco.bairro"
-          value={formData.cli_endereco?.bairro || ""}
+          name="cli_bairro"
+          value={formData.cli_bairro || ""}
           onChange={handleChange}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -65,8 +63,8 @@ const Address = ({ formData, handleChange }) => {
         <TextField
           label="Rua"
           variant="outlined"
-          name="cli_endereco.rua"
-          value={formData.cli_endereco?.rua || ""}
+          name="cli_endereco"
+          value={formData.cli_endereco || ""}
           onChange={handleChange}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -119,6 +117,5 @@ const Address = ({ formData, handleChange }) => {
     </Box>
   );
 };
-
 
 export default Address;
