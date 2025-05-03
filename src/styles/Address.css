@@ -1,3 +1,6 @@
+.addressContainer{
+  width: 70%;
+}
 .addressForm {
   width: 100%;
   display: flex;
