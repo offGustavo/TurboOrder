@@ -3,9 +3,9 @@ import { Box, TextField } from "@mui/material";
 import "../styles/Address.css";
 
 const Address = ({ formData, handleChange }) => {
-  if (!formData) {
-    return null;
-  }
+  // if (!formData) {
+  //   return null;
+  // }
   return (
     <Box sx={{ "& .MuiOutlinedInput-root": { width: "100%" } }}>
       <div className="addressForm">

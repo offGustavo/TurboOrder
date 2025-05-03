@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import styled from "styled-components";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -9,11 +9,31 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import SelectTime from './SelectTime.js';
 import Address from '../components/Address.js'
+import ClientInfo from './ClientInfo.js';
 import "../styles/DeliverySelect.css";
 
-export default function DeliverySelect() {
-  const [selectedOption, setSelectedOption] = React.useState("delivery"); // Estado para rastrear a seleção
+export default function DeliverySelect({ formData, setFormData }) {
+  const [selectedOption, setSelectedOption] = React.useState("delivery");
   const [selectedTime, setSelectedTime] = React.useState(null);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.startsWith("cli_endereco.")) {
+      const enderecoKey = name.split(".")[1];
+      setFormData((prevData) => ({
+        ...prevData,
+        cli_endereco: {
+          ...prevData.cli_endereco,
+          [enderecoKey]: value
+        }
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    }
+  }
 
   // NÃO REMOVER ISSO, CAUSA BUG 
   const SubText = styled.h2` margin: 20px 0px 20px 0px; font-size: 16px; `;
@@ -44,7 +64,9 @@ export default function DeliverySelect() {
           {/* Exibe a seção de Entrega se a opção for "delivery" */}
           {selectedOption === "delivery" && (
             <div className="EntregaSection">
-              <Address />
+              <Container>
+                <Address formData={formData} handleChange={handleChange} />
+              </Container>
             </div>
           )}
 
