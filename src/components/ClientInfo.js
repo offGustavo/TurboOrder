@@ -15,7 +15,35 @@ const ClientInfo = ({ formData, handleChange }) => {
   };
 
   return (
-    <div>
+    <div class="clientContainer">
+      <div className="CliForm tel">
+        <InputMask
+          mask="(99) 99999-9999"
+          value={formData.con_telefone}
+          onChange={handlePhoneChange}
+        >
+          {(inputProps) => (
+            <TextField
+              {...inputProps}
+              id="clientInfo-phone"
+              label="Telefone"
+              variant="outlined"
+              name="con_telefone"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+                "& .MuiInputBase-input": {
+                  color: "black",
+                },
+                width: "30ch",
+              }}
+            />
+          )}
+        </InputMask>
+      </div>
+
       <div className="CliForm">
         <TextField
           id="clientInfo-name"
@@ -55,33 +83,7 @@ const ClientInfo = ({ formData, handleChange }) => {
         />
       </div>
 
-      <div className="CliForm tel">
-        <InputMask
-          mask="(99) 99999-9999"
-          value={formData.con_telefone}
-          onChange={handlePhoneChange}
-        >
-          {(inputProps) => (
-            <TextField
-              {...inputProps}
-              id="clientInfo-phone"
-              label="Telefone"
-              variant="outlined"
-              name="con_telefone"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-                "& .MuiInputBase-input": {
-                  color: "black",
-                },
-                width: "30ch",
-              }}
-            />
-          )}
-        </InputMask>
-      </div>
+
     </div>
   );
 };
