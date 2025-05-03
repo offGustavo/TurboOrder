@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/FilterComponent.css';
+import { FaBars } from "react-icons/fa";
 
 const FilterComponent = ({ filterState, setFilter, filterItens }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -8,7 +9,7 @@ const FilterComponent = ({ filterState, setFilter, filterItens }) => {
     <div className="filter-section">
       {/* Botão Hambúrguer */}
       <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
+        <FaBars size={24} />
       </button>
 
       {/* Menu de filtros */}
