@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -107,7 +108,6 @@ const ProductTable = () => {
     ? products
     : products.filter((product) => product.pro_tipo === filter);
 
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="product-table">
@@ -157,6 +157,7 @@ const ProductTable = () => {
           filterState={filter}
           setFilter={setFilter}
           filterItens={productTypes}
+          menuOpen={false}
         />
       </div>
 
@@ -187,7 +188,7 @@ const ProductTable = () => {
           ))}
         </tbody>
       </table>
-    </div>
+    </div >
   );
 };
 
