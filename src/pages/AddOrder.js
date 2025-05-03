@@ -52,24 +52,41 @@ const AddOrder = () => {
   const [produtosSelecionados, setProdutosSelecionados] = useState({
     Arroz: null,
     Feijão: null,
-    Carne: null,
-    Carne: null,
+    Carne: [],
     Massa: null,
     Acompanhamento: null,
     Salada: null,
   });
 
   function printPedido() {
-    console.log("Pedido:");
     console.log("Cliente:", clientInfo);
-    console.log("Produtos selecionados:", produtosSelecionados);
+    console.log("Produtos selecionados:");
+    Object.entries(produtosSelecionados).forEach(([tipo, produto]) => {
+      if (Array.isArray(produto)) {
+        produto.forEach((p, i) =>
+          console.log(`${tipo} ${i + 1}:`, p)
+        );
+      } else {
+        console.log(`${tipo}:`, produto);
+      }
+    });
   }
 
-  const handleProdutoSelecionado = (tipo, produto) => {
-    setProdutosSelecionados((prev) => ({
-      ...prev,
-      [tipo]: produto,
-    }));
+  const handleProdutoSelecionado = (tipo, produto, index = 0) => {
+    setProdutosSelecionados((prev) => {
+      if (tipo === "Carne") {
+        const novasCarnes = [...(prev.Carne || [])];
+        novasCarnes[index] = produto;
+        return {
+          ...prev,
+          Carne: novasCarnes,
+        };
+      }
+      return {
+        ...prev,
+        [tipo]: produto,
+      };
+    });
   };
 
   useEffect(() => {
@@ -300,12 +317,11 @@ const AddOrder = () => {
             />
           </Box>
 
-          {/* Passando "Massa" como tipoSelecionado */}
           <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
             <ComboBox
               options={produtos}
               tipoSelecionado="Carne"
-              onChange={(value) => handleProdutoSelecionado("Carne", value)}
+              onChange={(value) => handleProdutoSelecionado("Carne", value, 0)}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -315,12 +331,11 @@ const AddOrder = () => {
             />
           </Box>
 
-          {/* Passando "Carne" como tipoSelecionado */}
           <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
             <ComboBox
               options={produtos}
               tipoSelecionado="Carne"
-              onChange={(value) => handleProdutoSelecionado("Carne", value)}
+              onChange={(value) => handleProdutoSelecionado("Carne", value, 1)}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
