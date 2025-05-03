@@ -187,6 +187,33 @@ const AddOrder = () => {
       <section className="section">
         <SubText>Cliente</SubText>
 
+
+        <Box sx={{ width: "40ch", margin: "30px 0 10px 0" }}>
+          <InputMask
+            mask="(99) 99999-9999"
+            value={phoneInput}
+            onChange={handlePhoneChange}
+          >
+            {(inputProps) => (
+              <TextField
+                {...inputProps}
+                label="Telefone"
+                variant="outlined"
+                placeholder="Digite o telefone do cliente"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover fieldset": { borderColor: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "black",
+                  },
+                  width: "30ch",
+                }}
+              />
+            )}
+          </InputMask>
+        </Box>
         <div style={{ display: "flex", gap: "20px" }}>
           <TextField
             label="Nome"
@@ -221,33 +248,6 @@ const AddOrder = () => {
             }}
           />
         </div>
-
-        <Box sx={{ width: "40ch", margin: "30px 0 10px 0" }}>
-          <InputMask
-            mask="(99) 99999-9999"
-            value={phoneInput}
-            onChange={handlePhoneChange}
-          >
-            {(inputProps) => (
-              <TextField
-                {...inputProps}
-                label="Telefone"
-                variant="outlined"
-                placeholder="Digite o telefone do cliente"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                  },
-                  "& .MuiInputBase-input": {
-                    color: "black",
-                  },
-                  width: "30ch",
-                }}
-              />
-            )}
-          </InputMask>
-        </Box>
 
         {loadingClient && <p>Carregando informações do cliente...</p>}
         {clientError && <p style={{ color: "red" }}>{clientError}</p>}
