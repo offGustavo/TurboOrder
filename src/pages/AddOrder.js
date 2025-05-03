@@ -52,8 +52,11 @@ const AddOrder = () => {
   const [produtosSelecionados, setProdutosSelecionados] = useState({
     Arroz: null,
     Feijão: null,
-    Massa: null,
     Carne: null,
+    Carne: null,
+    Massa: null,
+    Acompanhamento: null,
+    Salada: null,
   });
 
   function printPedido() {
@@ -62,7 +65,6 @@ const AddOrder = () => {
     console.log("Produtos selecionados:", produtosSelecionados);
   }
 
-  // FIXME: quando modificado sem ser pelo mouse o produto não é atualizado
   const handleProdutoSelecionado = (tipo, produto) => {
     setProdutosSelecionados((prev) => ({
       ...prev,
@@ -79,7 +81,6 @@ const AddOrder = () => {
       })
       .catch((err) => console.error('Erro ao carregar produtos:', err));
   }, []);
-
 
   const [clientInfo, setClientInfo] = useState({
     cli_nome: "",
@@ -256,7 +257,6 @@ const AddOrder = () => {
       <section>
         <SubText>Pedido</SubText>
         <div className="grid-2 pedido-section" style={{ padding: '10px' }}>
-          {/* Passando "Arroz" como tipoSelecionado */}
           <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
             <ComboBox
               options={produtos}
