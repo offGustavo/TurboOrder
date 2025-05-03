@@ -5,7 +5,7 @@ import "../styles/Address.css";
 const Address = ({ formData, handleChange }) => {
   return (
     <Box sx={{ "& .MuiOutlinedInput-root": { width: "100%" } }}>
-      <div className="addressForm">
+      <div class="addressForm">
         <TextField
           label="CEP"
           variant="outlined"
@@ -40,8 +40,6 @@ const Address = ({ formData, handleChange }) => {
             width: "30ch",
           }}
         />
-      </div>
-      <div className="addressForm">
         <TextField
           label="Bairro"
           variant="outlined"
@@ -93,8 +91,6 @@ const Address = ({ formData, handleChange }) => {
             width: "10ch",
           }}
         />
-      </div>
-      <div className="addressForm">
         <TextField
           label="Complemento"
           variant="outlined"

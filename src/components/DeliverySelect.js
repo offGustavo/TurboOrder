@@ -53,6 +53,7 @@ export default function DeliverySelect({ formData, setFormData }) {
           {/* Exibe a seção de Entrega se a opção for "delivery" */}
           {selectedOption === "delivery" && (
             <div className="EntregaSection">
+              <SubText>Endereço do Cliente</SubText>
               <Container>
                 <Address formData={formData} handleChange={handleChange} />
               </Container>
