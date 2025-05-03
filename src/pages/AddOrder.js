@@ -11,9 +11,6 @@ import ProgressBar from "../components/ProgressBar.js";
 import ClientInfo from "../components/ClientInfo.js";
 import axios from "axios";
 
-function printPedido() {
-  console.log("Pedido");
-}
 
 const TitlePedido = styled.h1`
   margin: 0px;
@@ -23,6 +20,12 @@ const TitlePedido = styled.h1`
 const SubText = styled.h2`
   margin: 10px 0px 20px 0px;
   font-size: 16px;
+`;
+
+const ProductText = styled.h3`
+  margin: 10px 0px 20px 0px;
+  font-size: 14px;
+font-weight: semi-bold;
 `;
 
 const AlreadyRegistered = styled.button`
@@ -46,6 +49,26 @@ const AlreadyRegistered = styled.button`
 const AddOrder = () => {
   const location = useLocation();
   const [produtos, setProdutos] = useState([]);
+  const [produtosSelecionados, setProdutosSelecionados] = useState({
+    Arroz: null,
+    Feijão: null,
+    Massa: null,
+    Carne: null,
+  });
+
+  function printPedido() {
+    console.log("Pedido:");
+    console.log("Cliente:", clientInfo);
+    console.log("Produtos selecionados:", produtosSelecionados);
+  }
+
+  // FIXME: quando modificado sem ser pelo mouse o produto não é atualizado
+  const handleProdutoSelecionado = (tipo, produto) => {
+    setProdutosSelecionados((prev) => ({
+      ...prev,
+      [tipo]: produto,
+    }));
+  };
 
   useEffect(() => {
     fetch('http://localhost:8800/produtos')
@@ -270,7 +293,7 @@ const AddOrder = () => {
             <ComboBox
               options={produtos}
               tipoSelecionado="Arroz"
-              onChange={(value) => console.log("Selecionado:", value)}
+              onChange={(value) => handleProdutoSelecionado("Arroz", value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -285,7 +308,21 @@ const AddOrder = () => {
             <ComboBox
               options={produtos}
               tipoSelecionado="Feijão"
-              onChange={(value) => console.log("Selecionado:", value)}
+              onChange={(value) => handleProdutoSelecionado("Feijão", value)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+              }}
+            />
+          </Box>
+
+          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+            <ComboBox
+              options={produtos}
+              tipoSelecionado="Massa"
+              onChange={(value) => handleProdutoSelecionado("Massa", value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -300,7 +337,7 @@ const AddOrder = () => {
             <ComboBox
               options={produtos}
               tipoSelecionado="Carne"
-              onChange={(value) => console.log("Selecionado:", value)}
+              onChange={(value) => handleProdutoSelecionado("Carne", value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -315,7 +352,7 @@ const AddOrder = () => {
             <ComboBox
               options={produtos}
               tipoSelecionado="Carne"
-              onChange={(value) => console.log("Selecionado:", value)}
+              onChange={(value) => handleProdutoSelecionado("Carne", value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -324,6 +361,36 @@ const AddOrder = () => {
               }}
             />
           </Box>
+
+          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+            <ComboBox
+              options={produtos}
+              tipoSelecionado="Acompanhamento"
+              onChange={(value) => handleProdutoSelecionado("Acompanhamento", value)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+              }}
+            />
+          </Box>
+
+          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+            {/* <ProductText>Salada</ProductText> */}
+            <ComboBox
+              options={produtos}
+              tipoSelecionado="Salada"
+              onChange={(value) => handleProdutoSelecionado("Salada", value)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+              }}
+            />
+          </Box>
+
         </div>
       </section>
     </main>
