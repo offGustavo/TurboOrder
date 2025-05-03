@@ -80,38 +80,6 @@ const AddOrder = () => {
       .catch((err) => console.error('Erro ao carregar produtos:', err));
   }, []);
 
-  // const options = [
-  //   { id: 1, nome: "Arroz Soltinho", tipo: "Arroz" },
-  //   { id: 2, nome: "Arroz Integral", tipo: "Arroz" },
-  //   { id: 3, nome: "Arroz Jasmim", tipo: "Arroz" },
-  //   { id: 4, nome: "Arroz Negro", tipo: "Arroz" },
-  //   { id: 5, nome: "Arroz Vermelho", tipo: "Arroz" },
-  //   { id: 6, nome: "Feijão Preto", tipo: "Feijão" },
-  //   { id: 7, nome: "Feijão Carioca", tipo: "Feijão" },
-  //   { id: 8, nome: "Feijão Feijoada", tipo: "Feijão" },
-  //   { id: 9, nome: "Feijão Tropeiro", tipo: "Feijão" },
-  //   { id: 10, nome: "Feijão Tutu", tipo: "Feijão" },
-  //   { id: 11, nome: "Massa Espaguete", tipo: "Massa" },
-  //   { id: 12, nome: "Massa Talharim", tipo: "Massa" },
-  //   { id: 13, nome: "Massa Penne", tipo: "Massa" },
-  //   { id: 14, nome: "Massa Ravioli", tipo: "Massa" },
-  //   { id: 15, nome: "Massa Fusilli", tipo: "Massa" },
-  //   { id: 16, nome: "Salada Caesar", tipo: "Salada" },
-  //   { id: 17, nome: "Salada Tropical", tipo: "Salada" },
-  //   { id: 18, nome: "Salada Caprese", tipo: "Salada" },
-  //   { id: 19, nome: "Salada Verde", tipo: "Salada" },
-  //   { id: 20, nome: "Salada De Frutas", tipo: "Salada" },
-  //   { id: 21, nome: "Acompanhamento Batata Frita", tipo: "Acompanhamento" },
-  //   { id: 22, nome: "Acompanhamento Purê de Batata", tipo: "Acompanhamento" },
-  //   { id: 23, nome: "Acompanhamento Farofa", tipo: "Acompanhamento" },
-  //   { id: 24, nome: "Acompanhamento Vinagrete", tipo: "Acompanhamento" },
-  //   { id: 25, nome: "Acompanhamento Legumes Salteados", tipo: "Acompanhamento" },
-  //   { id: 26, nome: "Carne Bife", tipo: "Carne" },
-  //   { id: 27, nome: "Carne Frango Grelhado", tipo: "Carne" },
-  //   { id: 28, nome: "Carne Costela", tipo: "Carne" },
-  //   { id: 29, nome: "Carne Picanha", tipo: "Carne" },
-  //   { id: 30, nome: "Carne Carne Moída", tipo: "Carne" }
-  // ];
 
   const [clientInfo, setClientInfo] = useState({
     cli_nome: "",
