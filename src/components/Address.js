@@ -2,7 +2,6 @@ import React from "react";
 import { Box, TextField } from "@mui/material";
 import "../styles/Address.css";
 
-// FIXME: Bug on AddClient
 const Address = ({ formData, handleChange }) => {
   return (
     <Box sx={{ "& .MuiOutlinedInput-root": { width: "100%" } }}>

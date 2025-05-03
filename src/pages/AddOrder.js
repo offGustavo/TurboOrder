@@ -58,18 +58,6 @@ const AddOrder = () => {
     Salada: null,
   });
 
-  const [formData, setFormData] = useState({
-    cli_nome: "",
-    cli_sobrenome: "",
-    con_telefone: "",
-    cli_cep: "",
-    cli_rua: "",
-    cli_bairro: "",
-    cli_cidade: "",
-    cli_numero: "",
-    cli_complemento: ""
-  });
-
   function printPedido() {
     console.log("Cliente:", clientInfo);
     console.log("Produtos selecionados:");
@@ -278,7 +266,6 @@ const AddOrder = () => {
       <section>
         <SubText>Entrega</SubText>
         <div>
-          {/* FIXME: Info rua não está sendo puxada aqui */}
           <DeliverySelect formData={clientInfo} setFormData={setClientInfo} />
         </div>
       </section>
