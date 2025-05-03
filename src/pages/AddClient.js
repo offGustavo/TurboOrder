@@ -68,34 +68,20 @@ const AddClient = () => {
     cli_nome: "",
     cli_sobrenome: "",
     con_telefone: "",
+    cli_cep: "",
+    cli_rua: "",
+    cli_bairro: "",
+    cli_cidade: "",
     cli_numero: "",
-    cli_complemento: "",
-    cli_endereco: {
-      cep: "",
-      cidade: "",
-      bairro: "",
-      rua: ""
-    }
+    cli_complemento: ""
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name.startsWith("cli_endereco.")) {
-      const enderecoKey = name.split(".")[1];
-      setFormData((prevData) => ({
-        ...prevData,
-        cli_endereco: {
-          ...prevData.cli_endereco,
-          [enderecoKey]: value
-        }
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -106,10 +92,10 @@ const AddClient = () => {
       !formData.cli_sobrenome ||
       !formData.con_telefone ||
       !formData.cli_numero ||
-      !formData.cli_endereco.cep ||
-      !formData.cli_endereco.cidade ||
-      !formData.cli_endereco.bairro ||
-      !formData.cli_endereco.rua
+      !formData.cli_cep ||
+      !formData.cli_cidade ||
+      !formData.cli_bairro ||
+      !formData.cli_rua
     ) {
       alert("Por favor, preencha todos os campos obrigatórios, exceto complemento.");
       return;
@@ -125,10 +111,10 @@ const AddClient = () => {
         cli_complemento: formData.cli_complemento,
       },
       address: {
-        end_cep: formData.cli_endereco.cep,
-        end_cidade: formData.cli_endereco.cidade,
-        end_bairro: formData.cli_endereco.bairro,
-        end_rua: formData.cli_endereco.rua,
+        end_cep: formData.cli_cep,
+        end_cidade: formData.cli_cidade,
+        end_bairro: formData.cli_bairro,
+        end_rua: formData.cli_rua,
       },
       con_telefone: telefone,
     };
@@ -144,14 +130,12 @@ const AddClient = () => {
           cli_nome: "",
           cli_sobrenome: "",
           con_telefone: "",
+          cli_cep: "",
+          cli_rua: "",
+          cli_bairro: "",
+          cli_cidade: "",
           cli_numero: "",
           cli_complemento: "",
-          cli_endereco: {
-            cep: "",
-            cidade: "",
-            bairro: "",
-            rua: ""
-          }
         });
         navigate("/cadastro-de-cliente/pedidos");
       } else {

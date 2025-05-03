@@ -62,14 +62,12 @@ const AddOrder = () => {
     cli_nome: "",
     cli_sobrenome: "",
     con_telefone: "",
+    cli_cep: "",
+    cli_rua: "",
+    cli_bairro: "",
+    cli_cidade: "",
     cli_numero: "",
-    cli_complemento: "",
-    cli_endereco: {
-      cep: "",
-      cidade: "",
-      bairro: "",
-      rua: ""
-    }
+    cli_complemento: ""
   });
 
   function printPedido() {
@@ -280,6 +278,7 @@ const AddOrder = () => {
       <section>
         <SubText>Entrega</SubText>
         <div>
+          {/* FIXME: Info rua não está sendo puxada aqui */}
           <DeliverySelect formData={clientInfo} setFormData={setClientInfo} />
         </div>
       </section>

@@ -15,25 +15,14 @@ import "../styles/DeliverySelect.css";
 export default function DeliverySelect({ formData, setFormData }) {
   const [selectedOption, setSelectedOption] = React.useState("delivery");
   const [selectedTime, setSelectedTime] = React.useState(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name.startsWith("cli_endereco.")) {
-      const enderecoKey = name.split(".")[1];
-      setFormData((prevData) => ({
-        ...prevData,
-        cli_endereco: {
-          ...prevData.cli_endereco,
-          [enderecoKey]: value
-        }
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value
-      }));
-    }
-  }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
   // NÃO REMOVER ISSO, CAUSA BUG 
   const SubText = styled.h2` margin: 20px 0px 20px 0px; font-size: 16px; `;

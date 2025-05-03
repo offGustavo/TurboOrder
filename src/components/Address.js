@@ -63,8 +63,8 @@ const Address = ({ formData, handleChange }) => {
         <TextField
           label="Rua"
           variant="outlined"
-          name="cli_endereco"
-          value={formData.cli_endereco || ""}
+          name="cli_rua"
+          value={formData.cli_rua || ""}
           onChange={handleChange}
           sx={{
             "& .MuiOutlinedInput-root": {
