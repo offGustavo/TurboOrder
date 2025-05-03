@@ -1,4 +1,3 @@
-
 /* Estiliza o botão hambúrguer */
 .hamburger {
   background: #FFBD0D;
@@ -20,6 +19,7 @@ button.hamburger:hover{
   display: flex;
   gap: 10px;
 }
+
 
 /* Modo responsivo: mostra o botão e esconde os botões */
 @media (max-width: 959px) {

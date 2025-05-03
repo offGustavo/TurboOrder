@@ -15,13 +15,13 @@ const FilterComponent = ({ filterState, setFilter, filterItens }) => {
       <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
         <span className="filter-label">Filtro</span>
         {
-          [null, ...filterItens.map((type) => type.value)].map((type, index) => (
+          ['Tudo', ...filterItens.map((type) => type.value)].map((type, index) => (
             <button
               key={index}
               className={`filter-btn ${filterState === type ? "active" : ""}`}
               onClick={() => setFilter(type)}
             >
-              {type || 'Tudo'}
+              {type}
             </button>
           ))
         }
