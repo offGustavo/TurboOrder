@@ -7,12 +7,10 @@ const FilterComponent = ({ filterState, setFilter, filterItens }) => {
 
   return (
     <div className="filter-section">
-      {/* Botão Hambúrguer */}
       <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         <FaBars size={24} />
       </button>
 
-      {/* Menu de filtros */}
       <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
         <span className="filter-label">Filtro</span>
         {

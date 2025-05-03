@@ -20,7 +20,6 @@ button.hamburger:hover{
   gap: 10px;
 }
 
-
 /* Modo responsivo: mostra o botão e esconde os botões */
 @media (max-width: 959px) {
   .hamburger {

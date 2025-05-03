@@ -80,8 +80,6 @@ const Dashboard = () => {
     return order.status === filter;
   });
 
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <main className="dashboard">
       <div className="revenue-section">

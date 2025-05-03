@@ -108,7 +108,6 @@ const ProductTable = () => {
     ? products
     : products.filter((product) => product.pro_tipo === filter);
 
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="product-table">
@@ -158,6 +157,7 @@ const ProductTable = () => {
           filterState={filter}
           setFilter={setFilter}
           filterItens={productTypes}
+          menuOpen={false}
         />
       </div>
 
