@@ -2,7 +2,7 @@ import React from "react";
 import { Box, TextField } from "@mui/material";
 import "../styles/Address.css";
 
-const Address = ({ formData = {}, handleChange }) => {
+const Address = ({ formData, handleChange }) => {
   return (
     <div className="addressContainer">
       <Box sx={{ "& .MuiOutlinedInput-root": { width: "100%" } }}>

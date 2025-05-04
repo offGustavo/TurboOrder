@@ -310,7 +310,7 @@ const AddOrder = () => {
       <section>
         <SubText>Entrega</SubText>
         <div>
-          <DeliverySelect />
+          <DeliverySelect formData={clientInfo} setFormData={setClientInfo} />
         </div>
       </section>
 
