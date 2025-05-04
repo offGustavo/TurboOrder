@@ -78,8 +78,8 @@ const ClientTable = () => {
               <td>{cliente.cli_sobrenome}</td>
               <td>{formatPhone(cliente.con_telefone)}</td>
               <td>
-                {cliente.cli_endereco && cliente.cli_bairro && cliente.cli_cidade && cliente.cli_complemento && cliente.cli_numero
-                  ? `${cliente.cli_endereco}, ${cliente.cli_bairro}, ${cliente.cli_cidade}, ${cliente.cli_complemento}, ${cliente.cli_numero}`
+                {cliente.cli_rua && cliente.cli_bairro && cliente.cli_cidade && cliente.cli_complemento && cliente.cli_numero
+                  ? `${cliente.cli_rua}, ${cliente.cli_bairro}, ${cliente.cli_cidade}, ${cliente.cli_complemento}, ${cliente.cli_numero}`
                   : "Endereço não disponível"}
               </td>
               <td>

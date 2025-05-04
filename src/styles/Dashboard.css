@@ -86,7 +86,7 @@
   background-color: #FD1F4A;
 }
 
-.revenue-transfer{
+.revenue-transfer {
   font-size: 1.57rem;
   color: #21B977;
 }
@@ -134,57 +134,14 @@
 }
 
 .order-cards {
-  /* display: flex; */
-  /* flex-wrap: wrap; */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+  width: 100%;
 }
 
-/* Estiliza o botão hambúrguer */
-.hamburger {
-  background: #FFBD0D;
-  margin: 10px 0;
-  border: none;
-  border-radius: 5px;
-  padding: 7px 13px 3px 13px;
-  font-size: 24px;
-  cursor: pointer;
-  display: none; /* Ocultar por padrão */
-}
-
-button.hamburger:hover{
-  background: #e59400;
-}
-
-/* Oculta o menu em telas menores */
-.filter-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-/* Modo responsivo: mostra o botão e esconde os botões */
-@media (max-width: 959px) {
-  .hamburger {
-    display: block;
-  }
-
-  .filter-buttons {
-    display: none;
-    flex-direction: column;
-    position: relative;
-    background: white;
-    /* border: 1px solid #ccc; */
-    padding: 10px;
-    /* top: 50px; */
-    /* left: 10px; */
-    /* right: 10px; */
-    z-index: 1000;
-  }
-
-  /* Exibir quando o menu estiver aberto */
-  .filter-buttons.open {
-    display: flex;
+@media (max-width: 600px) {
+  .order-cards {
+    grid-template-columns: 1fr;
   }
 }
-
