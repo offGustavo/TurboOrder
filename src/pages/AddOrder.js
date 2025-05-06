@@ -203,6 +203,7 @@ const AddOrder = () => {
     // Set order value based on meat quantity
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
+    // TODO: Modificar o campo funcionario para puxar o funcionario logado
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
       funcionario_fk: 1, // Hardcoded for now, adjust as needed
@@ -214,6 +215,7 @@ const AddOrder = () => {
     };
 
     try {
+      console.log("PedidoData: " + pedidoData)
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       alert("Pedido cadastrado com sucesso!");
       console.log(response.data);
