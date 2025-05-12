@@ -3,8 +3,10 @@ import OrderCard from './../components/OrderCard';
 import './../styles/Dashboard.css';
 import styled from 'styled-components';
 import { FaDollarSign, FaMoneyBillTransfer } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FilterComponent from '../components/FilterComponent';
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 60px;
@@ -78,8 +80,6 @@ const Dashboard = () => {
     return order.status === filter;
   });
 
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <main className="dashboard">
       <div className="revenue-section">
@@ -128,26 +128,11 @@ const Dashboard = () => {
       <section className="orders">
         <h2>Pedidos</h2>
 
-        {/* FIXME: Tranformar os botões em um menu hamburger quando o tamanho da tela for menor que o determinado */}
-        <div className="filter-section">
-          {/* Botão Hambúrguer */}
-          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-            ☰
-          </button>
-          {/* Menu de filtros */}
-          <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
-            <span className="filter-label">Filtro</span>
-            {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
-              <button
-                key={type}
-                className={`filter-btn ${filter === type ? "active" : ""}`}
-                onClick={() => setFilter(type)}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-        </div>
+        <FilterComponent
+          filterState={filter}
+          setFilter={setFilter}
+          filterItens={productTypes}
+        />
 
         <div className="order-cards">
           {filteredOrders.map(order => (

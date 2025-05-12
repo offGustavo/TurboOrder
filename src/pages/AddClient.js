@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
-// import Box from "@mui/material/Box";
-// import TextField from "@mui/material/TextField";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 import ClientInfo from "../components/ClientInfo";
 import Address from "../components/Address";
 import ProgressBar from "../components/ProgressBar";
@@ -24,14 +23,13 @@ const HeaderCliente = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-p
 `;
 
 const ActionsCliente = styled.div``;
 
 const TitleCliente = styled.h1`
   margin: 0px;
-  font-size: 18px;
+  font-size: 25px;
 `;
 
 const AlreadyRegistered = styled.button`
@@ -62,10 +60,117 @@ const SubText = styled.h2`
   font-size: 16px;
 `;
 
-const Form = styled.div`
-`;
+const Form = styled.div``;
 
 const AddClient = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    cli_nome: "",
+    cli_sobrenome: "",
+    con_telefone: "",
+    cli_numero: "",
+    cli_complemento: "",
+    cli_endereco: {
+      cep: "",
+      cidade: "",
+      bairro: "",
+      rua: ""
+    }
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.startsWith("cli_endereco.")) {
+      const enderecoKey = name.split(".")[1];
+      setFormData((prevData) => ({
+        ...prevData,
+        cli_endereco: {
+          ...prevData.cli_endereco,
+          [enderecoKey]: value
+        }
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.cli_nome ||
+      !formData.cli_sobrenome ||
+      !formData.con_telefone ||
+      !formData.cli_numero ||
+      !formData.cli_endereco.cep ||
+      !formData.cli_endereco.cidade ||
+      !formData.cli_endereco.bairro ||
+      !formData.cli_endereco.rua
+    ) {
+      alert("Por favor, preencha todos os campos obrigatórios, exceto complemento.");
+      return;
+    }
+
+    const telefone = formData.con_telefone.replace(/[^\d]/g, "");
+
+    const dataToSend = {
+      clientInfo: {
+        cli_nome: formData.cli_nome,
+        cli_sobrenome: formData.cli_sobrenome,
+        cli_numero: formData.cli_numero,
+        cli_complemento: formData.cli_complemento,
+      },
+      address: {
+        end_cep: formData.cli_endereco.cep,
+        end_cidade: formData.cli_endereco.cidade,
+        end_bairro: formData.cli_endereco.bairro,
+        end_rua: formData.cli_endereco.rua,
+      },
+      con_telefone: telefone,
+    };
+
+    console.log("Dados enviados:", dataToSend);
+
+    try {
+      const response = await axios.post("http://localhost:8800/clientes", dataToSend);
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Cliente cadastrado com sucesso!");
+        setFormData({
+          cli_nome: "",
+          cli_sobrenome: "",
+          con_telefone: "",
+          cli_numero: "",
+          cli_complemento: "",
+          cli_endereco: {
+            cep: "",
+            cidade: "",
+            bairro: "",
+            rua: ""
+          }
+        });
+        navigate("/cadastro-de-cliente/pedidos");
+      } else {
+        console.warn("Resposta inesperada:", response);
+        alert("Erro inesperado ao cadastrar o cliente.");
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar cliente:", error);
+
+      const mensagemErro =
+        error?.response?.data?.message ||
+        error?.response?.data ||
+        error?.message ||
+        "Erro ao cadastrar o cliente.";
+
+      alert(mensagemErro);
+    }
+  };
+
   return (
     <ContainerCliente>
       <HeaderCliente>
@@ -78,24 +183,23 @@ const AddClient = () => {
       </HeaderCliente>
       <ProgressBar />
       <FormConteiner>
-        <form>
+        <form onSubmit={handleSubmit}>
           <Form>
-              <SubText>Cliente</SubText>
-              <ClientInfo />
-              <hr />
-              <SubText>Endereço</SubText>
-              <Address />
-              {/* <hr /> */}
-              {/* <SubText>Empresa</SubText> */}
-              {/* <Box sx={{ "& .MuiOutlinedInput-root": { width: "30ch" } }}> */}
-              {/*   <TextField */}
-              {/*     label="CNPJ" */}
-              {/*     variant="outlined" */}
-              {/*     sx={{ margin: "10px 0px 30px 0px" }} */}
-              {/*   /> */}
-              {/* </Box> */}
+            <SubText>Cliente</SubText>
+            <ClientInfo
+              formData={formData}
+              handleChange={handleChange}
+            />
+            <hr />
+            <SubText>Endereço</SubText>
+            <Address
+              formData={formData}
+              handleChange={handleChange}
+            />
             <div className="addClient-btn-add">
-              <button type="button" className="btn-add">Cadastrar</button>
+              <NavLink to="/cadastro-de-cliente/pedidos" className={"btn-add"} onClick={handleSubmit}>
+                Cadastrar
+              </NavLink>
             </div>
           </Form>
         </form>

@@ -75,6 +75,13 @@ export default function Calendar() {
   const saveCardapio = () => {
     const dataAtual = currentDate.format('YYYY-MM-DD');
 
+    // Validação: todos os tipos de produtos devem estar preenchidos
+    const tiposFaltando = tiposProdutos.filter(tipo => !selectedProdutos[tipo] || selectedProdutos[tipo].length === 0);
+    if (tiposFaltando.length > 0) {
+      toast.error(`Preencha todos os campos antes de salvar o cardápio`, { position: "top-right" });
+      return;
+    }
+
     const produtosParaSalvar = [];
     Object.keys(selectedProdutos).forEach(tipo => {
       selectedProdutos[tipo].forEach(produto => {
@@ -93,8 +100,8 @@ export default function Calendar() {
       .then(res => res.json())
       .then(data => {
         console.log(data.message);
-        alert("Cardápio salvo com sucesso!");
-        setIsModified(false); // Resetar após salvar
+        // alert("Cardápio salvo com sucesso!");
+        toast.success("Cardápio salvo com sucesso!", { position: "top-right" });
       })
       .catch(err => {
         console.error("Erro ao salvar cardápio:", err);
@@ -141,8 +148,8 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
     `.trim();
 
     navigator.clipboard.writeText(cardapioTexto)
-      .then(() => toast.success("Cardápio copiado para área de transferência!"))
-      .catch((err) => console.log("Cardápio gerado, mas falha ao copiar: " + err));
+      .then(() => toast.success("Cardápio copiado para área de transferência!", { position: "top-right" }))
+      .catch((err) => toast.error("Cardápio gerado, mas falha ao copiar: " + err, { position: "top-right" }));
   };
 
   const showAddMenu = (tipo) => {
@@ -211,8 +218,8 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
               </li>
             ))}
           </ul>
-        </div>
-      </div>
+        </div >
+      </div >
 
       {/* TODO: Modificar o modal para utilizar o [React Dialog component - Material UI](https://mui.com/material-ui/react-dialog/) */}
       {selectedTipo && (

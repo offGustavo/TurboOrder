@@ -14,7 +14,7 @@ const OrderCard = ({ id, name, details, status, data }) => {
   };
 
   const editarPedido = () => {
-    console.log("Editand Pedido");
+    console.log("Editandm Pedido");
   };
 
   const changeStatus = () => {

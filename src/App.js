@@ -13,6 +13,7 @@ import Breadcrumb from "./components/Breadcrumb.js";
 import Calendar from "./pages/Calendar.js";
 import AddOrder from "./pages/AddOrder.js";
 import ClientTable from "./pages/ClientTable.js";
+import EditClient from "./pages/EditClient.js";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -33,14 +34,13 @@ function App() {
               <Route path="/cardapio" element={<Calendar />} />
               <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
               <Route path="/clientes" element={<ClientTable />} />
+              <Route path="/clientes/:id/edit" element={<EditClient />} />
             </Routes>
           </div>
         </main>
         <ToastContainer position="bottom-left" autoClose={3000} />
       </div>
-
     </Router>
-
   );
 }
 
