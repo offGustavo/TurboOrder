@@ -10,7 +10,6 @@ import '../styles/Calendar.css';
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [produtos, setProdutos] = useState([]);
-  const [menu, setMenu] = useState({});
   const [selectedTipo, setSelectedTipo] = useState(null);
   const [selectedProdutos, setSelectedProdutos] = useState({});
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
