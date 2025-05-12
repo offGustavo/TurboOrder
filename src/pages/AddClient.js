@@ -1,66 +1,15 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import ClientInfo from "../components/ClientInfo";
 import Address from "../components/Address";
 import ProgressBar from "../components/ProgressBar";
+
 import "../styles/Global.css";
 import "../styles/AddClient.css";
-
-const ContainerCliente = styled.div`
-  background-color: #ffffff;
-  color: #000000;
-  font-family: "poppins", serif;
-  font-size: 18px;
-  width: 100%;
-  height: 100%;
-  padding: 0px;
-`;
-
-const HeaderCliente = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-`;
-
-const ActionsCliente = styled.div``;
-
-const TitleCliente = styled.h1`
-  margin: 0px;
-  font-size: 25px;
-`;
-
-const AlreadyRegistered = styled.button`
-  height: auto;
-  margin: 0 15px;
-  color: #fd1f4a;
-  font-weight: bold;
-  padding: 10px;
-  background-color: #ffffff;
-  border: 1px solid #fd1f4a;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: #fd1f4a;
-    color: #ffffff;
-  }
-`;
-
-const FormConteiner = styled.div`
-  margin-top: 100px;
-  width: 100%;
-`;
-
-const SubText = styled.h2`
-  margin: 40px 0px 20px 0px;
-  font-size: 16px;
-`;
-
-const Form = styled.div``;
 
 const AddClient = () => {
   const navigate = useNavigate();
@@ -111,7 +60,7 @@ const AddClient = () => {
       !formData.cli_endereco.bairro ||
       !formData.cli_endereco.rua
     ) {
-      alert("Por favor, preencha todos os campos obrigatórios, exceto complemento.");
+      toast.warn("Preencha todos os campos obrigatórios, exceto complemento.");
       return;
     }
 
@@ -133,13 +82,25 @@ const AddClient = () => {
       con_telefone: telefone,
     };
 
-    console.log("Dados enviados:", dataToSend);
+    try {
+      const checkResponse = await axios.get(`http://localhost:8800/clientes/telefone/${telefone}`);
+      if (checkResponse.data) {
+        toast.error("Este cliente já está cadastrado com este número de telefone.");
+        return;
+      }
+    } catch (error) {
+      if (error.response && error.response.status !== 404) {
+        console.error("Erro ao verificar cliente existente:", error);
+        toast.error("Erro ao verificar se o cliente já está cadastrado.");
+        return;
+      }
+    }
 
     try {
       const response = await axios.post("http://localhost:8800/clientes", dataToSend);
 
       if (response.status === 200 || response.status === 201) {
-        alert("Cliente cadastrado com sucesso!");
+        toast.success("Cliente cadastrado com sucesso!");
         setFormData({
           cli_nome: "",
           cli_sobrenome: "",
@@ -156,7 +117,7 @@ const AddClient = () => {
         navigate("/cadastro-de-cliente/pedidos");
       } else {
         console.warn("Resposta inesperada:", response);
-        alert("Erro inesperado ao cadastrar o cliente.");
+        toast.error("Erro inesperado ao cadastrar o cliente.");
       }
     } catch (error) {
       console.error("Erro ao cadastrar cliente:", error);
@@ -167,44 +128,42 @@ const AddClient = () => {
         error?.message ||
         "Erro ao cadastrar o cliente.";
 
-      alert(mensagemErro);
+      toast.error(mensagemErro);
     }
   };
 
   return (
-    <ContainerCliente>
-      <HeaderCliente>
-        <TitleCliente>Cadastro de Cliente</TitleCliente>
-        <ActionsCliente>
+    <div className="container-cliente">
+      <div className="header-cliente">
+        <h1 className="title-cliente">Cadastro de Cliente</h1>
+        <div className="actions-cliente">
           <NavLink to="/cadastro-de-cliente/pedidos">
-            <AlreadyRegistered>Cliente já cadastrado</AlreadyRegistered>
+            <button className="already-registered">Cliente já cadastrado</button>
           </NavLink>
-        </ActionsCliente>
-      </HeaderCliente>
+        </div>
+      </div>
       <ProgressBar />
-      <FormConteiner>
+      <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <Form>
-            <SubText>Cliente</SubText>
-            <ClientInfo
-              formData={formData}
-              handleChange={handleChange}
-            />
+          <div>
+            <h2 className="sub-text">Cliente</h2>
+            <ClientInfo formData={formData} handleChange={handleChange} />
             <hr />
-            <SubText>Endereço</SubText>
-            <Address
-              formData={formData}
-              handleChange={handleChange}
-            />
+            <h2 className="sub-text">Endereço</h2>
+            <Address formData={formData} handleChange={handleChange} />
             <div className="addClient-btn-add">
-              <NavLink to="/cadastro-de-cliente/pedidos" className={"btn-add"} onClick={handleSubmit}>
+              <NavLink
+                to="/cadastro-de-cliente/pedidos"
+                className="btn-add"
+                onClick={handleSubmit}
+              >
                 Cadastrar
               </NavLink>
             </div>
-          </Form>
+          </div>
         </form>
-      </FormConteiner>
-    </ContainerCliente>
+      </div>
+    </div>
   );
 };
 

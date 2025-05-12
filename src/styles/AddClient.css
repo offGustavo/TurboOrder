@@ -1,3 +1,53 @@
+.container-cliente {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: "poppins", serif;
+  font-size: 18px;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+}
+
+.header-cliente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.title-cliente {
+  margin: 0px;
+  font-size: 25px;
+}
+
+.already-registered {
+  height: auto;
+  margin: 0 15px;
+  color: #fd1f4a;
+  font-weight: bold;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #fd1f4a;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.already-registered:hover {
+  background-color: #fd1f4a;
+  color: #ffffff;
+}
+
+.form-container {
+  margin-top: 100px;
+  width: 100%;
+}
+
+.sub-text {
+  margin: 40px 0px 20px 0px;
+  font-size: 16px;
+}
+
 .addClient-btn-add{
   padding: 10px 0;
   display: flex;
