@@ -214,6 +214,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         </div>
       </div>
 
+      {/* TODO: Modificar o modal para utilizar o [React Dialog component - Material UI](https://mui.com/material-ui/react-dialog/) */}
       {selectedTipo && (
         <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
           <h3>Adicionar produto para {selectedTipo}</h3>
