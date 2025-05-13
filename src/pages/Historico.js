@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import OrderCard from "../components/OrderCard";
-//import "./../styles/Historico.css";
+import { Box, TextField } from "@mui/material";
+import "./../styles/Historico.css";
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
@@ -23,8 +24,8 @@ const Historico = () => {
         if (orderId) params.append("id", orderId);
         if (orderDate) params.append("orderDate", orderDate);
         if (orderStatus) params.append("status", orderStatus);
-        if (minValue) params.append("minValue", minValue);
-        if (maxValue) params.append("maxValue", maxValue);
+        // if (minValue) params.append("minValue", minValue);
+        // if (maxValue) params.append("maxValue", maxValue);
 
         const response = await fetch(`http://localhost:8800/pedidos?${params.toString()}`);
         if (!response.ok) {
@@ -45,80 +46,141 @@ const Historico = () => {
 
   return (
     <div className="historico-container">
-      <h2>Histórico e Pesquisa de Pedidos</h2>
+      <h2 className="title">Histórico e Pesquisa de Pedidos</h2>
       <div className="filters">
-        <div className="filter-group">
-          <label htmlFor="customerName">Nome do Cliente:</label>
-          <input
-            type="text"
-            id="customerName"
+        <Box className="filters" display="flex" flexWrap="wrap" gap={2} mb={3}>
+          <TextField
+            label="Nome do Cliente"
+            variant="outlined"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
             placeholder="Digite o nome do cliente"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "25ch",
+            }}
           />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="phone">Telefone:</label>
-          <input
-            type="text"
-            id="phone"
+
+          <TextField
+            label="Telefone"
+            variant="outlined"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Digite o telefone"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "20ch",
+            }}
           />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="orderId">Código do Pedido (ID):</label>
-          <input
-            type="text"
-            id="orderId"
+
+          <TextField
+            label="Código do Pedido (ID)"
+            variant="outlined"
             value={orderId}
             onChange={(e) => setOrderId(e.target.value)}
             placeholder="Digite o código do pedido"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "20ch",
+            }}
           />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="orderDate">Data do Pedido:</label>
-          <input
+
+          <TextField
+            label="Data do Pedido"
+            variant="outlined"
             type="date"
-            id="orderDate"
+            InputLabelProps={{ shrink: true }}
             value={orderDate}
             onChange={(e) => setOrderDate(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "20ch",
+            }}
           />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="orderStatus">Estado do Pedido:</label>
-          <select
-            id="orderStatus"
+
+          <TextField
+            label="Status do Pedido"
+            variant="outlined"
+            select
             value={orderStatus}
             onChange={(e) => setOrderStatus(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "22ch",
+            }}
           >
             <option value="">Todos</option>
-            <option value="Em andamento">Em andamento</option>
-            <option value="Concluído">Concluído</option>
-            <option value="Cancelado">Cancelado</option>
-          </select>
-        </div>
-        <div className="filter-group">
-          <label htmlFor="minValue">Valor Mínimo:</label>
-          <input
+            <option value="0">Em andamento</option>
+            <option value="1">Concluído</option>
+            <option value="2">Cancelado</option>
+          </TextField>
+
+          <TextField
+            label="Valor Mínimo"
+            variant="outlined"
             type="number"
-            id="minValue"
             value={minValue}
             onChange={(e) => setMinValue(e.target.value)}
-            placeholder="Valor mínimo"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "15ch",
+            }}
           />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="maxValue">Valor Máximo:</label>
-          <input
+
+          <TextField
+            label="Valor Máximo"
+            variant="outlined"
             type="number"
-            id="maxValue"
             value={maxValue}
             onChange={(e) => setMaxValue(e.target.value)}
-            placeholder="Valor máximo"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "15ch",
+            }}
           />
-        </div>
+        </Box>
       </div>
 
       {loading ? (
