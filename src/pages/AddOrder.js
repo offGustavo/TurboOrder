@@ -335,6 +335,35 @@ const AddOrder = () => {
               />
             </Box>
           ))}
+
+          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+            <ComboBox
+              options={options.filter((opt) => opt.pro_tipo === "Salada")}
+              tipoSelecionado="Salada"
+              onChange={(produto) => handleProductChange("Salada", produto)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+              }}
+            />
+          </Box>
+
+          <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+            <ComboBox
+              options={options.filter((opt) => opt.pro_tipo === "Acompanhamento")}
+              tipoSelecionado="Acompanhamento"
+              onChange={(produto) => handleProductChange("Acompanhamento", produto)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                },
+              }}
+            />
+          </Box>
+
           <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
             <ComboBox
               options={options.filter((opt) => opt.pro_tipo === "Carne")}
@@ -348,6 +377,7 @@ const AddOrder = () => {
               }}
             />
           </Box>
+
           {isTwoMeats && (
             <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
               <ComboBox
