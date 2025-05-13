@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FilterComponent from '../components/FilterComponent.js';
 import axios from 'axios';
+import FilterComponent from '../components/FilterComponent';
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 1.59rem;
@@ -80,25 +81,25 @@ const Dashboard = () => {
           axios.get('http://localhost:8800/pedidos'),
           axios.get('http://localhost:8800/produtos')
         ]);
-    
+
         const productsMap = productsResponse.data.reduce((acc, product) => {
           acc[product.pro_id] = product.pro_nome;
           return acc;
         }, {});
-    
+
         // Mapeando os pedidos e associando os nomes dos produtos
         const ordersData = ordersResponse.data;
         const mappedOrders = ordersData.map(order => {
           const productNames = [];
-          
+
           if (order.arroz_fk) productNames.push(productsMap[order.arroz_fk]);
           if (order.feijao_fk) productNames.push(productsMap[order.feijao_fk]);
           if (order.massa_fk) productNames.push(productsMap[order.massa_fk]);
           if (order.carne01_fk) productNames.push(productsMap[order.carne01_fk]);
           if (order.carne02_fk) productNames.push(productsMap[order.carne02_fk]);
-    
+
           const productsText = productNames.join(', ');
-    
+
           return {
             id: `#${order.ped_id}`,
             name: `${order.cli_nome} ${order.cli_sobrenome}`,
@@ -108,16 +109,16 @@ const Dashboard = () => {
             valor: order.ped_valor,
           };
         });
-    
+
         setOrders(mappedOrders);
-    
+
         // Calcular faturamento diário e mensal
         const today = new Date();
         let dailySum = 0;
         let dailyCount = 0;
         let monthlySum = 0;
         let monthlyCount = 0;
-    
+
         ordersData.forEach(order => {
           const orderDate = new Date(order.ped_data);
           if (
@@ -136,17 +137,17 @@ const Dashboard = () => {
             monthlyCount++;
           }
         });
-    
+
         setDailyRevenue(dailySum);
         setMonthlyRevenue(monthlySum);
         setDailyAverage(dailyCount > 0 ? dailySum / dailyCount : 0);
         setMonthlyAverage(monthlyCount > 0 ? monthlySum / monthlyCount : 0);
-    
+
       } catch (error) {
         console.error("Erro ao buscar pedidos e produtos:", error);
       }
     };
-  
+
     fetchOrdersAndProducts();
   }, []);
 
