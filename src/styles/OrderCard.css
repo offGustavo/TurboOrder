@@ -1,51 +1,98 @@
+
+
 .order-card {
-    background: white;
-    min-width: 150px;
-    /* max-width: 500px; */
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.269);
-    font-size: 14px;
+  background-color: white;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0;
+  transition: transform 0.2s;
 }
 
-.order-card p {
-  margin: 5px 0;
+.order-card:hover {
+  transform: translateY(-2px);
 }
 
-.edit-btn {
-    background-color: #2D2C2E;
-    color: white;
-    padding: 5px 15px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-}
-
-hr {
-  margin: 15px 0px;
-  border: 1px solid #E6E6E6;
-}
-
-.idCard {
-  color: #B5B5B5;
-}
-
-.idCard strong {
-  color: #000000;
-}
-
-.infoOrder {
+.order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.orderDetails {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 5px;
+.order-id {
+  font-weight: bold;
+  color: #555;
+  margin-right: 10px;
 }
 
-@media (max-width: 959px) {
+.order-date {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.customer-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.order-details {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #999;
+  align-self: flex-start;
+}
+
+.status-tag.em-andamento {
+  background-color: #f0ad4e;
+}
+
+.status-tag.concluído {
+  background-color: #5cb85c;
+}
+
+.status-tag.cancelado {
+  background-color: #d9534f;
+}
+
+.edit-btn {
+  width: 20%;
+  background-color: #2D2C2E;
+  border-radius: 15px;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+hr {
+  margin: 15px 0;
+  border: 1px solid #E6E6E6;
+}
+
+@media (max-width: 768px) {
+  .order-card {
+    width: 100%;
+    max-width: 100%;
+  }
 }

@@ -5,12 +5,9 @@ import "./../styles/Historico.css";
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [orderId, setOrderId] = useState("");
   const [orderDate, setOrderDate] = useState("");
   const [orderStatus, setOrderStatus] = useState("");
   const [minValue, setMinValue] = useState("");
-  const [maxValue, setMaxValue] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -20,12 +17,9 @@ const Historico = () => {
       try {
         const params = new URLSearchParams();
         if (customerName) params.append("customerName", customerName);
-        if (phone) params.append("phone", phone);
-        if (orderId) params.append("id", orderId);
         if (orderDate) params.append("orderDate", orderDate);
         if (orderStatus) params.append("status", orderStatus);
-        // if (minValue) params.append("minValue", minValue);
-        // if (maxValue) params.append("maxValue", maxValue);
+        if (minValue) params.append("minValue", minValue);
 
         const response = await fetch(`http://localhost:8800/pedidos?${params.toString()}`);
         if (!response.ok) {
@@ -42,7 +36,7 @@ const Historico = () => {
     };
 
     fetchOrders();
-  }, [customerName, phone, orderId, orderDate, orderStatus, minValue, maxValue]);
+  }, [customerName, orderDate, orderStatus, minValue]);
 
   return (
     <div className="historico-container">
@@ -64,42 +58,6 @@ const Historico = () => {
                 color: "black",
               },
               width: "25ch",
-            }}
-          />
-
-          <TextField
-            label="Telefone"
-            variant="outlined"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Digite o telefone"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-              "& .MuiInputBase-input": {
-                color: "black",
-              },
-              width: "20ch",
-            }}
-          />
-
-          <TextField
-            label="Código do Pedido (ID)"
-            variant="outlined"
-            value={orderId}
-            onChange={(e) => setOrderId(e.target.value)}
-            placeholder="Digite o código do pedido"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-              "& .MuiInputBase-input": {
-                color: "black",
-              },
-              width: "20ch",
             }}
           />
 
@@ -146,7 +104,7 @@ const Historico = () => {
           </TextField>
 
           <TextField
-            label="Valor Mínimo"
+            label="Valor"
             variant="outlined"
             type="number"
             value={minValue}
@@ -163,23 +121,6 @@ const Historico = () => {
             }}
           />
 
-          <TextField
-            label="Valor Máximo"
-            variant="outlined"
-            type="number"
-            value={maxValue}
-            onChange={(e) => setMaxValue(e.target.value)}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-              "& .MuiInputBase-input": {
-                color: "black",
-              },
-              width: "15ch",
-            }}
-          />
         </Box>
       </div>
 
