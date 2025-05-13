@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./../styles/ProductTable.css";
+import FilterComponent from "../components/FilterComponent";
 
 
 const FormContainer = styled.div`
@@ -107,7 +108,6 @@ const ProductTable = () => {
     ? products
     : products.filter((product) => product.pro_tipo === filter);
 
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="product-table">
@@ -153,27 +153,13 @@ const ProductTable = () => {
           </FormContainer>
         </Box>
 
-        {/* TODO: Create componente for filter */}
-        <div className="filter-section">
-          {/* Botão Hambúrguer */}
-          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-            <FaBars size={24} />
-          </button>
-          {/* Menu de filtros */}
-          <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
-            <span className="filter-label">Filtro</span>
-            {["Tudo", ...productTypes.map((type) => type.value)].map((type) => (
-              <button
-                key={type}
-                className={`filter-btn ${filter === type ? "active" : ""}`}
-                onClick={() => setFilter(type)}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div >
+        <FilterComponent
+          filterState={filter}
+          setFilter={setFilter}
+          filterItens={productTypes}
+          menuOpen={false}
+        />
+      </div>
 
       <table>
         <thead>
