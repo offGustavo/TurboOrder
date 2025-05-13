@@ -11,10 +11,6 @@ import ProgressBar from "../components/ProgressBar.js";
 import ClientInfo from "../components/ClientInfo.js";
 import axios from "axios";
 
-function printPedido() {
-  console.log("Pedido");
-}
-
 const TitlePedido = styled.h1`
   margin: 0px;
   font-size: 25px;
