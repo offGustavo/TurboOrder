@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FilterComponent from '../components/FilterComponent.js';
 import axios from 'axios';
-import FilterComponent from '../components/FilterComponent';
+// import FilterComponent from '../components/FilterComponent';
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 1.59rem;
