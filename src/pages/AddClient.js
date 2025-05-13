@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import ClientInfo from "../components/ClientInfo";
 import Address from "../components/Address";
 import ProgressBar from "../components/ProgressBar";
+import PopupModal  from "../components/PopupModal";
+
 
 import "../styles/Global.css";
 import "../styles/AddClient.css";
@@ -26,6 +28,9 @@ const AddClient = () => {
       rua: ""
     }
   });
+  
+  const [showModal, setShowModal] = useState(false);
+  const [actionType, setActionType] = useState("confirmarCadastro");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +54,7 @@ const AddClient = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (
       !formData.cli_nome ||
       !formData.cli_sobrenome ||
@@ -64,6 +69,11 @@ const AddClient = () => {
       return;
     }
 
+    setActionType("confirmarCadastro");
+    setShowModal(true);
+  };
+
+  const handleConfirm = async () => {
     const telefone = formData.con_telefone.replace(/[^\d]/g, "");
 
     const dataToSend = {
@@ -130,6 +140,12 @@ const AddClient = () => {
 
       toast.error(mensagemErro);
     }
+
+    setShowModal(false);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -163,6 +179,13 @@ const AddClient = () => {
           </div>
         </form>
       </div>
+
+      <PopupModal
+        showModal={showModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirm}
+        actionType={actionType}
+      />
     </div>
   );
 };

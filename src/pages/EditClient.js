@@ -3,6 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClientInfo from "../components/ClientInfo";
 import Address from "../components/Address";
+import PopupModal from "../components/PopupModal";
+import { toast, ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 import "../styles/EditClient.css";
 
 const EditClient = () => {
@@ -21,6 +25,9 @@ const EditClient = () => {
     cli_complemento: ""
   });
 
+  const [showModal, setShowModal] = useState(false);
+  const [actionType, setActionType] = useState("confirmarAtualizacao");
+
   useEffect(() => {
     const fetchClient = async () => {
       try {
@@ -31,47 +38,24 @@ const EditClient = () => {
             cli_nome: client.cli_nome || "",
             cli_sobrenome: client.cli_sobrenome || "",
             con_telefone: client.con_telefone || "",
-            cli_cep: client.end_cep || "",
-            cli_cidade: client.end_cidade || "",
-            cli_bairro: client.end_bairro || "",
-            cli_rua: client.end_rua || "",
+            cli_cep: client.cli_cep || "",
+            cli_cidade: client.cli_cidade || "",
+            cli_bairro: client.cli_bairro || "",
+            cli_rua: client.cli_rua || "",
             cli_numero: client.cli_numero || "",
             cli_complemento: client.cli_complemento || ""
           });
         } else {
-          alert("Cliente não encontrado.");
+          toast.error("Cliente não encontrado.");
         }
       } catch (error) {
         console.error("Erro ao buscar cliente:", error);
-        alert("Erro ao buscar dados do cliente.");
+        toast.error("Erro ao buscar dados do cliente.");
       }
     };
 
     fetchClient();
   }, [id]);
-
-  useEffect(() => {
-    const fetchAddressByCep = async () => {
-      const cep = formData.cli_cep.replace(/\D/g, "");
-      if (cep.length === 8) {
-        try {
-          const res = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-          if (!res.data.erro) {
-            setFormData(prev => ({
-              ...prev,
-              cli_cidade: res.data.localidade,
-              cli_bairro: res.data.bairro,
-              cli_rua: res.data.logradouro
-            }));
-          }
-        } catch (error) {
-          console.error("Erro ao buscar endereço via CEP:", error);
-        }
-      }
-    };
-
-    fetchAddressByCep();
-  }, [formData.cli_cep]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,9 +65,13 @@ const EditClient = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleModalOpen = (e) => {
     e.preventDefault();
+    setActionType("confirmarAtualizacao");
+    setShowModal(true);
+  };
 
+  const handleSubmit = async () => {
     const payload = {
       cli_nome: formData.cli_nome,
       cli_sobrenome: formData.cli_sobrenome,
@@ -98,12 +86,21 @@ const EditClient = () => {
 
     try {
       await axios.put(`http://localhost:8800/clientes/${id}`, payload);
-      alert("Cliente atualizado com sucesso!");
+      toast.success("Cliente atualizado com sucesso!");
       navigate("/clientes");
     } catch (error) {
       console.error("Erro ao atualizar cliente:", error);
-      alert("Erro ao atualizar cliente.");
+      toast.error("Erro ao atualizar cliente."); 
     }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const handleConfirm = () => {
+    handleSubmit();
+    setShowModal(false);
   };
 
   return (
@@ -117,8 +114,23 @@ const EditClient = () => {
         <div className="section-margin">
           <Address formData={formData} handleChange={handleChange} />
         </div>
-        <button className="btn-add" type="submit">Atualizar Cliente</button>
+        <button
+          className="btn-add"
+          type="button"
+          onClick={handleModalOpen} 
+        >
+          Atualizar Cliente
+        </button>
       </form>
+
+      <PopupModal
+        showModal={showModal}
+        onClose={handleModalClose}
+        onConfirm={handleConfirm}
+        actionType={actionType}
+      />
+
+      <ToastContainer />
     </div>
   );
 };

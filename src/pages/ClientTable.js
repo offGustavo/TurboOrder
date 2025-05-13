@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
-import "./../styles/ClientTable.css";
+import PopupModal from "../components/PopupModal";
+import { toast, ToastContainer } from 'react-toastify';
 
+import 'react-toastify/dist/ReactToastify.css';
+import "./../styles/ClientTable.css";
 
 const ClientTable = () => {
   const [clientes, setClientes] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [actionType, setActionType] = useState("confirmarExclusao");
   const location = useLocation();
 
   useEffect(() => {
@@ -23,18 +29,25 @@ const ClientTable = () => {
   }, [location]);
 
   const handleDelete = async (clientId) => {
+    setSelectedClient(clientId);
+    setActionType("confirmarExclusao");
+    setShowModal(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8800/clientes/${clientId}`);
+      const response = await axios.delete(`http://localhost:8800/clientes/${selectedClient}`);
       if (response.status === 200) {
-        alert("Cliente excluído com sucesso!");
-        setClientes(clientes.filter(cliente => cliente.cli_id !== clientId));
+        toast.success("Cliente excluído com sucesso!");
+        setClientes(clientes.filter(cliente => cliente.cli_id !== selectedClient));
       } else {
-        alert("Erro ao excluir cliente.");
+        toast.error("Erro ao excluir cliente.");
       }
     } catch (error) {
       console.error("Erro ao excluir cliente:", error);
-      alert("Erro ao excluir cliente.");
+      toast.error("Erro ao excluir cliente.");
     }
+    setShowModal(false);
   };
 
   const formatPhone = (phone) => {
@@ -45,6 +58,10 @@ const ClientTable = () => {
       return `(${match[1]}) ${match[2]}-${match[3]}`;
     }
     return phone;
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
   };
 
   return (
@@ -63,7 +80,7 @@ const ClientTable = () => {
         <thead>
           <tr>
             <th>Código</th>
-            <th>Nome do Cliente</th>
+            <th>Cliente</th>
             <th>Sobrenome</th>
             <th>Telefone</th>
             <th>Endereço</th>
@@ -88,14 +105,26 @@ const ClientTable = () => {
                     <FaEdit />
                   </button>
                 </NavLink>
-                <button className="delete-btn">
-                  <FaTrash onClick={() => handleDelete(cliente.cli_id)} />
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDelete(cliente.cli_id)}
+                >
+                  <FaTrash />
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <PopupModal
+        showModal={showModal}
+        onClose={handleModalClose}
+        onConfirm={confirmDelete}
+        actionType={actionType}
+      />
+
+      <ToastContainer />
     </div>
   );
 };
