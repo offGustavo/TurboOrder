@@ -14,6 +14,7 @@ import Calendar from "./pages/Calendar.js";
 import AddOrder from "./pages/AddOrder.js";
 import ClientTable from "./pages/ClientTable.js";
 import EditClient from "./pages/EditClient.js";
+import Historico from "./pages/Historico.js";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -35,6 +36,7 @@ function App() {
               <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
               <Route path="/clientes" element={<ClientTable />} />
               <Route path="/clientes/:id/edit" element={<EditClient />} />
+              <Route path="/historico" element={<Historico />} />
             </Routes>
           </div>
         </main>
