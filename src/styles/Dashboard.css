@@ -135,13 +135,35 @@
 
 .order-cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
   width: 100%;
 }
 
+@media (max-width: 959px) {
+ 
+  .order-cards {
+    grid-template-columns: 2fr;
+  }
+
+.revenue-section {
+  width: 100%;
+    display: grid;
+    grid-template-columns: 2fr;
+}
+
+}
+ 
+
+@media (max-width: 768px)
+{
+
+}
+
 @media (max-width: 600px) {
+
   .order-cards {
     grid-template-columns: 1fr;
   }
+
 }
