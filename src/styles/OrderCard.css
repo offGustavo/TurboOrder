@@ -1,3 +1,20 @@
+
+
+:root {
+  --bg-white: #ffffff;
+  --bg-white-alt: #f5f5f5;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+  --bg-grey: #e6e6e6;
+  --fg-red: #f44336;
+  --bg-red: #f44336;
+  --bg-red-alt: #ab180e;
+  --btn-border-radius: 20px;
+  --btn-border-size: 1px;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
 .order-card {
   background-color: white;
   min-width: 300px;
@@ -81,6 +98,12 @@
   align-items: center;
   gap: 5px;
   cursor: pointer;
+}
+
+.order-day-order{
+  margin: 0 10px;
+  border-radius: 50%;
+  background-color: 
 }
 
 hr {
