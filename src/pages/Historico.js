@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import OrderCard from "../components/OrderCard";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, MenuItem } from "@mui/material";
 import "./../styles/Historico.css";
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
   const [orderDate, setOrderDate] = useState("");
   const [orderStatus, setOrderStatus] = useState("");
-  const [minValue, setMinValue] = useState("");
+  const [valor, setValor] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,7 @@ const Historico = () => {
         if (customerName) params.append("customerName", customerName);
         if (orderDate) params.append("orderDate", orderDate);
         if (orderStatus) params.append("status", orderStatus);
-        if (minValue) params.append("minValue", minValue);
+        if (valor) params.append("valor", valor);
 
         const response = await fetch(`http://localhost:8800/pedidos?${params.toString()}`);
         if (!response.ok) {
@@ -36,7 +36,7 @@ const Historico = () => {
     };
 
     fetchOrders();
-  }, [customerName, orderDate, orderStatus, minValue]);
+  }, [customerName, orderDate, orderStatus, valor]);
 
   return (
     <div className="historico-container">
@@ -97,18 +97,18 @@ const Historico = () => {
               width: "22ch",
             }}
           >
-            <option value="">Todos</option>
-            <option value="0">Em andamento</option>
-            <option value="1">Concluído</option>
-            <option value="2">Cancelado</option>
+            <MenuItem value="">Todos</MenuItem>
+            <MenuItem value="0">Em andamento</MenuItem>
+            <MenuItem value="1">Concluído</MenuItem>
+            <MenuItem value="2">Cancelado</MenuItem>
           </TextField>
 
           <TextField
             label="Valor"
             variant="outlined"
             type="number"
-            value={minValue}
-            onChange={(e) => setMinValue(e.target.value)}
+            value={valor}
+            onChange={(e) => setValor(e.target.value)}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -120,7 +120,6 @@ const Historico = () => {
               width: "15ch",
             }}
           />
-
         </Box>
       </div>
 
