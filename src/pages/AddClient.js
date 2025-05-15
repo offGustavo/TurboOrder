@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,7 +8,6 @@ import ClientInfo from "../components/ClientInfo";
 import Address from "../components/Address";
 import ProgressBar from "../components/ProgressBar";
 import PopupModal  from "../components/PopupModal";
-
 
 import "../styles/Global.css";
 import "../styles/AddClient.css";
@@ -19,14 +18,12 @@ const AddClient = () => {
     cli_nome: "",
     cli_sobrenome: "",
     con_telefone: "",
+    cli_cep: "",
+    cli_cidade: "",
+    cli_bairro: "",
+    cli_rua: "",
     cli_numero: "",
-    cli_complemento: "",
-    cli_endereco: {
-      cep: "",
-      cidade: "",
-      bairro: "",
-      rua: ""
-    }
+    cli_complemento: ""
   });
   
   const [showModal, setShowModal] = useState(false);
@@ -34,36 +31,24 @@ const AddClient = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name.startsWith("cli_endereco.")) {
-      const enderecoKey = name.split(".")[1];
-      setFormData((prevData) => ({
-        ...prevData,
-        cli_endereco: {
-          ...prevData.cli_endereco,
-          [enderecoKey]: value
-        }
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (
-      !formData.cli_nome ||
-      !formData.cli_sobrenome ||
-      !formData.con_telefone ||
-      !formData.cli_numero ||
-      !formData.cli_endereco.cep ||
-      !formData.cli_endereco.cidade ||
-      !formData.cli_endereco.bairro ||
-      !formData.cli_endereco.rua
+      !formData.cli_nome.trim() ||
+      !formData.cli_sobrenome.trim() ||
+      !formData.con_telefone.trim() ||
+      !formData.cli_numero.trim() ||
+      !formData.cli_cep.trim() ||
+      !formData.cli_cidade.trim() ||
+      !formData.cli_bairro.trim() ||
+      !formData.cli_rua.trim()
     ) {
       toast.warn("Preencha todos os campos obrigatórios, exceto complemento.");
       return;
@@ -84,10 +69,10 @@ const AddClient = () => {
         cli_complemento: formData.cli_complemento,
       },
       address: {
-        end_cep: formData.cli_endereco.cep,
-        end_cidade: formData.cli_endereco.cidade,
-        end_bairro: formData.cli_endereco.bairro,
-        end_rua: formData.cli_endereco.rua,
+        end_cep: formData.cli_cep,
+        end_cidade: formData.cli_cidade,
+        end_bairro: formData.cli_bairro,
+        end_rua: formData.cli_rua,
       },
       con_telefone: telefone,
     };
@@ -115,15 +100,14 @@ const AddClient = () => {
           cli_nome: "",
           cli_sobrenome: "",
           con_telefone: "",
+          cli_cep: "",
+          cli_cidade: "",
+          cli_bairro: "",
+          cli_rua: "",
           cli_numero: "",
-          cli_complemento: "",
-          cli_endereco: {
-            cep: "",
-            cidade: "",
-            bairro: "",
-            rua: ""
-          }
+          cli_complemento: ""
         });
+        setShowModal(false);
         navigate("/cadastro-de-cliente/pedidos");
       } else {
         console.warn("Resposta inesperada:", response);
@@ -140,8 +124,6 @@ const AddClient = () => {
 
       toast.error(mensagemErro);
     }
-
-    setShowModal(false);
   };
 
   const handleCloseModal = () => {
@@ -153,9 +135,9 @@ const AddClient = () => {
       <div className="header-cliente">
         <h1 className="title-cliente">Cadastro de Cliente</h1>
         <div className="actions-cliente">
-          <NavLink to="/cadastro-de-cliente/pedidos">
-            <button className="already-registered">Cliente já cadastrado</button>
-          </NavLink>
+          <button className="already-registered" onClick={() => navigate("/cadastro-de-cliente/pedidos")}>
+            Cliente já cadastrado
+          </button>
         </div>
       </div>
       <ProgressBar />
@@ -168,13 +150,9 @@ const AddClient = () => {
             <h2 className="sub-text">Endereço</h2>
             <Address formData={formData} handleChange={handleChange} />
             <div className="addClient-btn-add">
-              <NavLink
-                to="/cadastro-de-cliente/pedidos"
-                className="btn-add"
-                onClick={handleSubmit}
-              >
+              <button type="submit" className="btn-add">
                 Cadastrar
-              </NavLink>
+              </button>
             </div>
           </div>
         </form>
