@@ -52,6 +52,7 @@ const AddOrder = () => {
   const [loadingClient, setLoadingClient] = useState(false);
   const [clientError, setClientError] = useState(null);
   const [phoneOptions, setPhoneOptions] = useState([]);
+  const [observacao, setObservacao] = useState("");
 
   // State to hold selected products by category
   const [selectedProducts, setSelectedProducts] = useState({
@@ -203,6 +204,7 @@ const AddOrder = () => {
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
       ped_tipoPagamento: "Dinheiro",
+      ped_observacao: observacao,
       ped_desativado: 0
       // ped_ordem_dia será calculado no backend
     };
@@ -390,6 +392,35 @@ const AddOrder = () => {
             </Box>
           )}
         </div>
+      </section>
+
+      <hr />
+      <section>
+        <SubText>
+          Observações
+        </SubText>
+
+        <div style={{ display: "flex", gap: "20px" }}>
+          <TextField
+            id="ped_observacao"
+            label="Observações"
+            placeholder="Exemplo: Tirar Cebola, Molho à parte..."
+            multiline
+            value={observacao}
+            onChange={(e) => setObservacao(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "100%",
+            }}
+          />
+        </div>
+
       </section>
     </main>
   );
