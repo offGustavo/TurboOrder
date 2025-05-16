@@ -74,7 +74,6 @@ const Dashboard = () => {
   const [dailyAverage, setDailyAverage] = useState(0);
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
-  // NOTE: Precisamos dos produtos aqui?
   useEffect(() => {
     const fetchOrdersAndProducts = async () => {
       try {
