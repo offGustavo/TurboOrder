@@ -2,14 +2,14 @@ import React from 'react';
 import { FaPen } from "react-icons/fa";
 import '../styles/OrderCard.css';
 
-const OrderCard = ({ id, name, details, status, data, day_order }) => {
+const OrderCard = ({ id, name, details, status, data, ordem_dia }) => {
   const statusMap = {
     0: "Em andamento",
     1: "Concluído",
     2: "Cancelado"
   };
 
-  // let day_order = 11;
+  // let ordem_dia = 11;
 
   const statusText = typeof status === 'string' ? status : statusMap[status] || "Desconhecido";
   const statusClass = statusText.toLowerCase().replace(' ', '-');
@@ -25,7 +25,7 @@ const OrderCard = ({ id, name, details, status, data, day_order }) => {
         <div className='order-date-day'>
           <span className="order-date">{data}</span>
           {/* TODO: Criar o indicador de ordem para o dia */}
-          <div className='order-day-order'><span>{day_order}</span></div>
+          <div className='order-day-order'><span>{ordem_dia}</span></div>
         </div>
       </div>
       <p className="customer-name">{name}</p>
