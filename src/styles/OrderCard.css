@@ -12,6 +12,12 @@
   --btn-border-radius: 20px;
   --btn-border-size: 1px;
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --status-color-em-andamento: #f0ad4e;
+  --status-color-concluido: #5cb85c;
+  --status-color-cancelado: #d9534f;
+  --status-color-em-andamento-alt: #e7a241;
+  --status-color-concluido-alt: #43a443;
+  --status-color-cancelado-alt: #b24c49;
 }
 
 .order-card {
@@ -72,18 +78,32 @@
   color: #fff;
   background-color: #999;
   align-self: flex-start;
+  border: none;
+  outine: none;
 }
 
 .status-tag.em-andamento {
-  background-color: #f0ad4e;
+  background-color: var(--status-color-em-andamento);
+}
+
+.status-tag.em-andamento:hover {
+  background-color: var(--status-color-em-andamento-alt);
 }
 
 .status-tag.concluído {
-  background-color: #5cb85c;
+  background-color: var(--status-color-concluido);
+}
+
+.status-tag.concluído:hover {
+  background-color: var(--status-color-concluido-alt);
 }
 
 .status-tag.cancelado {
-  background-color: #d9534f;
+  background-color: var(--status-color-cancelado);
+}
+
+.status-tag.cancelado:hover {
+  background-color: var(--status-color-cancelado-alt);
 }
 
 .edit-btn {
