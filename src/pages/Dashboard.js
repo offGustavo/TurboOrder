@@ -74,6 +74,7 @@ const Dashboard = () => {
   const [dailyAverage, setDailyAverage] = useState(0);
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
+  // NOTE: Precisamos dos produtos aqui?
   useEffect(() => {
     const fetchOrdersAndProducts = async () => {
       try {
@@ -87,9 +88,20 @@ const Dashboard = () => {
           return acc;
         }, {});
 
-        // Mapeando os pedidos e associando os nomes dos produtos
+        const today = new Date();
+        const isSameDay = (date1, date2) =>
+          date1.getDate() === date2.getDate() &&
+          date1.getMonth() === date2.getMonth() &&
+          date1.getFullYear() === date2.getFullYear();
+
         const ordersData = ordersResponse.data;
-        const mappedOrders = ordersData.map(order => {
+
+        const filteredOrdersData = ordersData.filter(order => {
+          const orderDate = new Date(order.ped_data);
+          return isSameDay(orderDate, today) && order.ped_status === 1; // status 1 = Em andamento
+        });
+
+        const mappedOrders = filteredOrdersData.map(order => {
           const productNames = [];
 
           if (order.arroz_fk) productNames.push(productsMap[order.arroz_fk]);
@@ -107,44 +119,25 @@ const Dashboard = () => {
             status: mapStatus(order.ped_status),
             data: new Date(order.ped_data).toLocaleDateString('pt-BR'),
             valor: order.ped_valor,
+            day_order: order.ped_ordem_dia
           };
         });
 
         setOrders(mappedOrders);
 
-        // Calcular faturamento diário e mensal
-        const today = new Date();
-        let dailySum = 0;
-        let dailyCount = 0;
-        let monthlySum = 0;
-        let monthlyCount = 0;
-
-        ordersData.forEach(order => {
-          const orderDate = new Date(order.ped_data);
-          if (
-            orderDate.getDate() === today.getDate() &&
-            orderDate.getMonth() === today.getMonth() &&
-            orderDate.getFullYear() === today.getFullYear()
-          ) {
-            dailySum += parseFloat(order.ped_valor);
-            dailyCount++;
-          }
-          if (
-            orderDate.getMonth() === today.getMonth() &&
-            orderDate.getFullYear() === today.getFullYear()
-          ) {
-            monthlySum += parseFloat(order.ped_valor);
-            monthlyCount++;
-          }
-        });
-
+        // Calcular faturamento e média do dia com os pedidos filtrados
+        const dailySum = filteredOrdersData.reduce((sum, order) => sum + parseFloat(order.ped_valor), 0);
+        const dailyCount = filteredOrdersData.length;
         setDailyRevenue(dailySum);
-        setMonthlyRevenue(monthlySum);
         setDailyAverage(dailyCount > 0 ? dailySum / dailyCount : 0);
-        setMonthlyAverage(monthlyCount > 0 ? monthlySum / monthlyCount : 0);
+
+        // Como os pedidos do mês completo não são mais usados, zeramos
+        setMonthlyRevenue(0);
+        setMonthlyAverage(0);
 
       } catch (error) {
         console.error("Erro ao buscar pedidos e produtos:", error);
+        toast.error("Erro ao buscar dados do dashboard.");
       }
     };
 
