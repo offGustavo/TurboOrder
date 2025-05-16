@@ -1,66 +1,16 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import ClientInfo from "../components/ClientInfo";
 import Address from "../components/Address";
 import ProgressBar from "../components/ProgressBar";
+import PopupModal from "../components/PopupModal";
+
 import "../styles/Global.css";
 import "../styles/AddClient.css";
-
-const ContainerCliente = styled.div`
-  background-color: #ffffff;
-  color: #000000;
-  font-family: "poppins", serif;
-  font-size: 18px;
-  width: 100%;
-  height: 100%;
-  padding: 0px;
-`;
-
-const HeaderCliente = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-`;
-
-const ActionsCliente = styled.div``;
-
-const TitleCliente = styled.h1`
-  margin: 0px;
-  font-size: 25px;
-`;
-
-const AlreadyRegistered = styled.button`
-  height: auto;
-  margin: 0 15px;
-  color: #fd1f4a;
-  font-weight: bold;
-  padding: 10px;
-  background-color: #ffffff;
-  border: 1px solid #fd1f4a;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: #fd1f4a;
-    color: #ffffff;
-  }
-`;
-
-const FormConteiner = styled.div`
-  margin-top: 100px;
-  width: 100%;
-`;
-
-const SubText = styled.h2`
-  margin: 40px 0px 20px 0px;
-  font-size: 16px;
-`;
-
-const Form = styled.div``;
 
 const AddClient = () => {
   const navigate = useNavigate();
@@ -69,12 +19,15 @@ const AddClient = () => {
     cli_sobrenome: "",
     con_telefone: "",
     cli_cep: "",
-    cli_rua: "",
-    cli_bairro: "",
     cli_cidade: "",
+    cli_bairro: "",
+    cli_rua: "",
     cli_numero: "",
     cli_complemento: ""
   });
+
+  const [showModal, setShowModal] = useState(false);
+  const [actionType, setActionType] = useState("confirmarCadastro");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,23 +37,28 @@ const AddClient = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (
-      !formData.cli_nome ||
-      !formData.cli_sobrenome ||
-      !formData.con_telefone ||
-      !formData.cli_numero ||
-      !formData.cli_cep ||
-      !formData.cli_cidade ||
-      !formData.cli_bairro ||
-      !formData.cli_rua
+      !formData.cli_nome.trim() ||
+      !formData.cli_sobrenome.trim() ||
+      !formData.con_telefone.trim() ||
+      !formData.cli_numero.trim() ||
+      !formData.cli_cep.trim() ||
+      !formData.cli_cidade.trim() ||
+      !formData.cli_bairro.trim() ||
+      !formData.cli_rua.trim()
     ) {
-      alert("Por favor, preencha todos os campos obrigatórios, exceto complemento.");
+      toast.warn("Preencha todos os campos obrigatórios, exceto complemento.");
       return;
     }
 
+    setActionType("confirmarCadastro");
+    setShowModal(true);
+  };
+
+  const handleConfirm = async () => {
     const telefone = formData.con_telefone.replace(/[^\d]/g, "");
 
     const dataToSend = {
@@ -119,28 +77,41 @@ const AddClient = () => {
       con_telefone: telefone,
     };
 
-    console.log("Dados enviados:", dataToSend);
+    try {
+      const checkResponse = await axios.get(`http://localhost:8800/clientes/telefone/${telefone}`);
+      if (checkResponse.data) {
+        toast.error("Este cliente já está cadastrado com este número de telefone.");
+        return;
+      }
+    } catch (error) {
+      if (error.response && error.response.status !== 404) {
+        console.error("Erro ao verificar cliente existente:", error);
+        toast.error("Erro ao verificar se o cliente já está cadastrado.");
+        return;
+      }
+    }
 
     try {
       const response = await axios.post("http://localhost:8800/clientes", dataToSend);
 
       if (response.status === 200 || response.status === 201) {
-        alert("Cliente cadastrado com sucesso!");
+        toast.success("Cliente cadastrado com sucesso!");
         setFormData({
           cli_nome: "",
           cli_sobrenome: "",
           con_telefone: "",
           cli_cep: "",
-          cli_rua: "",
-          cli_bairro: "",
           cli_cidade: "",
+          cli_bairro: "",
+          cli_rua: "",
           cli_numero: "",
-          cli_complemento: "",
+          cli_complemento: ""
         });
+        setShowModal(false);
         navigate("/cadastro-de-cliente/pedidos");
       } else {
         console.warn("Resposta inesperada:", response);
-        alert("Erro inesperado ao cadastrar o cliente.");
+        toast.error("Erro inesperado ao cadastrar o cliente.");
       }
     } catch (error) {
       console.error("Erro ao cadastrar cliente:", error);
@@ -151,44 +122,49 @@ const AddClient = () => {
         error?.message ||
         "Erro ao cadastrar o cliente.";
 
-      alert(mensagemErro);
+      toast.error(mensagemErro);
     }
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <ContainerCliente>
-      <HeaderCliente>
-        <TitleCliente>Cadastro de Cliente</TitleCliente>
-        <ActionsCliente>
-          <NavLink to="/cadastro-de-cliente/pedidos">
-            <AlreadyRegistered>Cliente já cadastrado</AlreadyRegistered>
-          </NavLink>
-        </ActionsCliente>
-      </HeaderCliente>
+    <div className="container-cliente">
+      <div className="header-cliente">
+        <h1 className="title-cliente">Cadastro de Cliente</h1>
+        <div className="actions-cliente">
+          <button className="already-registered" onClick={() => navigate("/cadastro-de-cliente/pedidos")}>
+            Cliente já cadastrado
+          </button>
+        </div>
+      </div>
       <ProgressBar />
-      <FormConteiner>
+      <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <Form>
-            <SubText>Cliente</SubText>
-            <ClientInfo
-              formData={formData}
-              handleChange={handleChange}
-            />
+          <div>
+            <h2 className="sub-text">Cliente</h2>
+            <ClientInfo formData={formData} handleChange={handleChange} />
             <hr />
-            <SubText>Endereço</SubText>
-            <Address
-              formData={formData}
-              handleChange={handleChange}
-            />
+            <h2 className="sub-text">Endereço</h2>
+            <Address formData={formData} handleChange={handleChange} />
             <div className="addClient-btn-add">
-              <NavLink to="/cadastro-de-cliente/pedidos" className={"btn-add"} onClick={handleSubmit}>
+              <button type="submit" className="btn-add">
                 Cadastrar
-              </NavLink>
+              </button>
             </div>
-          </Form>
+          </div>
         </form>
-      </FormConteiner>
-    </ContainerCliente>
+      </div>
+
+      <PopupModal
+        showModal={showModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirm}
+        actionType={actionType}
+      />
+    </div>
   );
 };
 

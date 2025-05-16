@@ -21,8 +21,8 @@ const StepCircle = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: ${({ active, completed }) =>
-    completed ? "#FD1F4A" : active ? "#FD1F4A" : "#ccc"};
+  background-color: ${({ $active, $completed }) =>
+    $completed ? "#FD1F4A" : $active ? "#FD1F4A" : "#ccc"};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,14 +33,14 @@ const StepCircle = styled.div`
 const StepText = styled.span`
   margin-top: 8px;
   font-size: 14px;
-  color: ${({ active, completed }) =>
-    completed || active ? "#FD1F4A" : "#ccc"};
+  color: ${({ $active, $completed }) =>
+    $completed || $active ? "#FD1F4A" : "#ccc"};
 `;
 
 const Line = styled.div`
   flex: 1;
   height: 2px;
-  background-color: ${({ active }) => (active ? "#FD1F4A" : "#ccc")};
+  background-color: ${({ $active }) => ($active ? "#FD1F4A" : "#ccc")};
 `;
 
 const FilledCircle = styled.div`
@@ -82,26 +82,25 @@ const ProgressBar = () => {
         <React.Fragment key={step.label}>
           <Step>
             <StepCircle
-              active={index === currentStepIndex}
-              completed={index < currentStepIndex}
+              $active={index === currentStepIndex}
+              $completed={index < currentStepIndex}
             >
               {index < currentStepIndex && <FilledCircle />}
             </StepCircle>
             <StepText
-              active={index === currentStepIndex}
-              completed={index <= currentStepIndex}
+              $active={index === currentStepIndex}
+              $completed={index <= currentStepIndex}
             >
               {step.label}
             </StepText>
           </Step>
           {index < steps.length - 1 && (
-            <Line active={index < currentStepIndex} />
+            <Line $active={index < currentStepIndex} />
           )}
         </React.Fragment>
       ))}
     </StepContainer>
   );
 };
-
 
 export default ProgressBar;
