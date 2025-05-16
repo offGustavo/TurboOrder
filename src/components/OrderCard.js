@@ -23,7 +23,6 @@ const OrderCard = ({ id, name, details, status, data, day_order }) => {
         </div>
         <div className='order-date-day'>
           <span className="order-date">{data}</span>
-          {/* TODO: Criar o indicador de ordem para o dia */}
           <div className='order-day-order'><span>{day_order}</span></div>
         </div>
       </div>
