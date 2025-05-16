@@ -141,6 +141,13 @@
   width: 100%;
 }
 
+@media (max-width: 1400px) {
+  .order-cards {
+  grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
 @media (max-width: 959px) {
  
   .order-cards {
