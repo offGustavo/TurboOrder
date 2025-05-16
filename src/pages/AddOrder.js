@@ -166,13 +166,11 @@ const AddOrder = () => {
 
   // Submit order to backend
   const handleSubmitOrder = async () => {
-    console.log("SelectedProducts at submit:", selectedProducts);
     if (!clientInfo.cli_nome) {
       alert("Por favor, informe um cliente válido.");
       return;
     }
 
-    // Validate meat selection based on isTwoMeats
     if (isTwoMeats) {
       if (!selectedProducts.Carne || !selectedProducts.Carne2) {
         alert("Por favor, selecione as duas carnes.");
@@ -185,34 +183,31 @@ const AddOrder = () => {
       }
     }
 
-    // Map selected products to the expected backend keys
     const itens = {
-      arroz_fk: selectedProducts.Arroz ? selectedProducts.Arroz.pro_id : null,
-      feijao_fk: selectedProducts.Feijão ? selectedProducts.Feijão.pro_id : null,
-      massa_fk: selectedProducts.Massa ? selectedProducts.Massa.pro_id : null,
-      salada_fk: null, // Add if needed
-      acompanhamento_fk: null, // Add if needed
-      carne01_fk: selectedProducts.Carne ? selectedProducts.Carne.pro_id : null,
-      carne02_fk: isTwoMeats && selectedProducts.Carne2 ? selectedProducts.Carne2.pro_id : null,
+      arroz_fk: selectedProducts.Arroz?.pro_id || null,
+      feijao_fk: selectedProducts.Feijão?.pro_id || null,
+      massa_fk: selectedProducts.Massa?.pro_id || null,
+      salada_fk: selectedProducts.Salada?.pro_id || null,
+      acompanhamento_fk: selectedProducts.Acompanhamento?.pro_id || null,
+      carne01_fk: selectedProducts.Carne?.pro_id || null,
+      carne02_fk: isTwoMeats ? (selectedProducts.Carne2?.pro_id || null) : null,
     };
 
-    //TODO: modificar o valor para um valor puxado do banco 
-    // Set order value based on meat quantity
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
-    // TODO: Modificar o campo funcionario para puxar o funcionario logado
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
-      funcionario_fk: 1, // Hardcoded for now, adjust as needed
+      funcionario_fk: 1,
       itens,
-      ped_status: 1, // Status inicial, e.g., 1 = em andamento
+      ped_status: 1,
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
-      ped_tipoPagamento: "Dinheiro", // Adjust as needed
+      ped_tipoPagamento: "Dinheiro",
+      ped_desativado: 0
+      // ped_ordem_dia será calculado no backend
     };
 
     try {
-      console.log("PedidoData: " + pedidoData)
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       alert("Pedido cadastrado com sucesso!");
       console.log(response.data);
