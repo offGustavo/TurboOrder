@@ -100,10 +100,24 @@
   cursor: pointer;
 }
 
+.order-date-day{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
 .order-day-order{
-  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace;
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1 / 1;
+  /* margin: 0 10px; */
+  padding: 8px 8px;
   border-radius: 50%;
-  background-color: 
+  background-color: var(--bg-yellow);
 }
 
 hr {

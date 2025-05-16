@@ -196,6 +196,7 @@ const AddOrder = () => {
       carne02_fk: isTwoMeats && selectedProducts.Carne2 ? selectedProducts.Carne2.pro_id : null,
     };
 
+    //TODO: modificar o valor para um valor puxado do banco 
     // Set order value based on meat quantity
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
