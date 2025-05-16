@@ -125,6 +125,7 @@ const Dashboard = () => {
 
         setOrders(mappedOrders);
 
+        //FIXME: Modificar forma que está puxando do mês
         // Calcular faturamento e média do dia com os pedidos filtrados
         const dailySum = filteredOrdersData.reduce((sum, order) => sum + parseFloat(order.ped_valor), 0);
         const dailyCount = filteredOrdersData.length;
