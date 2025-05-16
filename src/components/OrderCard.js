@@ -9,8 +9,6 @@ const OrderCard = ({ id, name, details, status, data, day_order }) => {
     2: "Cancelado"
   };
 
-  // let day_order = 11;
-
   const statusText = typeof status === 'string' ? status : statusMap[status] || "Desconhecido";
   const statusClass = statusText.toLowerCase().replace(' ', '-');
 
