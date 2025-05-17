@@ -112,7 +112,7 @@ const Dashboard = () => {
           const productsText = productNames.join(', ');
 
           return {
-            id: `#${order.ped_id}`,
+            id: order.ped_id,
             name: `${order.cli_nome} ${order.cli_sobrenome}`,
             details: productsText,
             status: order.ped_status,
