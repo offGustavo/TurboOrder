@@ -74,75 +74,72 @@ const Dashboard = () => {
   const [dailyAverage, setDailyAverage] = useState(0);
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
+
+
+  const refreshOrders = async () => {
+    try {
+      const [ordersResponse, productsResponse] = await Promise.all([
+        axios.get('http://localhost:8800/pedidos'),
+        axios.get('http://localhost:8800/produtos')
+      ]);
+
+      const productsMap = productsResponse.data.reduce((acc, product) => {
+        acc[product.pro_id] = product.pro_nome;
+        return acc;
+      }, {});
+
+      const today = new Date();
+      const isSameDay = (date1, date2) =>
+        date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear();
+
+      const ordersData = ordersResponse.data;
+
+      const filteredOrdersData = ordersData.filter(order => {
+        const orderDate = new Date(order.ped_data);
+        return isSameDay(orderDate, today);
+      });
+
+      const mappedOrders = filteredOrdersData.map(order => {
+        const productNames = [];
+
+        if (order.arroz_fk) productNames.push(productsMap[order.arroz_fk]);
+        if (order.feijao_fk) productNames.push(productsMap[order.feijao_fk]);
+        if (order.massa_fk) productNames.push(productsMap[order.massa_fk]);
+        if (order.carne01_fk) productNames.push(productsMap[order.carne01_fk]);
+        if (order.carne02_fk) productNames.push(productsMap[order.carne02_fk]);
+
+        const productsText = productNames.join(', ');
+
+        return {
+          id: order.ped_id,
+          name: `${order.cli_nome} ${order.cli_sobrenome}`,
+          details: productsText,
+          status: order.ped_status,
+          data: new Date(order.ped_data).toLocaleDateString('pt-BR'),
+          valor: order.ped_valor,
+          day_order: order.ped_ordem_dia
+        };
+      });
+
+      setOrders(mappedOrders);
+
+      const dailySum = filteredOrdersData.reduce((sum, order) => sum + parseFloat(order.ped_valor), 0);
+      const dailyCount = filteredOrdersData.length;
+      setDailyRevenue(dailySum);
+      setDailyAverage(dailyCount > 0 ? dailySum / dailyCount : 0);
+      setMonthlyRevenue(0);
+      setMonthlyAverage(0);
+    } catch (error) {
+      console.error("Erro ao atualizar pedidos:", error);
+      toast.error("Erro ao atualizar pedidos.");
+    }
+  };
+
+
   useEffect(() => {
-    const fetchOrdersAndProducts = async () => {
-      try {
-        const [ordersResponse, productsResponse] = await Promise.all([
-          axios.get('http://localhost:8800/pedidos'),
-          axios.get('http://localhost:8800/produtos')
-        ]);
-
-        const productsMap = productsResponse.data.reduce((acc, product) => {
-          acc[product.pro_id] = product.pro_nome;
-          return acc;
-        }, {});
-
-        const today = new Date();
-        const isSameDay = (date1, date2) =>
-          date1.getDate() === date2.getDate() &&
-          date1.getMonth() === date2.getMonth() &&
-          date1.getFullYear() === date2.getFullYear();
-
-        const ordersData = ordersResponse.data;
-
-        const filteredOrdersData = ordersData.filter(order => {
-          const orderDate = new Date(order.ped_data);
-          return isSameDay(orderDate, today);
-          // && order.ped_status === "Em Andamento";
-        });
-
-        const mappedOrders = filteredOrdersData.map(order => {
-          const productNames = [];
-
-          if (order.arroz_fk) productNames.push(productsMap[order.arroz_fk]);
-          if (order.feijao_fk) productNames.push(productsMap[order.feijao_fk]);
-          if (order.massa_fk) productNames.push(productsMap[order.massa_fk]);
-          if (order.carne01_fk) productNames.push(productsMap[order.carne01_fk]);
-          if (order.carne02_fk) productNames.push(productsMap[order.carne02_fk]);
-
-          const productsText = productNames.join(', ');
-
-          return {
-            id: order.ped_id,
-            name: `${order.cli_nome} ${order.cli_sobrenome}`,
-            details: productsText,
-            status: order.ped_status,
-            data: new Date(order.ped_data).toLocaleDateString('pt-BR'),
-            valor: order.ped_valor,
-            day_order: order.ped_ordem_dia
-          };
-        });
-
-        setOrders(mappedOrders);
-
-        //FIXME: Modificar forma que está puxando do mês
-        // Calcular faturamento e média do dia com os pedidos filtrados
-        const dailySum = filteredOrdersData.reduce((sum, order) => sum + parseFloat(order.ped_valor), 0);
-        const dailyCount = filteredOrdersData.length;
-        setDailyRevenue(dailySum);
-        setDailyAverage(dailyCount > 0 ? dailySum / dailyCount : 0);
-
-        // Como os pedidos do mês completo não são mais usados, zeramos
-        setMonthlyRevenue(0);
-        setMonthlyAverage(0);
-
-      } catch (error) {
-        console.error("Erro ao buscar pedidos e produtos:", error);
-        toast.error("Erro ao buscar dados do dashboard.");
-      }
-    };
-
-    fetchOrdersAndProducts();
+    refreshOrders()
   }, []);
 
   const filteredOrders = orders.filter(order => {
@@ -201,7 +198,7 @@ const Dashboard = () => {
 
         <div className="order-cards">
           {filteredOrders.map(order => (
-            <OrderCard key={order.id} {...order} />
+            <OrderCard key={order.id} {...order} onStatusChange={refreshOrders} />
           ))}
         </div>
       </section>

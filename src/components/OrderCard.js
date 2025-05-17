@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
-const OrderCard = ({ id, name, details, status, data, day_order }) => {
+const OrderCard = ({ id, name, details, status, data, day_order, onStatusChange }) => {
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
 
   const statusClass = currentStatus.toLowerCase().replace(/\s/g, '-');
@@ -22,7 +22,10 @@ const OrderCard = ({ id, name, details, status, data, day_order }) => {
       });
 
       setCurrentStatus(nextStatus);
+
       toast.success(`Status atualizado para: ${nextStatus}`);
+
+      if (onStatusChange) onStatusChange();
     } catch (error) {
       console.error(`Erro ao atualizar o pedido ${id}:`, error);
       toast.error('Erro ao atualizar o status do pedido.');
