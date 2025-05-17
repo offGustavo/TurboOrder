@@ -1,4 +1,37 @@
+
+:root {
+  --bg-white: #ffffff;
+  --bg-white-alt: #f5f5f5;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+  --bg-grey: #e6e6e6;
+  --fg-red: #f44336;
+  --bg-red: #f44336;
+  --bg-red-alt: #ab180e;
+  --btn-border-radius: 20px;
+  --btn-border-size: 1px;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --status-color-em-andamento: #f0ad4e;
+  --status-color-concluido: #5cb85c;
+  --status-color-cancelado: #d9534f;
+  --status-color-em-andamento-alt: #e7a241;
+  --status-color-concluido-alt: #43a443;
+  --status-color-cancelado-alt: #b24c49;
+}
+
 .order-card {
+  background-color: white;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0;
+  transition: transform 0.2s;
   background-color: white;
   min-width: 300px;
   max-width: 400px;
@@ -22,12 +55,109 @@
   align-items: center;
 }
 
-.orderDetails {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 5px;
+.order-id {
+  font-weight: bold;
+  color: #555;
+  margin-right: 10px;
 }
 
-@media (max-width: 959px) {
+.order-date {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.customer-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.order-details {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #999;
+  align-self: flex-start;
+  border: none;
+  outine: none;
+}
+
+.status-tag.em-andamento {
+  background-color: var(--status-color-em-andamento);
+}
+
+.status-tag.em-andamento:hover {
+  background-color: var(--status-color-em-andamento-alt);
+}
+
+.status-tag.concluído {
+  background-color: var(--status-color-concluido);
+}
+
+.status-tag.concluído:hover {
+  background-color: var(--status-color-concluido-alt);
+}
+
+.status-tag.cancelado {
+  background-color: var(--status-color-cancelado);
+}
+
+.status-tag.cancelado:hover {
+  background-color: var(--status-color-cancelado-alt);
+}
+
+.edit-btn {
+  width: 20%;
+  background-color: #2D2C2E;
+  border-radius: 15px;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.order-date-day{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.order-day-order{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace;
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1 / 1;
+  /* margin: 0 10px; */
+  padding: 8px 8px;
+  border-radius: 50%;
+  background-color: var(--bg-yellow);
+}
+
+hr {
+  margin: 15px 0;
+  border: 1px solid #E6E6E6;
+}
+
+@media (max-width: 768px) {
+  .order-card {
+    width: 100%;
+    max-width: 100%;
+  }
 }
