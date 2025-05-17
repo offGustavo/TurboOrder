@@ -8,7 +8,6 @@ import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
 import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
-import ClientInfo from "../components/ClientInfo.js";
 import axios from "axios";
 
 const TitlePedido = styled.h1`
@@ -200,9 +199,10 @@ const AddOrder = () => {
       cliente_fk: clientInfo.cli_id,
       funcionario_fk: 1,
       itens,
-      ped_status: 1,
+      ped_status: "Em Andamento",
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
+      // TODO: Adicionar uma variavel para o metodo de pagamento
       ped_tipoPagamento: "Dinheiro",
       ped_observacao: observacao,
       ped_desativado: 0
