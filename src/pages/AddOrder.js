@@ -176,11 +176,6 @@ const AddOrder = () => {
         alert("Por favor, selecione as duas carnes.");
         return;
       }
-    } else {
-      if (!selectedProducts.Carne) {
-        alert("Por favor, selecione uma carne.");
-        return;
-      }
     }
 
     const itens = {
