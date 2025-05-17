@@ -61,7 +61,7 @@ const TransferRed = styled(FaMoneyBillTransfer)`
 `;
 
 const productTypes = [
-  { value: "Em andamento", label: "Em andamento" },
+  { value: "Em Andamento", label: "Em Andamento" },
   { value: "Concluído", label: "Concluído" },
   { value: "Cancelado", label: "Cancelado" },
 ];
