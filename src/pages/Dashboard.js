@@ -97,7 +97,7 @@ const Dashboard = () => {
 
         const filteredOrdersData = ordersData.filter(order => {
           const orderDate = new Date(order.ped_data);
-          return isSameDay(orderDate, today) && order.ped_status === 1; // status 1 = Em andamento
+          return isSameDay(orderDate, today) && order.ped_status === "Em Andamento";
         });
 
         const mappedOrders = filteredOrdersData.map(order => {
@@ -115,7 +115,7 @@ const Dashboard = () => {
             id: `#${order.ped_id}`,
             name: `${order.cli_nome} ${order.cli_sobrenome}`,
             details: productsText,
-            status: mapStatus(order.ped_status),
+            status: order.ped_status,
             data: new Date(order.ped_data).toLocaleDateString('pt-BR'),
             valor: order.ped_valor,
             day_order: order.ped_ordem_dia
@@ -143,19 +143,6 @@ const Dashboard = () => {
 
     fetchOrdersAndProducts();
   }, []);
-
-  const mapStatus = (statusCode) => {
-    switch (statusCode) {
-      case 1:
-        return "Em andamento";
-      case 2:
-        return "Concluído";
-      case 3:
-        return "Cancelado";
-      default:
-        return "Desconhecido";
-    }
-  };
 
   const filteredOrders = orders.filter(order => {
     if (filter === 'Tudo') return true;
