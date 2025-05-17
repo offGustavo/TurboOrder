@@ -1,50 +1,34 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { FaPen } from "react-icons/fa";
-import '../styles/OrderCard.css';
-import { toast } from 'react-toastify';
+import React from 'react';
+import './../styles/OrderCard.css';
+import { NavLink } from "react-router-dom";
+import { FaPen } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
+const OrderCard = ({ id, name, details, status, data }) => {
+  const getStatusClass = (status) => {
+    if (status === 'Em andamento') return '#FFBD0D';
+    if (status === 'Concluído') return '#24DF8E';
+    if (status === 'Cancelado') return '#FD1F4A';
+    return '';
+  };
 
-const OrderCard = ({ id, name, details, status, data, day_order, onStatusChange }) => {
-  const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
+  const editarPedido = () => {
+    console.log("Editandm Pedido");
+  };
 
-  const statusClass = currentStatus.toLowerCase().replace(/\s/g, '-');
-
-  const handleStatus = async () => {
-    const currentIndex = statusOptions.indexOf(currentStatus);
-    const nextIndex = (currentIndex + 1) % statusOptions.length;
-    const nextStatus = statusOptions[nextIndex];
-
-    try {
-      await axios.put(`http://localhost:8800/pedidos/${id}`, {
-        status: nextStatus,
-      });
-
-      setCurrentStatus(nextStatus);
-
-      toast.success(`Status atualizado para: ${nextStatus}`);
-
-      if (onStatusChange) onStatusChange();
-    } catch (error) {
-      console.error(`Erro ao atualizar o pedido ${id}:`, error);
-      toast.error('Erro ao atualizar o status do pedido.');
-    }
+  const changeStatus = () => {
+    console.log("changeStatus")
+    toast.success("Produto atualizado com sucesso!");
   };
 
   return (
     <div className="order-card">
-      <div className="order-header">
-        <div>
-          <span className="order-id">Id: #{id}</span>
-          <button className={`status-tag ${statusClass}`} onClick={handleStatus}>
-            {currentStatus}
-          </button>
-        </div>
-        <div className='order-date-day'>
-          <span className="order-date">{data}</span>
-          <div className='order-day-order'><span>{day_order}</span></div>
-        </div>
+      <div className="orderDetails">
+        <p className="idCard">Id: <strong>{id}</strong></p>
+        <button onClick={changeStatus} style={{ backgroundColor: getStatusClass(status), padding: '5px 15px', borderRadius: '30px', fontWeight: 'bold', fontSize: '12px' }}>
+          {status}
+        </button>
       </div>
       <p className="customer-name">{name}</p>
       <p className="order-details">{details}</p>
