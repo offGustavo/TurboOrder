@@ -97,7 +97,8 @@ const Dashboard = () => {
 
         const filteredOrdersData = ordersData.filter(order => {
           const orderDate = new Date(order.ped_data);
-          return isSameDay(orderDate, today) && order.ped_status === "Em Andamento";
+          return isSameDay(orderDate, today);
+          // && order.ped_status === "Em Andamento";
         });
 
         const mappedOrders = filteredOrdersData.map(order => {
