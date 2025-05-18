@@ -147,7 +147,6 @@
 .modal ul {
   list-style: none;
   padding: 0;
-  overflow-x: scroll;
 }
 
 .modal li {
@@ -159,12 +158,10 @@
   border-radius: 0px;
   overflow-y: auto;
   overflow-x: hidden;
-  /* previous heigh */
-  /* height: 150px; */
   height: 190px;
   width: 100%;
-  /* box-shadow: inset 0 4px 6px var(--shadow-color); */
 }
+
 #dialog-list-container{
   padding: 0px 10px;
 }
