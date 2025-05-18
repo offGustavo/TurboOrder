@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import "../styles/Global.css"
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
@@ -13,15 +14,36 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     ped_status: '',
     ped_data: '',
     ped_observacao: '',
-    ped_valor: ''
+    ped_valor: '',
+    ped_tipoPagamento: '',
+    ped_ordem_dia: '',
+    cli_nome: '',
+    cli_sobrenome: '',
+    fun_nome: '',
+
+    // FK dos produtos no pedido (ajuste conforme nomes no backend)
+    arroz_fk: '',
+    feijao_fk: '',
+    massa_fk: '',
+    carne01_fk: '',
+    carne02_fk: '',
   });
 
-  const [product, setProduct] = useState(null);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     if (open && id) {
-      // Buscar todos os pedidos e filtrar o desejado
+      // Buscar produtos
+      axios.get('http://localhost:8800/produtos')
+        .then(prodRes => {
+          setProducts(prodRes.data);
+        })
+        .catch(err => {
+          toast.error("Erro ao carregar produtos.");
+          console.error(err);
+        });
+
+      // Buscar pedido
       axios.get('http://localhost:8800/pedidos')
         .then(res => {
           const pedido = res.data.find(p => p.ped_id === id);
@@ -30,31 +52,28 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             return;
           }
 
+          // Popular o formulário com os dados do pedido
           setForm({
             ped_status: pedido.ped_status || '',
             ped_data: pedido.ped_data?.split('T')[0] || '',
             ped_observacao: pedido.ped_observacao || '',
-            ped_valor: pedido.ped_valor || ''
-          });
+            ped_valor: pedido.ped_valor || '',
+            ped_tipoPagamento: pedido.ped_tipoPagamento || '',
+            ped_ordem_dia: pedido.ped_ordem_dia || '',
+            cli_nome: pedido.cli_nome || '',
+            cli_sobrenome: pedido.cli_sobrenome || '',
+            fun_nome: pedido.fun_nome || '',
 
-          setProduct({
-            nome: pedido.ite_nome,
-            descricao: pedido.ite_descricao,
-            quantidade: pedido.ite_qtd,
-            categoria: pedido.ite_categoria
+            arroz_fk: pedido.arroz_fk || '',
+            feijao_fk: pedido.feijao_fk || '',
+            massa_fk: pedido.massa_fk || '',
+            carne01_fk: pedido.carne01_fk || '',
+            carne02_fk: pedido.carne02_fk || '',
           });
         })
         .catch(err => {
-          console.error("Erro ao buscar pedido:", err);
-          toast.error("Erro ao carregar o pedido.");
-        });
-
-      // Buscar produtos ativos
-      axios.get('http://localhost:8800/produtos')
-        .then(res => setProducts(res.data))
-        .catch(err => {
-          console.error("Erro ao buscar produtos:", err);
-          toast.error("Erro ao carregar produtos.");
+          toast.error("Erro ao carregar pedido.");
+          console.error(err);
         });
     }
   }, [open, id]);
@@ -65,21 +84,24 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`http://localhost:8800/${id}`, {
-        ped_id: id,
-        ...form
-      });
+      await axios.put(`http://localhost:8800/pedidos/${id}`, form);
       toast.success("Pedido atualizado com sucesso!");
       onClose();
       if (onStatusChange) onStatusChange();
     } catch (error) {
-      console.error("Erro ao atualizar pedido:", error);
       toast.error("Erro ao atualizar pedido.");
+      console.error(error);
     }
   };
 
+  // Função para pegar o nome do produto pelo id
+  const getProductName = (id) => {
+    const product = products.find(p => p.pro_id === id);
+    return product ? product.pro_nome : '';
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>Editar Pedido #{id}</DialogTitle>
       <DialogContent dividers>
         <TextField
@@ -98,6 +120,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
         <TextField
           margin="normal"
+          disabled
           label="Data"
           name="ped_data"
           type="date"
@@ -105,17 +128,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           value={form.ped_data}
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
-        />
-
-        <TextField
-          margin="normal"
-          label="Observação"
-          name="ped_observacao"
-          fullWidth
-          multiline
-          rows={3}
-          value={form.ped_observacao}
-          onChange={handleChange}
         />
 
         <TextField
@@ -128,22 +140,83 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           onChange={handleChange}
         />
 
-        {product && (
-          <div style={{ marginTop: 20 }}>
-            <Typography variant="subtitle1">Produto do Pedido</Typography>
-            <Typography><strong>Nome:</strong> {product.nome}</Typography>
-            <Typography><strong>Descrição:</strong> {product.descricao}</Typography>
-            <Typography><strong>Quantidade:</strong> {product.quantidade}</Typography>
-            <Typography><strong>Categoria:</strong> {product.categoria}</Typography>
-          </div>
-        )}
+        <TextField
+          margin="normal"
+          disabled
+          label="Tipo de Pagamento"
+          name="ped_tipoPagamento"
+          fullWidth
+          value={form.ped_tipoPagamento}
+          onChange={handleChange}
+        />
+
+        {/* <TextField */}
+        {/*   margin="normal" */}
+        {/*   label="Ordem do Dia" */}
+        {/*   name="ped_ordem_dia" */}
+        {/*   fullWidth */}
+        {/*   value={form.ped_ordem_dia} */}
+        {/*   onChange={handleChange} */}
+        {/* /> */}
+
+        <TextField
+          disabled
+          margin="normal"
+          label="Cliente - Nome"
+          name="cli_nome"
+          fullWidth
+          value={form.cli_nome}
+          InputProps={{ readOnly: true }}
+        />
+
+        <TextField
+          disabled
+          margin="normal"
+          label="Cliente - Sobrenome"
+          name="cli_sobrenome"
+          fullWidth
+          value={form.cli_sobrenome}
+          InputProps={{ readOnly: true }}
+        />
+
+        <TextField
+          disabled
+          margin="normal"
+          label="Funcionário Responsável"
+          name="fun_nome"
+          fullWidth
+          value={form.fun_nome}
+          InputProps={{ readOnly: true }}
+        />
+
+        {/* Selects para os produtos, usando FK e nome do produto */}
+        {['arroz_fk', 'feijao_fk', 'massa_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
+          <TextField
+            key={field}
+            margin="normal"
+            label={field.replace('_fk', '').toUpperCase()}
+            name={field}
+            select
+            fullWidth
+            value={form[field]}
+            onChange={handleChange}
+          >
+            <MenuItem value="">-- Nenhum --</MenuItem>
+            {products.map(product => (
+              <MenuItem key={product.pro_id} value={product.pro_id}>
+                {product.pro_nome}
+              </MenuItem>
+            ))}
+          </TextField>
+        ))}
+
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} color="secondary">Cancelar</Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">Salvar</Button>
+        <button onClick={onClose} className="btn-cancel">Cancelar</button>
+        <button onClick={handleSubmit} className="btn-add">Salvar</button>
       </DialogActions>
-    </Dialog>
+    </Dialog >
   );
 };
 
