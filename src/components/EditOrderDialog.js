@@ -142,7 +142,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
         <TextField
           margin="normal"
-          disabled
           label="Tipo de Pagamento"
           name="ped_tipoPagamento"
           fullWidth
@@ -167,6 +166,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           fullWidth
           value={form.cli_nome}
           InputProps={{ readOnly: true }}
+          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clietes") }}
         />
 
         <TextField
@@ -177,6 +177,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           fullWidth
           value={form.cli_sobrenome}
           InputProps={{ readOnly: true }}
+          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clietes") }}
         />
 
         <TextField
@@ -190,7 +191,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         {/* Selects para os produtos, usando FK e nome do produto */}
-        {['arroz_fk', 'feijao_fk', 'massa_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
+        {['arroz_fk', 'feijao_fk', 'massa_fk', 'acompanhamento_fk', 'salada_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
           <TextField
             key={field}
             margin="normal"
