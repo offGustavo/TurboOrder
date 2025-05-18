@@ -206,15 +206,15 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clientes") }}
         />
 
-        <TextField
-          disabled
-          margin="normal"
-          label="Funcionário Responsável"
-          name="fun_nome"
-          fullWidth
-          value={form.fun_nome}
-          InputProps={{ readOnly: true }}
-        />
+        {/* <TextField */}
+        {/*   disabled */}
+        {/*   margin="normal" */}
+        {/*   label="Funcionário Responsável" */}
+        {/*   name="fun_nome" */}
+        {/*   fullWidth */}
+        {/*   value={form.fun_nome} */}
+        {/*   InputProps={{ readOnly: true }} */}
+        {/* /> */}
 
         {Object.keys(tipoPorField).map((field) => {
           // Oculta carne02_fk se o valor do pedido for diferente de 22
