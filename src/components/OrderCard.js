@@ -4,6 +4,7 @@ import { FaPen } from "react-icons/fa";
 import '../styles/OrderCard.css';
 import { toast } from 'react-toastify';
 import EditOrderDialog from './EditOrderDialog';
+import { useLocation } from 'react-router';
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
@@ -19,6 +20,7 @@ const OrderCard = ({
     const currentIndex = statusOptions.indexOf(currentStatus);
     const nextIndex = (currentIndex + 1) % statusOptions.length;
     const nextStatus = statusOptions[nextIndex];
+    const currentLocation = useLocation();
 
     try {
       await axios.put(`http://localhost:8800/pedidos/${id}/status`, {
@@ -45,7 +47,10 @@ const OrderCard = ({
           </div>
           <div className='order-date-day'>
             <span className="order-date">{data}</span>
-            <div className='order-day-order'><span>{day_order}</span></div>
+
+            {location.pathname !== '/historico' && (
+              <div className='order-day-order'><span>{day_order}</span></div>
+            )}
           </div>
         </div>
         <p className="customer-name">{name}</p>
