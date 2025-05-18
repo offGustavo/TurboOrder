@@ -23,7 +23,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   const [form, setForm] = useState({
     ped_status: '',
     ped_data: '',
-    ped_horarioRetirada: '', // <== novo campo
+    ped_horarioRetirada: '',
     ped_observacao: '',
     ped_valor: '',
     ped_tipoPagamento: '',
