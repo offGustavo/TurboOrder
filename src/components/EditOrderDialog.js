@@ -5,14 +5,25 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import "../styles/Global.css"
+import "../styles/Global.css";
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
+
+const tipoPorField = {
+  arroz_fk: "Arroz",
+  feijao_fk: "Feijão",
+  massa_fk: "Massa",
+  salada_fk: "Salada",
+  acompanhamento_fk: "Acompanhamento",
+  carne01_fk: "Carne",
+  carne02_fk: "Carne"
+};
 
 const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   const [form, setForm] = useState({
     ped_status: '',
     ped_data: '',
+    ped_horarioRetirada: '', // <== novo campo
     ped_observacao: '',
     ped_valor: '',
     ped_tipoPagamento: '',
@@ -20,13 +31,17 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     cli_nome: '',
     cli_sobrenome: '',
     fun_nome: '',
-
-    // FK dos produtos no pedido (ajuste conforme nomes no backend)
-    arroz_fk: '',
-    feijao_fk: '',
-    massa_fk: '',
-    carne01_fk: '',
-    carne02_fk: '',
+    cliente_fk: '',
+    funcionario_fk: '',
+    itens: {
+      arroz_fk: '',
+      feijao_fk: '',
+      massa_fk: '',
+      carne01_fk: '',
+      carne02_fk: '',
+      salada_fk: '',
+      acompanhamento_fk: ''
+    },
   });
 
   const [products, setProducts] = useState([]);
@@ -52,10 +67,20 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             return;
           }
 
-          // Popular o formulário com os dados do pedido
+          const itens = {
+            arroz_fk: pedido.arroz_fk || '',
+            feijao_fk: pedido.feijao_fk || '',
+            massa_fk: pedido.massa_fk || '',
+            salada_fk: pedido.salada_fk || '',
+            acompanhamento_fk: pedido.acompanhamento_fk || '',
+            carne01_fk: pedido.carne01_fk || '',
+            carne02_fk: pedido.carne02_fk || '',
+          };
+          // Preencher form com os dados do pedido
           setForm({
             ped_status: pedido.ped_status || '',
             ped_data: pedido.ped_data?.split('T')[0] || '',
+            ped_horarioRetirada: pedido.ped_horarioRetirada || '', // <== novo campo
             ped_observacao: pedido.ped_observacao || '',
             ped_valor: pedido.ped_valor || '',
             ped_tipoPagamento: pedido.ped_tipoPagamento || '',
@@ -63,12 +88,9 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             cli_nome: pedido.cli_nome || '',
             cli_sobrenome: pedido.cli_sobrenome || '',
             fun_nome: pedido.fun_nome || '',
-
-            arroz_fk: pedido.arroz_fk || '',
-            feijao_fk: pedido.feijao_fk || '',
-            massa_fk: pedido.massa_fk || '',
-            carne01_fk: pedido.carne01_fk || '',
-            carne02_fk: pedido.carne02_fk || '',
+            cliente_fk: pedido.cliente_fk || '',
+            funcionario_fk: pedido.funcionario_fk || '',
+            itens
           });
         })
         .catch(err => {
@@ -79,7 +101,12 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   }, [open, id]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "ped_valor" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async () => {
@@ -94,19 +121,13 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     }
   };
 
-  // Função para pegar o nome do produto pelo id
-  const getProductName = (id) => {
-    const product = products.find(p => p.pro_id === id);
-    return product ? product.pro_nome : '';
-  };
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>Editar Pedido #{id}</DialogTitle>
       <DialogContent dividers>
         <TextField
           margin="normal"
-          label="Status"
+          label="Estado do Pedido"
           name="ped_status"
           select
           fullWidth
@@ -130,15 +151,32 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           InputLabelProps={{ shrink: true }}
         />
 
+
+        {form.ped_horarioRetirada && (
+          <TextField
+            margin="normal"
+            label="Horário de Retirada"
+            name="ped_horarioRetirada"
+            type="time"
+            fullWidth
+            value={form.ped_horarioRetirada}
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+          />
+        )}
+
         <TextField
           margin="normal"
           label="Valor"
           name="ped_valor"
-          type="number"
+          select
           fullWidth
           value={form.ped_valor}
           onChange={handleChange}
-        />
+        >
+          <MenuItem value={20}>R$ 20,00</MenuItem>
+          <MenuItem value={22}>R$ 22,00</MenuItem>
+        </TextField>
 
         <TextField
           margin="normal"
@@ -150,6 +188,15 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         <TextField
+          margin="normal"
+          label="Observação"
+          name="ped_observacao"
+          fullWidth
+          value={form.ped_observacao}
+          onChange={handleChange}
+        />
+
+        <TextField
           disabled
           margin="normal"
           label="Cliente - Nome"
@@ -157,7 +204,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           fullWidth
           value={form.cli_nome}
           InputProps={{ readOnly: true }}
-          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clietes") }}
+          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clientes") }}
         />
 
         <TextField
@@ -168,39 +215,44 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           fullWidth
           value={form.cli_sobrenome}
           InputProps={{ readOnly: true }}
-          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clietes") }}
+          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clientes") }}
         />
 
-        <TextField
-          disabled
-          margin="normal"
-          label="Funcionário Responsável"
-          name="fun_nome"
-          fullWidth
-          value={form.fun_nome}
-          InputProps={{ readOnly: true }}
-        />
-
-        {/* Selects para os produtos, usando FK e nome do produto */}
-        {['arroz_fk', 'feijao_fk', 'massa_fk', 'acompanhamento_fk', 'salada_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
-          <TextField
-            key={field}
-            margin="normal"
-            label={field.replace('_fk', '').toUpperCase()}
-            name={field}
-            select
-            fullWidth
-            value={form[field]}
-            onChange={handleChange}
-          >
-            <MenuItem value="">-- Nenhum --</MenuItem>
-            {products.map(product => (
-              <MenuItem key={product.pro_id} value={product.pro_id}>
-                {product.pro_nome}
-              </MenuItem>
-            ))}
-          </TextField>
-        ))}
+        {Object.keys(tipoPorField).map((field) => {
+          // Oculta carne02_fk se o valor do pedido for diferente de 22
+          if (field === 'carne02_fk' && Number(form.ped_valor) !== 22) return null;
+          const tipo = tipoPorField[field];
+          const produtosFiltrados = products.filter(
+            (p) => p.pro_tipo?.toLowerCase() === tipo.toLowerCase()
+          );
+          return (
+            <TextField
+              key={field}
+              margin="normal"
+              label={tipo.toUpperCase()}
+              name={field}
+              select
+              fullWidth
+              value={form.itens?.[field] || ''}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  itens: {
+                    ...prev.itens,
+                    [field]: e.target.value
+                  }
+                }))
+              }
+            >
+              <MenuItem value="">-- Nenhum --</MenuItem>
+              {produtosFiltrados.map((product) => (
+                <MenuItem key={product.pro_id} value={product.pro_id}>
+                  {product.pro_nome}
+                </MenuItem>
+              ))}
+            </TextField>
+          );
+        })}
 
       </DialogContent>
 
@@ -208,7 +260,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         <button onClick={onClose} className="btn-cancel">Cancelar</button>
         <button onClick={handleSubmit} className="btn-add">Salvar</button>
       </DialogActions>
-    </Dialog >
+    </Dialog>
   );
 };
 
