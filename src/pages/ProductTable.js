@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./../styles/ProductTable.css";
 import FilterComponent from "../components/FilterComponent";
-
+import EditProductModal from "./EditProductModal"; // Importando o modal
 
 const FormContainer = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const ProductTable = () => {
   const [proTipo, setProTipo] = useState("");
   const [filter, setFilter] = useState("Tudo");
   const [onEdit, setOnEdit] = useState(null);
-
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const productTypes = [
     { value: "Arroz", label: "Arroz" },
     { value: "Feijão", label: "Feijão" },
@@ -72,6 +72,7 @@ const ProductTable = () => {
           setProTipo("");
           setOnEdit(null);
           toast.success("Produto atualizado com sucesso!");
+          setIsEditModalOpen(false);
         })
         .catch(() => toast.error("Erro ao atualizar o produto."));
     } else {
@@ -102,6 +103,7 @@ const ProductTable = () => {
     setOnEdit(product);
     setProNome(product.pro_nome);
     setProTipo(product.pro_tipo);
+    setIsEditModalOpen(true);
   };
 
   const filteredProducts = filter === "Tudo"
@@ -188,6 +190,21 @@ const ProductTable = () => {
           ))}
         </tbody>
       </table>
+
+       <EditProductModal
+        open={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setOnEdit(null);
+          setProNome("");
+          setProTipo("");  
+        }}
+        product={onEdit}  
+        onSave={handleSave}
+        setProNome={setProNome}
+        setProTipo={setProTipo}
+        productTypes={productTypes}
+      />
     </div >
   );
 };
