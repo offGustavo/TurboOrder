@@ -23,6 +23,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   const [form, setForm] = useState({
     ped_status: '',
     ped_data: '',
+    ped_horarioRetirada: '', // <== novo campo
     ped_observacao: '',
     ped_valor: '',
     ped_tipoPagamento: '',
@@ -30,10 +31,8 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     cli_nome: '',
     cli_sobrenome: '',
     fun_nome: '',
-
     cliente_fk: '',
     funcionario_fk: '',
-
     itens: {
       arroz_fk: '',
       feijao_fk: '',
@@ -81,6 +80,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           setForm({
             ped_status: pedido.ped_status || '',
             ped_data: pedido.ped_data?.split('T')[0] || '',
+            ped_horarioRetirada: pedido.ped_horarioRetirada || '', // <== novo campo
             ped_observacao: pedido.ped_observacao || '',
             ped_valor: pedido.ped_valor || '',
             ped_tipoPagamento: pedido.ped_tipoPagamento || '',
@@ -88,10 +88,8 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             cli_nome: pedido.cli_nome || '',
             cli_sobrenome: pedido.cli_sobrenome || '',
             fun_nome: pedido.fun_nome || '',
-
             cliente_fk: pedido.cliente_fk || '',
             funcionario_fk: pedido.funcionario_fk || '',
-
             itens
           });
         })
@@ -152,6 +150,20 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
         />
+
+
+        {form.ped_horarioRetirada && (
+          <TextField
+            margin="normal"
+            label="Horário de Retirada"
+            name="ped_horarioRetirada"
+            type="time"
+            fullWidth
+            value={form.ped_horarioRetirada}
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+          />
+        )}
 
         <TextField
           margin="normal"
