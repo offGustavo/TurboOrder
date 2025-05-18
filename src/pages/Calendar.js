@@ -260,11 +260,6 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
           </div>
         </DialogContent>
 
-        {/* <DialogActions> */}
-        {/*   <button className='calendar-close-btn' onClick={() => setSelectedTipo(null)}> */}
-        {/*     Fechar */}
-        {/*   </button> */}
-        {/* </DialogActions> */}
       </Dialog>
     </main>
   );
