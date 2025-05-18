@@ -11,6 +11,7 @@ const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 const OrderCard = ({
   id, name, details, status, data, day_order, products, valor, onStatusChange
 }) => {
+  const location = useLocation();
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
   const [editOpen, setEditOpen] = useState(false);
 
@@ -20,7 +21,6 @@ const OrderCard = ({
     const currentIndex = statusOptions.indexOf(currentStatus);
     const nextIndex = (currentIndex + 1) % statusOptions.length;
     const nextStatus = statusOptions[nextIndex];
-    const currentLocation = useLocation();
 
     try {
       await axios.put(`http://localhost:8800/pedidos/${id}/status`, {
