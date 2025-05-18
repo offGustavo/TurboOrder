@@ -8,7 +8,7 @@ import EditOrderDialog from './EditOrderDialog';
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
 const OrderCard = ({
-  id, name, details, status, data, day_order, valor, onStatusChange
+  id, name, details, status, data, day_order, products, valor, onStatusChange
 }) => {
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
   const [editOpen, setEditOpen] = useState(false);
@@ -49,7 +49,10 @@ const OrderCard = ({
           </div>
         </div>
         <p className="customer-name">{name}</p>
-        <p className="order-details">{details}</p>
+        {details && details.trim() !== '' && (
+          <p className="order-details">Observações: {details}</p>
+        )}
+        <p className="order-details">{products}</p>
         <hr />
         <button className="edit-btn" onClick={() => setEditOpen(true)}>
           <FaPen /> Editar

@@ -115,7 +115,8 @@ const Dashboard = () => {
         return {
           id: order.ped_id,
           name: `${order.cli_nome} ${order.cli_sobrenome}`,
-          details: productsText,
+          products: productsText,
+          details: order.ped_observacao,
           status: order.ped_status,
           data: new Date(order.ped_data).toLocaleDateString('pt-BR'),
           valor: order.ped_valor,
