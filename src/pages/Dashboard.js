@@ -81,6 +81,8 @@ const Dashboard = () => {
 
       const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
 
+      console.log("totalMes", totalMesAtual)
+      console.log("mediaMesAtual", mediaMesAtual)
       setMonthlyRevenue(totalMesAtual);
       setMonthlyAverage(mediaMesAtual);
     } catch (error) {
@@ -148,8 +150,6 @@ const Dashboard = () => {
       const dailyCount = filteredOrdersData.length;
       setDailyRevenue(dailySum);
       setDailyAverage(dailyCount > 0 ? dailySum / dailyCount : 0);
-      setMonthlyRevenue(0);
-      setMonthlyAverage(0);
     } catch (error) {
       console.error("Erro ao atualizar pedidos:", error);
       toast.error("Erro ao atualizar pedidos.");
