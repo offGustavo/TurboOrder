@@ -176,6 +176,11 @@ const AddOrder = () => {
       return;
     }
 
+    if (!pagamento) {
+      alert("Por favor, informe o tipo de pagamento.");
+      return;
+    }
+
     if (isTwoMeats) {
       if (!selectedProducts.Carne || !selectedProducts.Carne2) {
         alert("Por favor, selecione as duas carnes.");
