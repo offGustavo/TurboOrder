@@ -120,6 +120,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
         <TextField
           margin="normal"
+          disabled
           label="Data"
           name="ped_data"
           type="date"
@@ -141,6 +142,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
         <TextField
           margin="normal"
+          disabled
           label="Tipo de Pagamento"
           name="ped_tipoPagamento"
           fullWidth
@@ -148,16 +150,17 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           onChange={handleChange}
         />
 
-        <TextField
-          margin="normal"
-          label="Ordem do Dia"
-          name="ped_ordem_dia"
-          fullWidth
-          value={form.ped_ordem_dia}
-          onChange={handleChange}
-        />
+        {/* <TextField */}
+        {/*   margin="normal" */}
+        {/*   label="Ordem do Dia" */}
+        {/*   name="ped_ordem_dia" */}
+        {/*   fullWidth */}
+        {/*   value={form.ped_ordem_dia} */}
+        {/*   onChange={handleChange} */}
+        {/* /> */}
 
         <TextField
+          disabled
           margin="normal"
           label="Cliente - Nome"
           name="cli_nome"
@@ -167,6 +170,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         <TextField
+          disabled
           margin="normal"
           label="Cliente - Sobrenome"
           name="cli_sobrenome"
@@ -176,6 +180,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         <TextField
+          disabled
           margin="normal"
           label="Funcionário Responsável"
           name="fun_nome"
