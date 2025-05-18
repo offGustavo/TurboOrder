@@ -6,6 +6,8 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { toast } from "react-toastify";
 import '../styles/Global.css';
 import '../styles/Calendar.css';
+import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
+import { IoMdClose } from "react-icons/io";
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -220,11 +222,24 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         </div >
       </div >
 
-      {/* TODO: Modificar o modal para utilizar o [React Dialog component - Material UI](https://mui.com/material-ui/react-dialog/) */}
-      {selectedTipo && (
-        <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
-          <h3>Adicionar produto para {selectedTipo}</h3>
-          <input className='calendar-search-produtos' placeholder='Pesquisar mantimentos...' type="text" />
+      <Dialog open={!!selectedTipo} onClose={() => setSelectedTipo(null)} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          Adicionar produto para {selectedTipo}
+          <IconButton
+            aria-label="close"
+            onClick={() => setSelectedTipo(null)}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <IoMdClose />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent dividers id='dialog-list-container'>
           <div className='modal-list-container'>
             <ul className='calendar-ul-produtos'>
               {produtos.filter(produto =>
@@ -233,16 +248,24 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
               ).map(produto => (
                 <li key={produto.pro_id} className='modal-list-item'>
                   {produto.pro_nome}
-                  <button onClick={() => addProductToMenu(produto)} className='btn-add calendar-add-btn'>Adicionar</button>
+                  <button
+                    onClick={() => addProductToMenu(produto)}
+                    className='btn-add calendar-add-btn'
+                  >
+                    Adicionar
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
-          <div className='calendar-close-div'>
-            <button className='calendar-close-btn' onClick={() => setSelectedTipo(null)}>Fechar</button>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+
+        {/* <DialogActions> */}
+        {/*   <button className='calendar-close-btn' onClick={() => setSelectedTipo(null)}> */}
+        {/*     Fechar */}
+        {/*   </button> */}
+        {/* </DialogActions> */}
+      </Dialog>
     </main>
   );
 }
