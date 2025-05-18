@@ -10,10 +10,10 @@ import '../styles/Calendar.css';
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [produtos, setProdutos] = useState([]);
-  const [menu, setMenu] = useState({});
   const [selectedTipo, setSelectedTipo] = useState(null);
   const [selectedProdutos, setSelectedProdutos] = useState({});
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [isModified, setIsModified] = useState(false); // Novo estado
 
   const h3Refs = useRef({});
   const tiposProdutos = ["Arroz", "Feijão", "Massa", "Carne", "Acompanhamento", "Salada"];
@@ -47,12 +47,29 @@ export default function Calendar() {
         } else {
           setSelectedProdutos({});
         }
+        setIsModified(false); // Resetar ao carregar
       })
       .catch((err) => {
         console.error('Erro ao carregar cardápio:', err);
         setSelectedProdutos({});
+        setIsModified(false);
       });
   }, [currentDate]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isModified) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isModified]);
 
   const saveCardapio = () => {
     const dataAtual = currentDate.format('YYYY-MM-DD');
@@ -151,6 +168,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
       ...prev,
       [selectedTipo]: [...(prev[selectedTipo] || []), produto]
     }));
+    setIsModified(true);
   };
 
   const removeProductFromMenu = (tipo, index) => {
@@ -162,6 +180,7 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         [tipo]: updatedList,
       };
     });
+    setIsModified(true);
   };
 
   return (
@@ -201,11 +220,11 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
         </div >
       </div >
 
+      {/* TODO: Modificar o modal para utilizar o [React Dialog component - Material UI](https://mui.com/material-ui/react-dialog/) */}
       {selectedTipo && (
         <div className="modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
           <h3>Adicionar produto para {selectedTipo}</h3>
-          {/* TODO: Adicionar função para filtrar produtos pelo nome */}
-          {/* <input className='calendar-search-produtos' placeholder='Pesquisar mantimentos...' type="text" /> */}
+          <input className='calendar-search-produtos' placeholder='Pesquisar mantimentos...' type="text" />
           <div className='modal-list-container'>
             <ul className='calendar-ul-produtos'>
               {produtos.filter(produto =>
