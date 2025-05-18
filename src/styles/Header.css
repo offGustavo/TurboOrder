@@ -61,7 +61,7 @@
   transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0px;
 }
 
 .add-order-btn:hover {
@@ -74,7 +74,7 @@
 }
 
 .add-order-btn svg {
-  margin-right: 10px;
+  margin-left: 5px;
 }
 
 a {
