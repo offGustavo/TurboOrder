@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import "../styles/Global.css"
+import "../styles/Global.css";
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
@@ -21,12 +21,18 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     cli_sobrenome: '',
     fun_nome: '',
 
-    // FK dos produtos no pedido (ajuste conforme nomes no backend)
-    arroz_fk: '',
-    feijao_fk: '',
-    massa_fk: '',
-    carne01_fk: '',
-    carne02_fk: '',
+    cliente_fk: '',
+    funcionario_fk: '',
+
+    itens: {
+      arroz_fk: '',
+      feijao_fk: '',
+      massa_fk: '',
+      carne01_fk: '',
+      carne02_fk: '',
+      salada_fk: '',
+      acompanhamento_fk: ''
+    },
   });
 
   const [products, setProducts] = useState([]);
@@ -52,7 +58,16 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             return;
           }
 
-          // Popular o formulário com os dados do pedido
+          const itens = {
+            arroz_fk: pedido.arroz_fk || '',
+            feijao_fk: pedido.feijao_fk || '',
+            massa_fk: pedido.massa_fk || '',
+            salada_fk: pedido.salada_fk || '',
+            acompanhamento_fk: pedido.acompanhamento_fk || '',
+            carne01_fk: pedido.carne01_fk || '',
+            carne02_fk: pedido.carne02_fk || '',
+          };
+          // Preencher form com os dados do pedido
           setForm({
             ped_status: pedido.ped_status || '',
             ped_data: pedido.ped_data?.split('T')[0] || '',
@@ -64,11 +79,10 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             cli_sobrenome: pedido.cli_sobrenome || '',
             fun_nome: pedido.fun_nome || '',
 
-            arroz_fk: pedido.arroz_fk || '',
-            feijao_fk: pedido.feijao_fk || '',
-            massa_fk: pedido.massa_fk || '',
-            carne01_fk: pedido.carne01_fk || '',
-            carne02_fk: pedido.carne02_fk || '',
+            cliente_fk: pedido.cliente_fk || '',
+            funcionario_fk: pedido.funcionario_fk || '',
+
+            itens
           });
         })
         .catch(err => {
@@ -92,12 +106,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
       toast.error("Erro ao atualizar pedido.");
       console.error(error);
     }
-  };
-
-  // Função para pegar o nome do produto pelo id
-  const getProductName = (id) => {
-    const product = products.find(p => p.pro_id === id);
-    return product ? product.pro_nome : '';
   };
 
   return (
@@ -157,7 +165,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           fullWidth
           value={form.cli_nome}
           InputProps={{ readOnly: true }}
-          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clietes") }}
+          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clientes") }}
         />
 
         <TextField
@@ -168,7 +176,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           fullWidth
           value={form.cli_sobrenome}
           InputProps={{ readOnly: true }}
-          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clietes") }}
+          onClick={() => { toast.warning("As informações do cliente devem ser alteradas na página de clientes") }}
         />
 
         <TextField
@@ -181,8 +189,8 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           InputProps={{ readOnly: true }}
         />
 
-        {/* Selects para os produtos, usando FK e nome do produto */}
-        {['arroz_fk', 'feijao_fk', 'massa_fk', 'acompanhamento_fk', 'salada_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
+        {/* Selects para os produtos */}
+        {['arroz_fk', 'feijao_fk', 'massa_fk', 'salada_fk', 'acompanhamento_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
           <TextField
             key={field}
             margin="normal"
@@ -201,14 +209,13 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             ))}
           </TextField>
         ))}
-
       </DialogContent>
 
       <DialogActions>
         <button onClick={onClose} className="btn-cancel">Cancelar</button>
         <button onClick={handleSubmit} className="btn-add">Salvar</button>
       </DialogActions>
-    </Dialog >
+    </Dialog>
   );
 };
 
