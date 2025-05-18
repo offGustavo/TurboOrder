@@ -52,6 +52,7 @@ const AddOrder = () => {
   const [clientError, setClientError] = useState(null);
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [observacao, setObservacao] = useState("");
+  const [pagamento, setPagamento] = useState("");
 
   // State to hold selected products by category
   const [selectedProducts, setSelectedProducts] = useState({
@@ -197,8 +198,7 @@ const AddOrder = () => {
       ped_status: "Em Andamento",
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
-      // TODO: Adicionar uma variavel para o metodo de pagamento
-      ped_tipoPagamento: "Dinheiro",
+      ped_tipoPagamento: pagamento,
       ped_observacao: observacao,
       ped_desativado: 0
       // ped_ordem_dia será calculado no backend
@@ -417,6 +417,35 @@ const AddOrder = () => {
         </div>
 
       </section>
+
+      <hr />
+      <section>
+        <SubText>
+          Pagamento
+        </SubText>
+
+        <div style={{ display: "flex", gap: "20px" }}>
+          <TextField
+            id="ped_tipoPagamento"
+            label="Tipo de Pagamento"
+            placeholder="Exemplo: Dinheiro, Cartão de Crédito, Pix..."
+            value={pagamento}
+            onChange={(e) => setPagamento(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "100%",
+            }}
+          />
+        </div>
+
+      </section>
+
     </main>
   );
 };
