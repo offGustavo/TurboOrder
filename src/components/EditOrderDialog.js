@@ -9,6 +9,16 @@ import "../styles/Global.css";
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
+const tipoPorField = {
+  arroz_fk: "Arroz",
+  feijao_fk: "Feijão",
+  massa_fk: "Massa",
+  salada_fk: "Salada",
+  acompanhamento_fk: "Acompanhamento",
+  carne01_fk: "Carne",
+  carne02_fk: "Carne"
+};
+
 const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   const [form, setForm] = useState({
     ped_status: '',
@@ -93,7 +103,12 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   }, [open, id]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "ped_valor" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async () => {
@@ -142,11 +157,14 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           margin="normal"
           label="Valor"
           name="ped_valor"
-          type="number"
+          select
           fullWidth
           value={form.ped_valor}
           onChange={handleChange}
-        />
+        >
+          <MenuItem value={20}>R$ 20,00</MenuItem>
+          <MenuItem value={22}>R$ 22,00</MenuItem>
+        </TextField>
 
         <TextField
           margin="normal"
@@ -154,6 +172,15 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           name="ped_tipoPagamento"
           fullWidth
           value={form.ped_tipoPagamento}
+          onChange={handleChange}
+        />
+
+        <TextField
+          margin="normal"
+          label="Observação"
+          name="ped_observacao"
+          fullWidth
+          value={form.ped_observacao}
           onChange={handleChange}
         />
 
@@ -189,33 +216,41 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           InputProps={{ readOnly: true }}
         />
 
-        {['arroz_fk', 'feijao_fk', 'massa_fk', 'salada_fk', 'acompanhamento_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
-          <TextField
-            key={field}
-            margin="normal"
-            label={field.replace('_fk', '').toUpperCase()}
-            name={field}
-            select
-            fullWidth
-            value={form.itens?.[field] || ''}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                itens: {
-                  ...prev.itens,
-                  [field]: e.target.value
-                }
-              }))
-            }
-          >
-            <MenuItem value="">-- Nenhum --</MenuItem>
-            {products.map((product) => (
-              <MenuItem key={product.pro_id} value={product.pro_id}>
-                {product.pro_nome}
-              </MenuItem>
-            ))}
-          </TextField>
-        ))}
+        {Object.keys(tipoPorField).map((field) => {
+          // Oculta carne02_fk se o valor do pedido for diferente de 22
+          if (field === 'carne02_fk' && Number(form.ped_valor) !== 22) return null;
+          const tipo = tipoPorField[field];
+          const produtosFiltrados = products.filter(
+            (p) => p.pro_tipo?.toLowerCase() === tipo.toLowerCase()
+          );
+          return (
+            <TextField
+              key={field}
+              margin="normal"
+              label={tipo.toUpperCase()}
+              name={field}
+              select
+              fullWidth
+              value={form.itens?.[field] || ''}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  itens: {
+                    ...prev.itens,
+                    [field]: e.target.value
+                  }
+                }))
+              }
+            >
+              <MenuItem value="">-- Nenhum --</MenuItem>
+              {produtosFiltrados.map((product) => (
+                <MenuItem key={product.pro_id} value={product.pro_id}>
+                  {product.pro_nome}
+                </MenuItem>
+              ))}
+            </TextField>
+          );
+        })}
 
       </DialogContent>
 
