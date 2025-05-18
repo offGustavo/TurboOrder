@@ -75,6 +75,24 @@ const Dashboard = () => {
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
 
+  const fetchRevenueData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8800/pedidos/soma-mensal");
+
+      const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
+
+      setMonthlyRevenue(totalMesAtual);
+      setMonthlyAverage(mediaMesAtual);
+    } catch (error) {
+      console.error("Erro ao buscar dados de faturamento:", error);
+      toast.error("Erro ao buscar faturamento mensal.");
+    }
+  };
+
+  useEffect(() => {
+    refreshOrders();
+    fetchRevenueData();
+  }, []);
 
   const refreshOrders = async () => {
     try {
