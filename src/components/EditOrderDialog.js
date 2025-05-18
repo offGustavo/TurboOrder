@@ -149,15 +149,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           onChange={handleChange}
         />
 
-        {/* <TextField */}
-        {/*   margin="normal" */}
-        {/*   label="Ordem do Dia" */}
-        {/*   name="ped_ordem_dia" */}
-        {/*   fullWidth */}
-        {/*   value={form.ped_ordem_dia} */}
-        {/*   onChange={handleChange} */}
-        {/* /> */}
-
         <TextField
           disabled
           margin="normal"
