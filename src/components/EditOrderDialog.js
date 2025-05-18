@@ -189,7 +189,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           InputProps={{ readOnly: true }}
         />
 
-        {/* Selects para os produtos */}
         {['arroz_fk', 'feijao_fk', 'massa_fk', 'salada_fk', 'acompanhamento_fk', 'carne01_fk', 'carne02_fk'].map((field) => (
           <TextField
             key={field}
@@ -198,17 +197,26 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             name={field}
             select
             fullWidth
-            value={form[field]}
-            onChange={handleChange}
+            value={form.itens?.[field] || ''}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                itens: {
+                  ...prev.itens,
+                  [field]: e.target.value
+                }
+              }))
+            }
           >
             <MenuItem value="">-- Nenhum --</MenuItem>
-            {products.map(product => (
+            {products.map((product) => (
               <MenuItem key={product.pro_id} value={product.pro_id}>
                 {product.pro_nome}
               </MenuItem>
             ))}
           </TextField>
         ))}
+
       </DialogContent>
 
       <DialogActions>
