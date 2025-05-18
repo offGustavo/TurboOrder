@@ -4,12 +4,14 @@ import { FaPen } from "react-icons/fa";
 import '../styles/OrderCard.css';
 import { toast } from 'react-toastify';
 import EditOrderDialog from './EditOrderDialog';
+import { useLocation } from 'react-router';
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
 const OrderCard = ({
   id, name, details, status, data, day_order, products, valor, onStatusChange
 }) => {
+  const location = useLocation();
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
   const [editOpen, setEditOpen] = useState(false);
 
@@ -45,7 +47,10 @@ const OrderCard = ({
           </div>
           <div className='order-date-day'>
             <span className="order-date">{data}</span>
-            <div className='order-day-order'><span>{day_order}</span></div>
+
+            {location.pathname !== '/historico' && (
+              <div className='order-day-order'><span>{day_order}</span></div>
+            )}
           </div>
         </div>
         <p className="customer-name">{name}</p>
