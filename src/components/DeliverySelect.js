@@ -12,9 +12,8 @@ import Address from '../components/Address.js'
 import ClientInfo from './ClientInfo.js';
 import "../styles/DeliverySelect.css";
 
-export default function DeliverySelect({ formData, setFormData }) {
+export default function DeliverySelect({ formData, setFormData, selectedTime, setSelectedTime }) {
   const [selectedOption, setSelectedOption] = React.useState("delivery");
-  const [selectedTime, setSelectedTime] = React.useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,11 +23,18 @@ export default function DeliverySelect({ formData, setFormData }) {
     }));
   };
 
-  // NÃO REMOVER ISSO, CAUSA BUG 
+  const handleOptionChange = (event) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+
+    if (value === "delivery") {
+      setSelectedTime(null); // Zera o horário se for entrega
+    }
+  };
+
+  // WARN: NÃO REMOVER ISSO, CAUSA BUG 
   const SubText = styled.h2` margin: 20px 0px 20px 0px; font-size: 16px; `;
-
   const Form = styled.div` display: flex; `;
-
   const Container = styled.div` display: flex; padding: 0px 10px;`;
 
   return (
@@ -36,8 +42,8 @@ export default function DeliverySelect({ formData, setFormData }) {
       <FormLabel id="delivery-options-label">Escolha o método de entrega</FormLabel>
       <RadioGroup
         aria-labelledby="delivery-options-label"
-        value={selectedOption} // Vincula o estado ao RadioGroup
-        onChange={(event) => setSelectedOption(event.target.value)} // Atualiza o estado
+        value={selectedOption}
+        onChange={handleOptionChange}
         name="delivery-options-group"
       >
         <FormControlLabel value="delivery" control={<Radio />} label="Entrega" />
@@ -45,12 +51,7 @@ export default function DeliverySelect({ formData, setFormData }) {
       </RadioGroup>
 
       <Form>
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-        >
-          {/* Exibe a seção de Entrega se a opção for "delivery" */}
+        <Box component="form" noValidate autoComplete="off">
           {selectedOption === "delivery" && (
             <div className="EntregaSection">
               <SubText>Endereço do Cliente</SubText>
@@ -60,12 +61,9 @@ export default function DeliverySelect({ formData, setFormData }) {
             </div>
           )}
 
-          {/* Exibe a seção de Retirada Local se a opção for "local" */}
           {selectedOption === "local" && (
             <div className="LocalSection" style={{ padding: 0 }}>
-
               <SubText>Selecione um Horário</SubText>
-
               <Container>
                 <SelectTime
                   label="Horário"

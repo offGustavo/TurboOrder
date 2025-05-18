@@ -53,19 +53,20 @@ const AddOrder = () => {
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [observacao, setObservacao] = useState("");
   const [pagamento, setPagamento] = useState("");
+  const [selectedTime, setSelectedTime] = useState(null);
+  // const horarioFormatado = selectedTime?.format("HH:mm") || null;
 
-  // State to hold selected products by category
   const [selectedProducts, setSelectedProducts] = useState({
     Arroz: null,
     Feijão: null,
     Massa: null,
     Carne: null,
     Carne2: null,
+    Salada: null,
+    Acompanhamento: null
   });
 
-  // State to track if user wants two meats
   const [isTwoMeats, setIsTwoMeats] = useState(false);
-
   const debounceTimeout = useRef(null);
 
   useEffect(() => {
@@ -76,10 +77,13 @@ const AddOrder = () => {
   }, [location.state]);
 
   useEffect(() => {
-    const sanitizedPhone = phoneInput.replace(/\D/g, '');
-    if (sanitizedPhone.length >= 8) {
-      fetchClientInfo(phoneInput);
-    }
+    clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      const sanitized = phoneInput.replace(/\D/g, '');
+      if (sanitized.length >= 8) {
+        fetchClientInfo(phoneInput);
+      }
+    }, 500);
   }, [phoneInput]);
 
   useEffect(() => {
@@ -189,8 +193,10 @@ const AddOrder = () => {
       carne02_fk: isTwoMeats ? (selectedProducts.Carne2?.pro_id || null) : null,
     };
 
+    //TODO: transformart esse valores em variaveis do banco de dados
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
+    // TODO: Criar funcionario
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
       funcionario_fk: 1,
@@ -199,9 +205,9 @@ const AddOrder = () => {
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
       ped_tipoPagamento: pagamento,
+      ped_horarioRetirada: selectedTime?.format("HH:mm") || null,
       ped_observacao: observacao,
       ped_desativado: 0
-      // ped_ordem_dia será calculado no backend
     };
 
     try {
@@ -210,6 +216,7 @@ const AddOrder = () => {
       console.log(response.data);
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
+      console.log(pedidoData);
       alert("Erro ao cadastrar pedido.");
     }
   };
@@ -301,7 +308,12 @@ const AddOrder = () => {
       <section>
         <SubText>Entrega</SubText>
         <div>
-          <DeliverySelect formData={clientInfo} setFormData={setClientInfo} />
+          <DeliverySelect
+            formData={clientInfo}
+            setFormData={setClientInfo}
+            selectedTime={selectedTime}
+            setSelectedTime={setSelectedTime}
+          />
         </div>
       </section>
 
