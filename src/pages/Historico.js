@@ -40,7 +40,7 @@ const Historico = () => {
 
   return (
     <div className="historico-container">
-      <h2 className="title">Histórico e Pesquisa de Pedidos</h2>
+      <h2 className="title">Histórico de Pedidos</h2>
       <div className="filters">
         <Box className="filters" display="flex" flexWrap="wrap" gap={2} mb={3}>
           <TextField
@@ -98,9 +98,9 @@ const Historico = () => {
             }}
           >
             <MenuItem value="">Todos</MenuItem>
-            <MenuItem value="0">Em andamento</MenuItem>
-            <MenuItem value="1">Concluído</MenuItem>
-            <MenuItem value="2">Cancelado</MenuItem>
+            <MenuItem value="Em Andamento">Em andamento</MenuItem>
+            <MenuItem value="Concluído">Concluído</MenuItem>
+            <MenuItem value="Cancelado">Cancelado</MenuItem>
           </TextField>
 
           <TextField
