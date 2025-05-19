@@ -9,13 +9,14 @@ import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
+import { useReactToPrint } from 'react-to-print';
 
-const TitlePedido = styled.h1`
+const TitlePedido = styled.h1`  
   margin: 0px;
   font-size: 25px;
 `;
 
-const SubText = styled.h2`
+const SubText = styled.h2`  
   margin: 10px 0px 20px 0px;
   font-size: 16px;
 `;
@@ -38,8 +39,76 @@ const AlreadyRegistered = styled.button`
   }
 `;
 
+// Componente para o conteúdo da impressão
+const PrintContent = React.forwardRef(({
+  clientInfo,
+  selectedProducts,
+  isTwoMeats,
+  observacao,
+  pagamento,
+  selectedTime
+}, ref) => {
+  const formatPhone = (phone) => {
+    if (!phone) return '';
+    const cleaned = ('' + phone).replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+    if (match) {
+      return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+    return phone;
+  };
+
+  return (
+    <div ref={ref} style={{ padding: '20px', fontFamily: 'Arial' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Comprovante de Pedido</h1>
+
+      <div style={{ marginBottom: '15px' }}>
+        <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>Informações do Cliente</h2>
+        <p><strong>Nome:</strong> {clientInfo.cli_nome} {clientInfo.cli_sobrenome}</p>
+        <p><strong>Telefone:</strong> {formatPhone(clientInfo.con_telefone)}</p>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>Detalhes do Pedido</h2>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f5f5f5' }}>
+              <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Item</th>
+              <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Produto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(selectedProducts).map(([tipo, produto]) => {
+              if (!produto || (tipo === 'Carne2' && !isTwoMeats)) return null;
+              return (
+                <tr key={tipo}>
+                  <td style={{ padding: '8px', border: '1px solid #ddd' }}>{tipo}</td>
+                  <td style={{ padding: '8px', border: '1px solid #ddd' }}>{produto.pro_nome}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>Informações Adicionais</h2>
+        <p><strong>Horário de Retirada:</strong> {selectedTime?.format("HH:mm") || 'Não especificado'}</p>
+        <p><strong>Observações:</strong> {observacao || 'Nenhuma'}</p>
+        <p><strong>Pagamento:</strong> {pagamento || 'Não especificado'}</p>
+        <p><strong>Valor Total:</strong> R$ {isTwoMeats ? '22,00' : '20,00'}</p>
+      </div>
+
+      <div style={{ marginTop: '30px', textAlign: 'center', fontStyle: 'italic' }}>
+        <p>Pedido gerado em: {new Date().toLocaleString()}</p>
+      </div>
+    </div>
+  );
+});
+
 const AddOrder = () => {
   const location = useLocation();
+  const printRef = useRef();
 
   const [options, setOptions] = useState([]);
   const [clientInfo, setClientInfo] = useState({
@@ -54,7 +123,6 @@ const AddOrder = () => {
   const [observacao, setObservacao] = useState("");
   const [pagamento, setPagamento] = useState("");
   const [selectedTime, setSelectedTime] = useState(null);
-  // const horarioFormatado = selectedTime?.format("HH:mm") || null;
 
   const [selectedProducts, setSelectedProducts] = useState({
     Arroz: null,
@@ -68,6 +136,23 @@ const AddOrder = () => {
 
   const [isTwoMeats, setIsTwoMeats] = useState(false);
   const debounceTimeout = useRef(null);
+
+  // Configuração do react-to-print
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    pageStyle: `
+      @page {
+        size: A5;
+        margin: 10mm;
+      }
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+        }
+      }
+    `,
+    documentTitle: `Pedido_${clientInfo.cli_nome}_${new Date().toLocaleDateString()}`,
+  });
 
   useEffect(() => {
     if (location.state && location.state.client) {
@@ -151,7 +236,6 @@ const AddOrder = () => {
     }
   };
 
-  // Handle product selection change
   const handleProductChange = (tipo, produto) => {
     console.log("Produto selecionado para", tipo, ":", produto);
     setSelectedProducts(prev => ({
@@ -160,16 +244,13 @@ const AddOrder = () => {
     }));
   };
 
-  // Handle checkbox change for two meats
   const handleTwoMeatsChange = (event) => {
     setIsTwoMeats(event.target.checked);
     if (!event.target.checked) {
-      // Clear second meat selection if unchecked
       setSelectedProducts(prev => ({ ...prev, Carne2: null }));
     }
   };
 
-  // Submit order to backend
   const handleSubmitOrder = async () => {
     if (!clientInfo.cli_nome) {
       alert("Por favor, informe um cliente válido.");
@@ -198,10 +279,8 @@ const AddOrder = () => {
       carne02_fk: isTwoMeats ? (selectedProducts.Carne2?.pro_id || null) : null,
     };
 
-    //TODO: transformart esse valores em variaveis do banco de dados
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
-    // TODO: Criar funcionario
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
       funcionario_fk: 1,
@@ -219,6 +298,8 @@ const AddOrder = () => {
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       alert("Pedido cadastrado com sucesso!");
       console.log(response.data);
+      // Chama a impressão após o sucesso do cadastro
+      handlePrint();
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
       console.log(pedidoData);
@@ -228,6 +309,19 @@ const AddOrder = () => {
 
   return (
     <main className="p-10 ContainerPedido">
+      {/* Componente de impressão (oculto na tela) */}
+      <div style={{ display: "none" }}>
+        <PrintContent
+          ref={printRef}
+          clientInfo={clientInfo}
+          selectedProducts={selectedProducts}
+          isTwoMeats={isTwoMeats}
+          observacao={observacao}
+          pagamento={pagamento}
+          selectedTime={selectedTime}
+        />
+      </div>
+
       <header className="display-flex space-between ">
         <TitlePedido>Cadastro De Pedidos</TitlePedido>
         <div className="display-flex">
@@ -432,7 +526,6 @@ const AddOrder = () => {
             }}
           />
         </div>
-
       </section>
 
       <hr />
@@ -460,9 +553,7 @@ const AddOrder = () => {
             }}
           />
         </div>
-
       </section>
-
     </main>
   );
 };
