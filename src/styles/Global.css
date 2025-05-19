@@ -61,7 +61,7 @@ main{
   transition: background-color 0.2s ease;
 }
 
-.btn-canel:hover {
+.btn-cancel:hover {
   background-color: var(--bg-red-alt);
 }
 
