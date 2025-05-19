@@ -54,6 +54,9 @@ const AddOrder = () => {
   const [clientError, setClientError] = useState(null);
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [observacao, setObservacao] = useState("");
+  const [pagamento, setPagamento] = useState("");
+  const [selectedTime, setSelectedTime] = useState(null);
+  // const horarioFormatado = selectedTime?.format("HH:mm") || null;
 
   const [selectedProducts, setSelectedProducts] = useState({
     Arroz: null,
@@ -61,12 +64,12 @@ const AddOrder = () => {
     Massa: null,
     Carne: null,
     Carne2: null,
+    Salada: null,
+    Acompanhamento: null
   });
 
   const [isTwoMeats, setIsTwoMeats] = useState(false);
-
   const [ticketData, setTicketData] = useState(null);
-
   const debounceTimeout = useRef(null);
   const componentRef = useRef();
 
@@ -78,10 +81,13 @@ const AddOrder = () => {
   }, [location.state]);
 
   useEffect(() => {
-    const sanitizedPhone = phoneInput.replace(/\D/g, '');
-    if (sanitizedPhone.length >= 8) {
-      fetchClientInfo(phoneInput);
-    }
+    clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      const sanitized = phoneInput.replace(/\D/g, '');
+      if (sanitized.length >= 8) {
+        fetchClientInfo(phoneInput);
+      }
+    }, 500);
   }, [phoneInput]);
 
   useEffect(() => {
@@ -185,6 +191,11 @@ const AddOrder = () => {
       return;
     }
 
+    if (!pagamento) {
+      alert("Por favor, informe o tipo de pagamento.");
+      return;
+    }
+
     if (isTwoMeats) {
       if (!selectedProducts.Carne || !selectedProducts.Carne2) {
         alert("Por favor, selecione as duas carnes.");
@@ -202,8 +213,10 @@ const AddOrder = () => {
       carne02_fk: isTwoMeats ? (selectedProducts.Carne2?.pro_id || null) : null,
     };
 
+    //TODO: transformart esse valores em variaveis do banco de dados
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
+    // TODO: Criar funcionario
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
       funcionario_fk: 1,
@@ -211,7 +224,8 @@ const AddOrder = () => {
       ped_status: "Em Andamento",
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
-      ped_tipoPagamento: "Dinheiro",
+      ped_tipoPagamento: pagamento,
+      ped_horarioRetirada: selectedTime?.format("HH:mm") || null,
       ped_observacao: observacao,
       ped_desativado: 0
     };
@@ -226,6 +240,7 @@ const AddOrder = () => {
 
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
+      console.log(pedidoData);
       alert("Erro ao cadastrar pedido.");
     }
   };
@@ -317,7 +332,12 @@ const AddOrder = () => {
       <section>
         <SubText>Entrega</SubText>
         <div>
-          <DeliverySelect formData={clientInfo} setFormData={setClientInfo} />
+          <DeliverySelect
+            formData={clientInfo}
+            setFormData={setClientInfo}
+            selectedTime={selectedTime}
+            setSelectedTime={setSelectedTime}
+          />
         </div>
       </section>
 
@@ -405,9 +425,67 @@ const AddOrder = () => {
         </div>
       </section>
 
+      <hr />
+      <section>
+        <SubText>
+          Observações
+        </SubText>
+
+        <div style={{ display: "flex", gap: "20px" }}>
+          <TextField
+            id="ped_observacao"
+            label="Observações"
+            placeholder="Exemplo: Tirar Cebola, Molho à parte..."
+            multiline
+            value={observacao}
+            onChange={(e) => setObservacao(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "100%",
+            }}
+          />
+        </div>
+
+      </section>
+
+      <hr />
+      <section>
+        <SubText>
+          Pagamento
+        </SubText>
+
+        <div style={{ display: "flex", gap: "20px" }}>
+          <TextField
+            id="ped_tipoPagamento"
+            label="Tipo de Pagamento"
+            placeholder="Exemplo: Dinheiro, Cartão de Crédito, Pix..."
+            value={pagamento}
+            onChange={(e) => setPagamento(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              "& .MuiInputBase-input": {
+                color: "black",
+              },
+              width: "100%",
+            }}
+          />
+        </div>
+
+      </section>
+
       <div style={{ display: 'none' }}>
         <TicketOrder ref={componentRef} pedido={ticketData} />
       </div>
+
     </main>
   );
 };

@@ -1,0 +1,126 @@
+.modal-container {
+  max-width: 800px;
+  width: 100%;
+  height: 23%;
+
+}
+
+
+.modal-container .MuiBox-root:last-of-type {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-box{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+}
+
+@media (max-width: 450px) {
+
+  .modal-box{
+    flex-direction: column;
+  }
+  .modal-container {
+    width: 90% !important;
+    padding: 16px !important;
+  }
+
+  .modal-container h2 {
+    font-size: 1.2rem;
+  }
+
+  .MuiBox-root {
+    flex-direction: row !important;
+    gap: 1rem !important;
+  }
+
+   .modal-container button {
+    position: relative;
+    bottom: 8rem;
+  }
+
+}
+
+/* Tablet */
+@media (min-width: 451px) and (max-width: 768px) {
+  .modal-container {
+    width: 90% !important;
+    padding: 16px !important;
+  }
+
+  .modal-container h2 {
+    font-size: 1.5rem;
+  }
+
+   .modal-container button {
+    position: relative;
+    bottom: 8rem;
+  }
+
+  .modal-container .MuiBox-root:last-of-type {
+    justify-content: flex-end;
+    flex-direction: row;
+  }
+}
+
+/* Laptop */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .modal-container {
+    width: 80% !important; 
+    padding: 15px !important; 
+  }
+
+  .modal-container h2 {
+    font-size: 1.8rem; 
+  }
+
+  .modal-container button {
+    position: relative;
+    bottom: 8rem;
+  }
+  
+  
+}
+
+/* Laptop L */
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .modal-container {
+    width: 70% !important; 
+    padding: 16px !important; 
+  }
+
+  .modal-container h2 {
+    font-size: 2rem; 
+  }
+
+
+  .modal-container button {
+    position: relative;
+    bottom: 8rem;
+  }
+}
+
+
+/* Tv */
+@media (min-width: 1440px) and (max-width: 2560px) {
+  .modal-container {
+    width: 60% !important; 
+    padding: 16px !important; 
+    height: 22%;
+  }
+
+  .modal-container h2 {
+    font-size: 2.5rem; 
+  }
+
+  .modal-container button {
+    position: relative;
+    bottom: 8rem;
+  }
+  
+  
+}

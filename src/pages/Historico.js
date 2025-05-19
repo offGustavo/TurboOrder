@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import OrderCard from "../components/OrderCard";
 import { Box, TextField, MenuItem } from "@mui/material";
 import "./../styles/Historico.css";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
@@ -21,7 +26,7 @@ const Historico = () => {
         if (orderStatus) params.append("status", orderStatus);
         if (valor) params.append("valor", valor);
 
-        const response = await fetch(`http://localhost:8800/pedidos?${params.toString()}`);
+        const response = await fetch(`http://localhost:8800/pedidos/filtred?${params.toString()}`);
         if (!response.ok) {
           throw new Error("Erro ao buscar pedidos");
         }
@@ -61,24 +66,28 @@ const Historico = () => {
             }}
           />
 
-          <TextField
-            label="Data do Pedido"
-            variant="outlined"
-            type="date"
-            InputLabelProps={{ shrink: true }}
-            value={orderDate}
-            onChange={(e) => setOrderDate(e.target.value)}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-              "& .MuiInputBase-input": {
-                color: "black",
-              },
-              width: "20ch",
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+            <DatePicker
+              label="Data do Pedido"
+              value={dayjs(orderDate)} // orderDate como string ou dayjs object
+              onChange={(newValue) => setOrderDate(newValue?.format("YYYY-MM-DD"))}
+              slotProps={{
+                textField: {
+                  variant: "outlined",
+                  sx: {
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": { borderColor: "#FD1F4A" },
+                      "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                    },
+                    "& .MuiInputBase-input": {
+                      color: "black",
+                    },
+                    width: "20ch",
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
 
           <TextField
             label="Status do Pedido"

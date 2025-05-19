@@ -91,6 +91,7 @@
   align-self: flex-start;
   border: none;
   outine: none;
+  cursor: pointer;
 }
 
 .status-tag.em-andamento {

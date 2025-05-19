@@ -50,10 +50,21 @@
     cursor: pointer;
 }
 
-.client-table button.edit-btn svg {
-    color: black;
-}
+/* .client-table button.edit-btn svg { */
+/*     color: black; */
+/* } */
 
 .client-table button.delete-btn svg {
     color: #FD1F4A;
+}
+
+.control-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#edit-btn {
+  background-color: none;
+  color: black;
 }
