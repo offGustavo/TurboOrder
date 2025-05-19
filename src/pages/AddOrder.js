@@ -221,9 +221,9 @@ const AddOrder = () => {
       console.log(response.data);
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
-      console.log(pedidoData);
       alert("Erro ao cadastrar pedido.");
     }
+    console.log(pedidoData);
   };
 
   return (
