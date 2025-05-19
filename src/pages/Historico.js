@@ -21,7 +21,7 @@ const Historico = () => {
         if (orderStatus) params.append("status", orderStatus);
         if (valor) params.append("valor", valor);
 
-        const response = await fetch(`http://localhost:8800/pedidos?${params.toString()}`);
+        const response = await fetch(`http://localhost:8800/pedidos/filtred?${params.toString()}`);
         if (!response.ok) {
           throw new Error("Erro ao buscar pedidos");
         }
