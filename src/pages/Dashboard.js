@@ -138,6 +138,7 @@ const Dashboard = () => {
           products: productsText,
           details: order.ped_observacao,
           status: order.ped_status,
+          // FIXME: Bug Data muda para o próximo dia depois das 20:00
           data: new Date(order.ped_data).toLocaleDateString('pt-BR'),
           valor: order.ped_valor,
           day_order: order.ped_ordem_dia
