@@ -9,6 +9,8 @@ import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
+import { useReactToPrint } from 'react-to-print';
+import TicketOrder from "../components/TicketOrder";
 
 const TitlePedido = styled.h1`
   margin: 0px;
@@ -53,7 +55,6 @@ const AddOrder = () => {
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [observacao, setObservacao] = useState("");
 
-  // State to hold selected products by category
   const [selectedProducts, setSelectedProducts] = useState({
     Arroz: null,
     Feijão: null,
@@ -62,10 +63,12 @@ const AddOrder = () => {
     Carne2: null,
   });
 
-  // State to track if user wants two meats
   const [isTwoMeats, setIsTwoMeats] = useState(false);
 
+  const [ticketData, setTicketData] = useState(null);
+
   const debounceTimeout = useRef(null);
+  const componentRef = useRef();
 
   useEffect(() => {
     if (location.state && location.state.client) {
@@ -82,10 +85,9 @@ const AddOrder = () => {
   }, [phoneInput]);
 
   useEffect(() => {
-    // Fetch products for today's menu from backend
     const fetchProducts = async () => {
       try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('pt-br');
         const response = await axios.get(`http://localhost:8800/cardapio?data=${today}`);
         setOptions(response.data);
       } catch (error) {
@@ -146,25 +148,37 @@ const AddOrder = () => {
     }
   };
 
-  // Handle product selection change
   const handleProductChange = (tipo, produto) => {
-    console.log("Produto selecionado para", tipo, ":", produto);
     setSelectedProducts(prev => ({
       ...prev,
       [tipo]: produto,
     }));
   };
 
-  // Handle checkbox change for two meats
   const handleTwoMeatsChange = (event) => {
     setIsTwoMeats(event.target.checked);
     if (!event.target.checked) {
-      // Clear second meat selection if unchecked
       setSelectedProducts(prev => ({ ...prev, Carne2: null }));
     }
   };
 
-  // Submit order to backend
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  useEffect(() => {
+    if (ticketData) {
+      console.log("Imprimindo ticket:");
+      console.log(JSON.stringify(ticketData, null, 2));
+      const timer = setTimeout(() => {
+        if (componentRef.current) {
+          handlePrint();
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [ticketData]);
+
   const handleSubmitOrder = async () => {
     if (!clientInfo.cli_nome) {
       alert("Por favor, informe um cliente válido.");
@@ -197,17 +211,19 @@ const AddOrder = () => {
       ped_status: "Em Andamento",
       ped_valor,
       ped_data: new Date().toISOString().split('T')[0],
-      // TODO: Adicionar uma variavel para o metodo de pagamento
       ped_tipoPagamento: "Dinheiro",
       ped_observacao: observacao,
       ped_desativado: 0
-      // ped_ordem_dia será calculado no backend
     };
 
     try {
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       alert("Pedido cadastrado com sucesso!");
-      console.log(response.data);
+      const pedidoId = response.data.pedidoId;
+
+      const ticketResponse = await axios.get(`http://localhost:8800/pedidos/${pedidoId}/ticket`);
+      setTicketData(ticketResponse.data);
+
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
       alert("Erro ao cadastrar pedido.");
@@ -267,7 +283,7 @@ const AddOrder = () => {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { color: "#FD1F4A" },
               },
               "& .MuiInputBase-input": {
                 color: "black",
@@ -283,7 +299,7 @@ const AddOrder = () => {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { color: "#FD1F4A" },
               },
               "& .MuiInputBase-input": {
                 color: "black",
@@ -322,7 +338,7 @@ const AddOrder = () => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { color: "#FD1F4A" },
                   },
                 }}
               />
@@ -337,7 +353,7 @@ const AddOrder = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { color: "#FD1F4A" },
                 },
               }}
             />
@@ -351,7 +367,7 @@ const AddOrder = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { color: "#FD1F4A" },
                 },
               }}
             />
@@ -365,7 +381,7 @@ const AddOrder = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { color: "#FD1F4A" },
                 },
               }}
             />
@@ -380,7 +396,7 @@ const AddOrder = () => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { color: "#FD1F4A" },
                   },
                 }}
               />
@@ -389,34 +405,9 @@ const AddOrder = () => {
         </div>
       </section>
 
-      <hr />
-      <section>
-        <SubText>
-          Observações
-        </SubText>
-
-        <div style={{ display: "flex", gap: "20px" }}>
-          <TextField
-            id="ped_observacao"
-            label="Observações"
-            placeholder="Exemplo: Tirar Cebola, Molho à parte..."
-            multiline
-            value={observacao}
-            onChange={(e) => setObservacao(e.target.value)}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-              },
-              "& .MuiInputBase-input": {
-                color: "black",
-              },
-              width: "100%",
-            }}
-          />
-        </div>
-
-      </section>
+      <div style={{ display: 'none' }}>
+        <TicketOrder ref={componentRef} pedido={ticketData} />
+      </div>
     </main>
   );
 };
