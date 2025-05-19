@@ -9,8 +9,6 @@ import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
-import { useReactToPrint } from 'react-to-print';
-import TicketOrder from "../components/TicketOrder";
 
 const TitlePedido = styled.h1`
   margin: 0px;
@@ -69,9 +67,7 @@ const AddOrder = () => {
   });
 
   const [isTwoMeats, setIsTwoMeats] = useState(false);
-  const [ticketData, setTicketData] = useState(null);
   const debounceTimeout = useRef(null);
-  const componentRef = useRef();
 
   useEffect(() => {
     if (location.state && location.state.client) {
@@ -91,6 +87,7 @@ const AddOrder = () => {
   }, [phoneInput]);
 
   useEffect(() => {
+    // Fetch products for today's menu from backend
     const fetchProducts = async () => {
       try {
         const today = new Date().toISOString().split('T')[0];
@@ -154,37 +151,25 @@ const AddOrder = () => {
     }
   };
 
+  // Handle product selection change
   const handleProductChange = (tipo, produto) => {
+    console.log("Produto selecionado para", tipo, ":", produto);
     setSelectedProducts(prev => ({
       ...prev,
       [tipo]: produto,
     }));
   };
 
+  // Handle checkbox change for two meats
   const handleTwoMeatsChange = (event) => {
     setIsTwoMeats(event.target.checked);
     if (!event.target.checked) {
+      // Clear second meat selection if unchecked
       setSelectedProducts(prev => ({ ...prev, Carne2: null }));
     }
   };
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  useEffect(() => {
-    if (ticketData) {
-      console.log("Imprimindo ticket:");
-      console.log(JSON.stringify(ticketData, null, 2));
-      const timer = setTimeout(() => {
-        if (componentRef.current) {
-          handlePrint();
-        }
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [ticketData]);
-
+  // Submit order to backend
   const handleSubmitOrder = async () => {
     if (!clientInfo.cli_nome) {
       alert("Por favor, informe um cliente válido.");
@@ -233,16 +218,12 @@ const AddOrder = () => {
     try {
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       alert("Pedido cadastrado com sucesso!");
-      const pedidoId = response.data.pedidoId;
-
-      const ticketResponse = await axios.get(`http://localhost:8800/pedidos/${pedidoId}/ticket`);
-      setTicketData(ticketResponse.data);
-
+      console.log(response.data);
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
-      console.log(pedidoData);
       alert("Erro ao cadastrar pedido.");
     }
+    console.log(pedidoData);
   };
 
   return (
@@ -298,7 +279,7 @@ const AddOrder = () => {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
               },
               "& .MuiInputBase-input": {
                 color: "black",
@@ -314,7 +295,7 @@ const AddOrder = () => {
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
-                "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
               },
               "& .MuiInputBase-input": {
                 color: "black",
@@ -358,7 +339,7 @@ const AddOrder = () => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                   },
                 }}
               />
@@ -373,7 +354,7 @@ const AddOrder = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                 },
               }}
             />
@@ -387,7 +368,7 @@ const AddOrder = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                 },
               }}
             />
@@ -401,7 +382,7 @@ const AddOrder = () => {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                 },
               }}
             />
@@ -416,7 +397,7 @@ const AddOrder = () => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { color: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                   },
                 }}
               />
@@ -481,10 +462,6 @@ const AddOrder = () => {
         </div>
 
       </section>
-
-      <div style={{ display: 'none' }}>
-        <TicketOrder ref={componentRef} pedido={ticketData} />
-      </div>
 
     </main>
   );
