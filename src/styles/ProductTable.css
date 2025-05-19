@@ -9,10 +9,12 @@
 .icon-size{
   font-size: 15px;
 }
+
 .control-box{
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
 .MuiInputLabel-root {
@@ -52,17 +54,18 @@
     background-color: #fff;
 }
 
-.product-table .actions {
+/* .product-table .actions {
     display: flex;
     justify-content: center;
     gap: 10px;
-}
+} */
 
 .product-table button.edit-btn,
 .product-table button.delete-btn {
     border: none;
     background: none;
     cursor: pointer;
+    padding: 0;
 }
 
 .product-table button.edit-btn svg {
@@ -297,3 +300,10 @@
         padding: 10px;
     }
 }
+
+/* @media (min-width) {
+    .product-table button.edit-btn svg {
+        color: green;
+        width: 15px;
+    }
+} */
