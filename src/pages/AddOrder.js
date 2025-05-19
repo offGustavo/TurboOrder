@@ -57,6 +57,7 @@ const AddOrder = () => {
   const [pagamento, setPagamento] = useState("");
   const [selectedTime, setSelectedTime] = useState(null);
   // const horarioFormatado = selectedTime?.format("HH:mm") || null;
+  const ticketRef = useRef();
 
   const [selectedProducts, setSelectedProducts] = useState({
     Arroz: null,
@@ -154,6 +155,10 @@ const AddOrder = () => {
     }
   };
 
+  const handleImprimir = () => {
+    ticketRef.current?.print();
+  };
+
   const handleProductChange = (tipo, produto) => {
     setSelectedProducts(prev => ({
       ...prev,
@@ -243,6 +248,11 @@ const AddOrder = () => {
       console.log(pedidoData);
       alert("Erro ao cadastrar pedido.");
     }
+
+
+    {/* <button onClick={handleImprimir}>Imprimir</button> */ }
+    <TicketOrder ref={ticketRef} pedido={pedidoData} />
+
   };
 
   return (
@@ -482,9 +492,6 @@ const AddOrder = () => {
 
       </section>
 
-      <div style={{ display: 'none' }}>
-        <TicketOrder ref={componentRef} pedido={ticketData} />
-      </div>
 
     </main>
   );
