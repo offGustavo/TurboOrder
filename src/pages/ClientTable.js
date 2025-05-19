@@ -100,17 +100,17 @@ const ClientTable = () => {
                   : "Endereço não disponível"}
               </td>
               <td>
-                <NavLink to={`/clientes/${cliente.cli_id}/edit`}>
-                  <button className="edit-btn">
-                    <FaEdit />
+                <div className="control-box">
+                  <NavLink to={`/clientes/${cliente.cli_id}/edit`} id='edit-btn'>
+                    <FaEdit size={16} />
+                  </NavLink>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(cliente.cli_id)}
+                  >
+                    <FaTrash size={16} />
                   </button>
-                </NavLink>
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(cliente.cli_id)}
-                >
-                  <FaTrash />
-                </button>
+                </div>
               </td>
             </tr>
           ))}

@@ -33,7 +33,6 @@ const ProductTable = () => {
   const [proTipo, setProTipo] = useState("");
   const [filter, setFilter] = useState("Tudo");
   const [onEdit, setOnEdit] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const productTypes = [
     { value: "Arroz", label: "Arroz" },
     { value: "Feijão", label: "Feijão" },
@@ -42,6 +41,12 @@ const ProductTable = () => {
     { value: "Acompanhamento", label: "Acompanhamento" },
     { value: "Salada", label: "Salada" },
   ];
+
+  const [editProNome, setEditProNome] = useState('');
+  const [editProTipo, setEditProTipo] = useState('');
+  const [onProductEdit, setProductEdit] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
 
   useEffect(() => {
     axios
@@ -52,7 +57,7 @@ const ProductTable = () => {
 
   const handleSave = () => {
     if (!proNome || !proTipo) {
-      toast.warn("Por favor, preencha todos os campos.");
+      toast.error("Por favor, preencha todos os campos.");
       return;
     }
 
@@ -88,6 +93,8 @@ const ProductTable = () => {
     }
   };
 
+
+
   const handleDelete = async (pro_id) => {
     await axios
       .delete(`http://localhost:8800/produtos/${pro_id}`)
@@ -100,9 +107,9 @@ const ProductTable = () => {
   };
 
   const handleEdit = (product) => {
-    setOnEdit(product);
-    setProNome(product.pro_nome);
-    setProTipo(product.pro_tipo);
+    setProductEdit(product);
+    setEditProNome(product.pro_nome);
+    setEditProTipo(product.pro_tipo);
     setIsEditModalOpen(true);
   };
 
@@ -179,32 +186,32 @@ const ProductTable = () => {
               <td>{product.pro_nome}</td>
               <td>{product.pro_tipo}</td>
               <td>
-                <button className="edit-btn">
-                  <FaEdit onClick={() => handleEdit(product)} />
-                </button>
-                <button className="delete-btn">
-                  <FaTrash onClick={() => handleDelete(product.pro_id)} />
-                </button>
+                <div className="control-box">
+                  <button className="edit-btn">
+                    <FaEdit onClick={() => handleEdit(product)} size={16} className='icon-size' />
+                  </button>
+                  <button className="delete-btn">
+                    <FaTrash onClick={() => handleDelete(product.pro_id)} size={16} className='icon-size' />
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-       <EditProductModal
+
+      <EditProductModal
         open={isEditModalOpen}
         onClose={() => {
           setIsEditModalOpen(false);
           setOnEdit(null);
-          setProNome("");
-          setProTipo("");  
         }}
-        product={onEdit}  
-        onSave={handleSave}
-        setProNome={setProNome}
-        setProTipo={setProTipo}
+        onEdit={onProductEdit}
+        setProducts={setProducts}
         productTypes={productTypes}
       />
+
     </div >
   );
 };

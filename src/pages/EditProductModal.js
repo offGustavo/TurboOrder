@@ -1,108 +1,115 @@
-// components/EditProductModal.js
-import React from "react";
-import { Modal, Box, TextField, MenuItem, Button } from "@mui/material";
-import "../styles/EditProductModal.css"; 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 800,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  
-  borderRadius: '10px',
-};
+import * as React from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  MenuItem,
+  Box
+} from '@mui/material';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import '../styles/Global.css';
+import '../styles/EditProductModal.css';
 
-
-
-const EditProductModal = ({
+export default function EditProductModal({
   open,
   onClose,
-  product,
-  proNome,
-  proTipo,
-  onSave,
-  setProNome,
-  setProTipo,
-  productTypes,
-}) => {
-  if (!product) return null;
- 
+  onEdit,
+  setProducts,
+  productTypes
+}) {
+  const [localNome, setLocalNome] = React.useState('');
+  const [localTipo, setLocalTipo] = React.useState('');
+
+  React.useEffect(() => {
+    if (onEdit) {
+      setLocalNome(onEdit.pro_nome || '');
+      setLocalTipo(onEdit.pro_tipo || '');
+    }
+  }, [onEdit]);
+
+  const handleEdit = () => {
+    if (!localNome || !localTipo) {
+      toast.error("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    const updatedProduct = {
+      pro_id: onEdit.pro_id,
+      pro_nome: localNome,
+      pro_tipo: localTipo
+    };
+
+    axios
+      .put(`http://localhost:8800/produtos/${updatedProduct.pro_id}`, updatedProduct)
+      .then(() => {
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.pro_id === updatedProduct.pro_id ? updatedProduct : product
+          )
+        );
+        toast.success("Produto atualizado com sucesso!");
+        handleClose();
+      })
+      .catch(() => toast.error("Erro ao atualizar o produto."));
+  };
+
+  const handleClose = () => {
+    setLocalNome('');
+    setLocalTipo('');
+    onClose();
+  };
+
   return (
-    <Modal open={open} onClose={onClose} >
-      <Box sx={style} className="modal-container">
-        <h2>Editar Produto</h2>
-
-
-        <Box display="flex" gap={2} mb={18}>
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Nome do Produto"
-          value={proNome}
-          onChange={(e) => setProNome(e.target.value)}
-           sx={{
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle>Editar Produto</DialogTitle>
+      <DialogContent>
+        <Box sx={{ display: 'flex', gap: 2, mt: 1 }} >
+          <div className='modal-box'>
+            <TextField
+              fullWidth
+              label="Nome do Produto"
+              value={localNome}
+              onChange={(e) => setLocalNome(e.target.value)}
+              sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
                   "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                 },
               }}
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          select
-          label="Tipo do Produto"
-          value={proTipo}
-          onChange={(e) => setProTipo(e.target.value)}
-           sx={{
+            />
+            <TextField
+              fullWidth
+              select
+              label="Tipo do Produto"
+              value={localTipo}
+              onChange={(e) => setLocalTipo(e.target.value)}
+              sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
                   "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
                 },
               }}
-        >
-          {productTypes.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-
+            >
+              {productTypes.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </div>
         </Box>
-
-        <Box display="flex" justifyContent="flex-end" mt={2}>
-          <Button
-            variant="outlined"
-            onClick={onClose}
-            sx={{
-              marginRight: 1,
-              backgroundColor: '#dc3545',
-              color: '#fff',
-              '&:hover': { backgroundColor: '#bc0b0b' }
-            }}
-          >
-            Cancelar
-          </Button>
-          <Button
-            variant="contained"
-            onClick={onSave}
-            sx={{
-              marginRight: 1,
-              backgroundColor: '#FFBD0D',
-              color: 'black',
-              fontWeight: 'bold',
-              '&:hover': { backgroundColor: '#e4aa0a' }
-            }}
-          >
-            Salvar
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+        <button onClick={handleClose} className="btn-cancel">
+          Fechar
+        </button>
+        <button onClick={handleEdit} className="btn-add">
+          Salvar
+        </button>
+      </DialogActions>
+    </Dialog>
   );
-};
-
-export default EditProductModal;
+}

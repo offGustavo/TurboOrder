@@ -12,10 +12,18 @@
   gap: 8px;
 }
 
-
-
+.modal-box{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+}
 
 @media (max-width: 450px) {
+
+  .modal-box{
+    flex-direction: column;
+  }
   .modal-container {
     width: 90% !important;
     padding: 16px !important;
