@@ -6,6 +6,15 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.icon-size{
+  font-size: 15px;
+}
+.control-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .MuiInputLabel-root {
     color: black !important;
 }

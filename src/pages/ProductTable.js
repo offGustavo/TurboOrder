@@ -186,12 +186,14 @@ const ProductTable = () => {
               <td>{product.pro_nome}</td>
               <td>{product.pro_tipo}</td>
               <td>
-                <button className="edit-btn">
-                  <FaEdit onClick={() => handleEdit(product)} />
-                </button>
-                <button className="delete-btn">
-                  <FaTrash onClick={() => handleDelete(product.pro_id)} />
-                </button>
+                <div className="control-box">
+                  <button className="edit-btn">
+                    <FaEdit onClick={() => handleEdit(product)} size={16} className='icon-size' />
+                  </button>
+                  <button className="delete-btn">
+                    <FaTrash onClick={() => handleDelete(product.pro_id)} size={16} className='icon-size' />
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
