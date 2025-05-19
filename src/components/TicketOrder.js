@@ -11,6 +11,7 @@ const TicketOrder = React.forwardRef(({ pedido }, ref) => {
       <p><strong>Pedido ID:</strong> {pedido.id}</p>
       <p><strong>Cliente:</strong> {pedido.cliente.nome} {pedido.cliente.sobrenome}</p>
       <p><strong>Data:</strong> {new Date(pedido.data).toLocaleDateString()}</p>
+      <p><strong>Horário de Retirada:</strong> {pedido.horarioRetirada}</p>
       <p><strong>Status:</strong> {pedido.status}</p>
       <p><strong>Pagamento:</strong> {pedido.tipoPagamento}</p>
       <p><strong>Observação:</strong> {pedido.observacao || 'Nenhuma'}</p>
