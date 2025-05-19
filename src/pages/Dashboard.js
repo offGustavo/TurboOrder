@@ -75,6 +75,26 @@ const Dashboard = () => {
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
 
+  const fetchRevenueData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8800/pedidos/soma-mensal");
+
+      const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
+
+      console.log("totalMes", totalMesAtual)
+      console.log("mediaMesAtual", mediaMesAtual)
+      setMonthlyRevenue(totalMesAtual);
+      setMonthlyAverage(mediaMesAtual);
+    } catch (error) {
+      console.error("Erro ao buscar dados de faturamento:", error);
+      toast.error("Erro ao buscar faturamento mensal.");
+    }
+  };
+
+  useEffect(() => {
+    refreshOrders();
+    fetchRevenueData();
+  }, []);
 
   const refreshOrders = async () => {
     try {
@@ -131,8 +151,6 @@ const Dashboard = () => {
       const dailyCount = filteredOrdersData.length;
       setDailyRevenue(dailySum);
       setDailyAverage(dailyCount > 0 ? dailySum / dailyCount : 0);
-      setMonthlyRevenue(0);
-      setMonthlyAverage(0);
     } catch (error) {
       console.error("Erro ao atualizar pedidos:", error);
       toast.error("Erro ao atualizar pedidos.");
