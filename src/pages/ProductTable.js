@@ -52,7 +52,7 @@ const ProductTable = () => {
 
   const handleSave = () => {
     if (!proNome || !proTipo) {
-      toast.warn("Por favor, preencha todos os campos.");
+      toast.error("Por favor, preencha todos os campos.");
       return;
     }
 
@@ -191,20 +191,24 @@ const ProductTable = () => {
         </tbody>
       </table>
 
-       <EditProductModal
+
+      <EditProductModal
         open={isEditModalOpen}
         onClose={() => {
           setIsEditModalOpen(false);
           setOnEdit(null);
           setProNome("");
-          setProTipo("");  
+          setProTipo("");
         }}
-        product={onEdit}  
         onSave={handleSave}
+        proNome={proNome}
+        proTipo={proTipo}
         setProNome={setProNome}
         setProTipo={setProTipo}
         productTypes={productTypes}
       />
+     />
+
     </div >
   );
 };
