@@ -60,6 +60,12 @@ const AddOrder = () => {
     cli_nome: "",
     cli_sobrenome: "",
     con_telefone: "",
+    cli_numero: "",
+    cli_complemento: "",
+    end_cep: "",
+    end_cidade: "",
+    end_bairro: "",
+    end_rua: ""
   });
   const [phoneInput, setPhoneInput] = useState("");
   const [loadingClient, setLoadingClient] = useState(false);
@@ -100,14 +106,19 @@ const AddOrder = () => {
         <Line />
         <Text>Cliente: {clientInfo.cli_nome} {clientInfo.cli_sobrenome}</Text>
         <Text>Telefone: {clientInfo.con_telefone}</Text>
-        {/* <Text> Endereço: {clientInfo.cli_nome} </Text> */}
-        <Text>Pagamento: {pagamento}</Text>
+        <Text>
+          Endereço: {clientInfo.end_rua},  {clientInfo.cli_complemento} - {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep}
+        </Text>
+        {/* FIXME: Fix pagamento calculo */}
+        <Text>Pagamento: {isTwoMeats ? 22.00 : 20.00}, Tipo: {pagamento}</Text>
         <Text>Observações: {observacao}</Text>
         <Text>Produtos:</Text>
         {Object.entries(selectedProducts).map(([key, product]) =>
           product ? <Text key={key}>- {key}: {product.pro_nome}</Text> : null
         )}
-        <Text>Retirada: {selectedTime?.format("HH:mm") || "Não informado"}</Text>
+        {selectedTime && (
+          <Text>Retirada: {selectedTime.format("HH:mm")}</Text>
+        )}
         <Cut />
       </Printer>
     );
@@ -174,28 +185,53 @@ const AddOrder = () => {
   };
 
   const fetchClientInfo = async (phone) => {
+    // Se o telefone for inválido ou muito curto, limpa apenas o nome/sobrenome e mantém o telefone no estado
     if (!phone || phone.length < 8) {
       setClientInfo({
         cli_nome: "",
         cli_sobrenome: "",
         con_telefone: phone || "",
+        cli_numero: "",
+        cli_complemento: "",
+        end_cep: "",
+        end_cidade: "",
+        end_bairro: "",
+        end_rua: ""
       });
       return;
     }
+
     setLoadingClient(true);
     try {
-      const sanitizedPhone = phone.replace(/\D/g, '');
-      const response = await axios.get(`http://localhost:8800/clientes/telefone/${sanitizedPhone}`);
+      const sanitizedPhone = phone.replace(/\D/g, "");
+      const response = await axios.get(
+        `http://localhost:8800/clientes/telefone/${sanitizedPhone}`
+      );
+
+      // Cliente encontrado: preenche todos os campos retornados pelo backend
       setClientInfo(response.data);
+      console.log(response.data);
       setClientError(null);
       setPhoneInput(response.data.con_telefone || "");
     } catch (error) {
-      setClientInfo({
-        cli_nome: "",
-        cli_sobrenome: "",
-        con_telefone: phone || "",
-      });
-      setClientError("Cliente não encontrado");
+      // Se o servidor respondeu 404 => cliente não existe
+      if (error.response && error.response.status === 404) {
+        setClientInfo({
+          cli_nome: "",
+          cli_sobrenome: "",
+          con_telefone: phone || "",
+          cli_numero: "",
+          cli_complemento: "",
+          end_cep: "",
+          end_cidade: "",
+          end_bairro: "",
+          end_rua: ""
+        });
+        setClientError("Cliente não encontrado");
+      } else {
+        // Qualquer outro erro de requisição
+        setClientError("Erro ao buscar cliente");
+      }
       setPhoneInput(phone || "");
     } finally {
       setLoadingClient(false);
