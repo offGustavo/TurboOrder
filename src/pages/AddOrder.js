@@ -106,9 +106,7 @@ const AddOrder = () => {
         <Line />
         <Text>Cliente: {clientInfo.cli_nome} {clientInfo.cli_sobrenome}</Text>
         <Text>Telefone: {clientInfo.con_telefone}</Text>
-        <Text>
-          Endereço: {clientInfo.end_rua},  {clientInfo.cli_complemento} - {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep}
-        </Text>
+        <Text> Endereço: {clientInfo.end_rua},  {clientInfo.cli_numero} {clientInfo.cli_complemento} - {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep} </Text>
         {/* FIXME: Fix pagamento calculo */}
         <Text>Pagamento: {isTwoMeats ? 22.00 : 20.00}, Tipo: {pagamento}</Text>
         <Text>Observações: {observacao}</Text>
