@@ -118,6 +118,7 @@ const AddOrder = () => {
         {selectedTime && (
           <Text>Retirada: {selectedTime.format("HH:mm")}</Text>
         )}
+        <Br />
         <Cut />
       </Printer>
     );
