@@ -7,41 +7,30 @@ import { NavLink, useNavigate } from "react-router-dom";
 const Header = () => {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
-  const [searchName, setSearchName] = useState('');
 
-  const handleSearch = () => {
-    if (searchText.trim() === "") return;
+  const handleSearch = (text) => {
+    navigate("/", { state: { searchTerm: text } });
 
-    // Navega para a home
-    navigate("/", { state: { searchTerm: searchText } });
-
-    // Dispara evento personalizado
-    const searchEvent = new CustomEvent("search", { detail: searchText });
+    const searchEvent = new CustomEvent("search", { detail: text });
     window.dispatchEvent(searchEvent);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
   };
 
   return (
     <header className="header">
       <div className="header-content">
         <div className="search-bar">
-          <FaSearch className="search-icon" onClick={handleSearch} />
-          {/* Barra de busca por nome */}
-          <div className="search-wrapper">
-            <input
-              type="text"
-              placeholder="Buscar por nome do cliente..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="search-input"
-            />
-          </div>
+          <FaSearch className="search-icon" onClick={() => handleSearch(searchText)} />
+          <input
+            type="text"
+            placeholder="Buscar por nome do cliente..."
+            value={searchText}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              setSearchText(newValue);
+              handleSearch(newValue);
+            }}
+            className="search-input"
+          />
         </div>
 
         <div className="user-actions">
