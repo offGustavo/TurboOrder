@@ -3,12 +3,10 @@ import OrderCard from './../components/OrderCard';
 import './../styles/Dashboard.css';
 import styled from 'styled-components';
 import { FaDollarSign, FaMoneyBillTransfer } from "react-icons/fa6";
-import { FaBars } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FilterComponent from '../components/FilterComponent.js';
 import axios from 'axios';
-// import FilterComponent from '../components/FilterComponent';
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 1.59rem;
@@ -69,20 +67,16 @@ const productTypes = [
 const Dashboard = () => {
   const [filter, setFilter] = useState('Tudo');
   const [orders, setOrders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [dailyRevenue, setDailyRevenue] = useState(0);
   const [monthlyRevenue, setMonthlyRevenue] = useState(0);
   const [dailyAverage, setDailyAverage] = useState(0);
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
-
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get("http://localhost:8800/pedidos/soma-mensal");
-
       const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
-
-      console.log("totalMes", totalMesAtual)
-      console.log("mediaMesAtual", mediaMesAtual)
       setMonthlyRevenue(totalMesAtual);
       setMonthlyAverage(mediaMesAtual);
     } catch (error) {
@@ -90,11 +84,6 @@ const Dashboard = () => {
       toast.error("Erro ao buscar faturamento mensal.");
     }
   };
-
-  useEffect(() => {
-    refreshOrders();
-    fetchRevenueData();
-  }, []);
 
   const refreshOrders = async () => {
     try {
@@ -123,25 +112,22 @@ const Dashboard = () => {
 
       const mappedOrders = filteredOrdersData.map(order => {
         const productNames = [];
-
         if (order.arroz_fk) productNames.push(productsMap[order.arroz_fk]);
         if (order.feijao_fk) productNames.push(productsMap[order.feijao_fk]);
         if (order.massa_fk) productNames.push(productsMap[order.massa_fk]);
         if (order.carne01_fk) productNames.push(productsMap[order.carne01_fk]);
         if (order.carne02_fk) productNames.push(productsMap[order.carne02_fk]);
 
-        const productsText = productNames.join(', ');
-
         return {
           id: order.ped_id,
           name: `${order.cli_nome} ${order.cli_sobrenome}`,
-          products: productsText,
+          products: productNames.join(', '),
           details: order.ped_observacao,
           status: order.ped_status,
-          // FIXME: Bug Data muda para o próximo dia depois das 20:00
           data: new Date().toISOString().split('T')[0],
           valor: order.ped_valor,
-          day_order: order.ped_ordem_dia
+          day_order: order.ped_ordem_dia,
+          visible: true
         };
       });
 
@@ -157,15 +143,34 @@ const Dashboard = () => {
     }
   };
 
-
   useEffect(() => {
-    refreshOrders()
+    refreshOrders();
+    fetchRevenueData();
   }, []);
 
-  const filteredOrders = orders.filter(order => {
-    if (filter === 'Tudo') return true;
-    return order.status === filter;
-  });
+  useEffect(() => {
+    const handleSearch = (event) => {
+      const text = event.detail.toLowerCase();
+      setSearchTerm(text);
+    };
+    window.addEventListener("search", handleSearch);
+    return () => window.removeEventListener("search", handleSearch);
+  }, []);
+
+  useEffect(() => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) => {
+        const matchesFilter = filter === 'Tudo' || order.status === filter;
+        const matchesSearch = order.name.toLowerCase().includes(searchTerm);
+        return {
+          ...order,
+          visible: matchesFilter && matchesSearch,
+        };
+      })
+    );
+  }, [filter, searchTerm]);
+
+  const filteredOrders = orders.filter(order => order.visible !== false);
 
   return (
     <main className="dashboard">
@@ -209,13 +214,11 @@ const Dashboard = () => {
 
       <section className="orders">
         <h2>Pedidos</h2>
-
         <FilterComponent
           filterState={filter}
           setFilter={setFilter}
           filterItens={productTypes}
         />
-
         <div className="order-cards">
           {filteredOrders.map(order => (
             <OrderCard key={order.id} {...order} onStatusChange={refreshOrders} />
