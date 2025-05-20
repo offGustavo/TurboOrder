@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FilterComponent from '../components/FilterComponent.js';
 import axios from 'axios';
-// import FilterComponent from '../components/FilterComponent';
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 1.59rem;
@@ -74,7 +73,6 @@ const Dashboard = () => {
   const [dailyAverage, setDailyAverage] = useState(0);
   const [monthlyAverage, setMonthlyAverage] = useState(0);
 
-
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get("http://localhost:8800/pedidos/soma-mensal");
@@ -95,6 +93,8 @@ const Dashboard = () => {
     refreshOrders();
     fetchRevenueData();
   }, []);
+
+
 
   const refreshOrders = async () => {
     try {
@@ -138,10 +138,10 @@ const Dashboard = () => {
           products: productsText,
           details: order.ped_observacao,
           status: order.ped_status,
-          // FIXME: Bug Data muda para o próximo dia depois das 20:00
           data: new Date().toISOString().split('T')[0],
           valor: order.ped_valor,
-          day_order: order.ped_ordem_dia
+          day_order: order.ped_ordem_dia,
+          visible: true
         };
       });
 
@@ -157,15 +157,32 @@ const Dashboard = () => {
     }
   };
 
-
   useEffect(() => {
-    refreshOrders()
+    refreshOrders();
   }, []);
 
-  const filteredOrders = orders.filter(order => {
-    if (filter === 'Tudo') return true;
-    return order.status === filter;
-  });
+
+  useEffect(() => {
+    const handleSearch = (event) => {
+      const searchTerm = event.detail.toLowerCase();
+      setOrders((prevOrders) =>
+        prevOrders.map((order) => ({
+          ...order,
+          visible:
+            (filter === 'Tudo' || order.status === filter) &&
+            order.name.toLowerCase().includes(searchTerm),
+        }))
+      );
+    };
+
+    window.addEventListener("search", handleSearch);
+
+    return () => {
+      window.removeEventListener("search", handleSearch);
+    };
+  }, [filter]);
+
+  const filteredOrders = orders.filter(order => order.visible !== false);
 
   return (
     <main className="dashboard">
@@ -210,6 +227,8 @@ const Dashboard = () => {
       <section className="orders">
         <h2>Pedidos</h2>
 
+
+        {/* Filtro de status */}
         <FilterComponent
           filterState={filter}
           setFilter={setFilter}
