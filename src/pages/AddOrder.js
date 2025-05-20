@@ -9,6 +9,7 @@ import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const TitlePedido = styled.h1`
   margin: 0px;
@@ -172,18 +173,18 @@ const AddOrder = () => {
   // Submit order to backend
   const handleSubmitOrder = async () => {
     if (!clientInfo.cli_nome) {
-      alert("Por favor, informe um cliente válido.");
+      toast.error("Por favor, informe um cliente válido.");
       return;
     }
 
     if (!pagamento) {
-      alert("Por favor, informe o tipo de pagamento.");
+      toast.error("Por favor, informe o tipo de pagamento.");
       return;
     }
 
     if (isTwoMeats) {
       if (!selectedProducts.Carne || !selectedProducts.Carne2) {
-        alert("Por favor, selecione as duas carnes.");
+        toast.error("Por favor, selecione as duas carnes.");
         return;
       }
     }
@@ -217,11 +218,37 @@ const AddOrder = () => {
 
     try {
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
-      alert("Pedido cadastrado com sucesso!");
+      toast.success("Pedido cadastrado com sucesso!");
       console.log(response.data);
+
+      // → Limpar todos os inputs após criar o pedido
+      setClientInfo({
+        cli_nome: "",
+        cli_sobrenome: "",
+        con_telefone: "",
+      });
+      setPhoneInput("");
+      setClientError(null);
+      //FIX: não está limpando as escolhas
+      setSelectedProducts({
+        Arroz: null,
+        Feijão: null,
+        Massa: null,
+        Carne: null,
+        Carne2: null,
+        Salada: null,
+        Acompanhamento: null
+      });
+      setIsTwoMeats(false);
+      setObservacao("");
+      setPagamento("");
+      setSelectedTime(null);
+      setPhoneOptions([]);
+
+
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
-      alert("Erro ao cadastrar pedido.");
+      toast.error("Erro ao cadastrar pedido.");
     }
     console.log(pedidoData);
   };

@@ -44,6 +44,18 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     },
   });
 
+
+  const inputFormat = {
+    "& .MuiOutlinedInput-root": {
+      "&:hover fieldset": { borderColor: "#FD1F4A" },
+      "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+    },
+    "& .MuiInputBase-input": {
+      color: "black",
+    },
+    width: "100%",
+  };
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -126,6 +138,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
       <DialogTitle>Editar Pedido #{id}</DialogTitle>
       <DialogContent dividers>
         <TextField
+          sx={inputFormat}
           margin="normal"
           label="Estado do Pedido"
           name="ped_status"
@@ -140,6 +153,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         </TextField>
 
         <TextField
+          sx={inputFormat}
           margin="normal"
           disabled
           label="Data"
@@ -154,6 +168,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
         {form.ped_horarioRetirada && (
           <TextField
+            sx={inputFormat}
             margin="normal"
             label="Horário de Retirada"
             name="ped_horarioRetirada"
@@ -166,6 +181,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         )}
 
         <TextField
+          sx={inputFormat}
           margin="normal"
           label="Valor"
           name="ped_valor"
@@ -179,6 +195,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         </TextField>
 
         <TextField
+          sx={inputFormat}
           margin="normal"
           label="Tipo de Pagamento"
           name="ped_tipoPagamento"
@@ -188,6 +205,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         <TextField
+          sx={inputFormat}
           margin="normal"
           label="Observação"
           name="ped_observacao"
@@ -197,6 +215,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         <TextField
+          sx={inputFormat}
           disabled
           margin="normal"
           label="Cliente - Nome"
@@ -208,6 +227,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         <TextField
+          sx={inputFormat}
           disabled
           margin="normal"
           label="Cliente - Sobrenome"
@@ -227,6 +247,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           );
           return (
             <TextField
+              sx={inputFormat}
               key={field}
               margin="normal"
               label={tipo.toUpperCase()}
