@@ -221,6 +221,30 @@ const AddOrder = () => {
       toast.success("Pedido cadastrado com sucesso!");
       console.log(response.data);
 
+      // → Limpar todos os inputs após criar o pedido
+      setClientInfo({
+        cli_nome: "",
+        cli_sobrenome: "",
+        con_telefone: "",
+      });
+      setPhoneInput("");
+      setClientError(null);
+      //FIX: não está limpando as escolhas
+      setSelectedProducts({
+        Arroz: null,
+        Feijão: null,
+        Massa: null,
+        Carne: null,
+        Carne2: null,
+        Salada: null,
+        Acompanhamento: null
+      });
+      setIsTwoMeats(false);
+      setObservacao("");
+      setPagamento("");
+      setSelectedTime(null);
+      setPhoneOptions([]);
+
 
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
