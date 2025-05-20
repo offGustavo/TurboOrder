@@ -4,12 +4,26 @@ import styled from "styled-components";
 import DeliverySelect from "../components/DeliverySelect.js";
 import "../styles/AddOrder.css";
 import "../styles/Global.css";
-import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
+import { Box, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
 import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
 import { toast } from 'react-toastify';
+
+import {
+  Printer,
+  Print,
+  Text,
+  Row,
+  Line,
+  Br,
+  Cut,
+  Barcode,
+  QRCode,
+  Image,
+  render,
+} from "react-thermal-printer";
 
 const TitlePedido = styled.h1`
   margin: 0px;
@@ -47,6 +61,12 @@ const AddOrder = () => {
     cli_nome: "",
     cli_sobrenome: "",
     con_telefone: "",
+    cli_numero: "",
+    cli_complemento: "",
+    end_cep: "",
+    end_cidade: "",
+    end_bairro: "",
+    end_rua: ""
   });
   const [phoneInput, setPhoneInput] = useState("");
   const [loadingClient, setLoadingClient] = useState(false);
@@ -69,6 +89,53 @@ const AddOrder = () => {
 
   const [isTwoMeats, setIsTwoMeats] = useState(false);
   const debounceTimeout = useRef(null);
+
+  const printerRef = useRef(null);
+
+  const handlePrint = async () => {
+    if (!clientInfo.cli_nome) {
+      alert("Por favor, informe um cliente válido para imprimir.");
+      return;
+    }
+
+    const receipt = (
+      <Printer type="epson" width={42}>
+        <Text size={{ width: 2, height: 2 }} bold>
+          Pedido
+        </Text>
+        <Br />
+        <Line />
+        <Text>Cliente: {clientInfo.cli_nome} {clientInfo.cli_sobrenome}</Text>
+        <Text>Telefone: {clientInfo.con_telefone}</Text>
+        <Text> Endereço: {clientInfo.end_rua},  {clientInfo.cli_numero} {clientInfo.cli_complemento} - {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep} </Text>
+        {/* FIXME: Fix pagamento calculo */}
+        <Text>Pagamento: {isTwoMeats ? 22.00 : 20.00}, Tipo: {pagamento}</Text>
+        <Text>Observações: {observacao}</Text>
+        <Text>Produtos:</Text>
+        {Object.entries(selectedProducts).map(([key, product]) =>
+          product ? <Text key={key}>- {key}: {product.pro_nome}</Text> : null
+        )}
+        {selectedTime && (
+          <Text>Retirada: {selectedTime.format("HH:mm")}</Text>
+        )}
+        <Cut />
+      </Printer>
+    );
+
+    try {
+      const data = await render(receipt);
+      const port = await window.navigator.serial.requestPort();
+      await port.open({ baudRate: 9600 });
+      const writer = port.writable?.getWriter();
+      if (writer) {
+        await writer.write(data);
+        writer.releaseLock();
+      }
+    } catch (error) {
+      alert("Erro ao imprimir o pedido: " + error.message);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (location.state && location.state.client) {
@@ -117,28 +184,53 @@ const AddOrder = () => {
   };
 
   const fetchClientInfo = async (phone) => {
+    // Se o telefone for inválido ou muito curto, limpa apenas o nome/sobrenome e mantém o telefone no estado
     if (!phone || phone.length < 8) {
       setClientInfo({
         cli_nome: "",
         cli_sobrenome: "",
         con_telefone: phone || "",
+        cli_numero: "",
+        cli_complemento: "",
+        end_cep: "",
+        end_cidade: "",
+        end_bairro: "",
+        end_rua: ""
       });
       return;
     }
+
     setLoadingClient(true);
     try {
-      const sanitizedPhone = phone.replace(/\D/g, '');
-      const response = await axios.get(`http://localhost:8800/clientes/telefone/${sanitizedPhone}`);
+      const sanitizedPhone = phone.replace(/\D/g, "");
+      const response = await axios.get(
+        `http://localhost:8800/clientes/telefone/${sanitizedPhone}`
+      );
+
+      // Cliente encontrado: preenche todos os campos retornados pelo backend
       setClientInfo(response.data);
+      console.log(response.data);
       setClientError(null);
       setPhoneInput(response.data.con_telefone || "");
     } catch (error) {
-      setClientInfo({
-        cli_nome: "",
-        cli_sobrenome: "",
-        con_telefone: phone || "",
-      });
-      setClientError("Cliente não encontrado");
+      // Se o servidor respondeu 404 => cliente não existe
+      if (error.response && error.response.status === 404) {
+        setClientInfo({
+          cli_nome: "",
+          cli_sobrenome: "",
+          con_telefone: phone || "",
+          cli_numero: "",
+          cli_complemento: "",
+          end_cep: "",
+          end_cidade: "",
+          end_bairro: "",
+          end_rua: ""
+        });
+        setClientError("Cliente não encontrado");
+      } else {
+        // Qualquer outro erro de requisição
+        setClientError("Erro ao buscar cliente");
+      }
       setPhoneInput(phone || "");
     } finally {
       setLoadingClient(false);
@@ -219,6 +311,7 @@ const AddOrder = () => {
     try {
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       toast.success("Pedido cadastrado com sucesso!");
+      handlePrint();
       console.log(response.data);
 
       // → Limpar todos os inputs após criar o pedido
@@ -253,6 +346,7 @@ const AddOrder = () => {
     console.log(pedidoData);
   };
 
+
   return (
     <main className="p-10 ContainerPedido">
       <header className="display-flex space-between ">
@@ -261,7 +355,10 @@ const AddOrder = () => {
           <NavLink to="/cadastro-de-cliente">
             <AlreadyRegistered>Cliente não cadastrado</AlreadyRegistered>
           </NavLink>
-          <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button>
+          {/* <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button> */}
+          {/* <Button variant="outlined" color="primary" onClick={handlePrint} sx={{ marginLeft: 2 }}> */}
+          {/*   Imprimir Pedido */}
+          {/* </Button> */}
         </div>
       </header>
       <ProgressBar />
@@ -489,6 +586,11 @@ const AddOrder = () => {
         </div>
 
       </section>
+
+      <hr />
+      <footer>
+        <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button>
+      </footer>
 
     </main>
   );
