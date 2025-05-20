@@ -310,6 +310,7 @@ const AddOrder = () => {
     try {
       const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
       alert("Pedido cadastrado com sucesso!");
+      handlePrint();
       console.log(response.data);
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
@@ -327,10 +328,10 @@ const AddOrder = () => {
           <NavLink to="/cadastro-de-cliente">
             <AlreadyRegistered>Cliente não cadastrado</AlreadyRegistered>
           </NavLink>
-          <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button>
-          <Button variant="outlined" color="primary" onClick={handlePrint} sx={{ marginLeft: 2 }}>
-            Imprimir Pedido
-          </Button>
+          {/* <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button> */}
+          {/* <Button variant="outlined" color="primary" onClick={handlePrint} sx={{ marginLeft: 2 }}> */}
+          {/*   Imprimir Pedido */}
+          {/* </Button> */}
         </div>
       </header>
       <ProgressBar />
@@ -558,6 +559,11 @@ const AddOrder = () => {
         </div>
 
       </section>
+
+      <hr />
+      <footer>
+        <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button>
+      </footer>
 
     </main>
   );
