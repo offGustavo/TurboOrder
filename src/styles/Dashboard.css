@@ -1,4 +1,26 @@
-
+:root {
+--fg-white: #ffffff;
+  --bg-white-alt: #f5f5f5;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+  --bg-grey: #e6e6e6;
+  --fg-red: #f44336;
+  --bg-red: #f44336;
+  --bg-red-alt: #ab180e;
+  --bg-blue: blue;
+  --bg-blue-alt: darkblue;
+  --btn-border-radius: 20px;
+  --btn-border-size: 1px;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --bg-white: #ffffff;
+  --bg-yellow: #FFBD0D;
+  --bg-yellow-alt: #e59400;
+  --fg-black: #000000;
+  --fg-red: #f44336;
+  --bg-red: #f44336;
+  --bg-red-alt: #ab180e;
+}
 .dashboard {
   flex: 1;
   padding: 20px;
