@@ -1,3 +1,4 @@
+
 .dashboard {
   flex: 1;
   padding: 20px;
@@ -36,6 +37,10 @@
 
 .revenue-red {
   background-color: #FD1F4A;
+}
+
+.revenue-blue {
+  background-color: var(--bg-blue);
 }
 
 .revenue-header p {
@@ -84,6 +89,12 @@
   height: 8vh;
   width: 5px;
   background-color: #FD1F4A;
+}
+
+.card-blue .vertical-divider {
+  height: 8vh;
+  width: 5px;
+  background-color: var(--bg-blue);
 }
 
 .revenue-transfer {

@@ -26,6 +26,14 @@ const DolarRed = styled(FaDollarSign)`
   padding: 10px;
 `;
 
+const DolarBlue = styled(FaDollarSign)`
+  font-size: 1.59rem;
+  background-color: blue;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 10px;
+`;
+
 const Statistic = styled.p`
   color: #000000;
   font-size: 1rem;
@@ -50,9 +58,22 @@ const AmountRed = styled.p`
   margin: 0px;
 `;
 
+const AmountBlue = styled.p`
+  color: #007BFF;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+`;
+
 const TransferGreen = styled(FaMoneyBillTransfer)`
   font-size: 2.19rem;
   color: #1DAD6F;
+`;
+
+const TransferBlue = styled(FaMoneyBillTransfer)`
+  font-size: 2.19rem;
+  color: #007BFF;
 `;
 
 const TransferRed = styled(FaMoneyBillTransfer)`
@@ -91,7 +112,7 @@ const Dashboard = () => {
 
   const fetchRevenueData = async () => {
     try {
-      const response = await axios.get("http://localhost:8800/pedidos/soma-mensal");
+      const response = await axios.get("http://localhost:8800/status/soma-mensal");
       const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
       console.log("totalMes", totalMesAtual)
       console.log("mediaMesAtual", mediaMesAtual)
@@ -105,7 +126,7 @@ const Dashboard = () => {
 
   const getWeeklyRevenue = async () => {
     try {
-      const response = await axios.get("http://localhost:8800/pedidos/soma-semensal");
+      const response = await axios.get("http://localhost:8800/status/soma-semanal");
       const { totalSemanaAtual, mediaSemanaAtual } = response.data;
       setWeekRevenue(totalSemanaAtual);
       setWeekAverage(mediaSemanaAtual);
@@ -194,6 +215,7 @@ const Dashboard = () => {
   return (
     <main className="dashboard">
       <div className="revenue-section">
+
         <div className="header-card card-green">
           <div className="revenue-header revenue-green">
             <DolarGreen />
@@ -212,10 +234,9 @@ const Dashboard = () => {
           </div>
         </div>
 
-
-        <CardBlue>
-          <div className="revenue-header revenue-red">
-            <DolarRed />
+        <div className="header-card card-blue">
+          <div className="revenue-header revenue-blue">
+            <DolarBlue />
             <div className="revenue-info">
               <h3>Faturamento desta Semana</h3>
               <p>R$ {weekRevenue.toFixed(2)}</p>
@@ -223,13 +244,13 @@ const Dashboard = () => {
           </div>
           <div className="revenue-transfer">
             <div className="vertical-divider"></div>
-            <TransferRed />
+            <TransferBlue />
             <div className="transfer-details">
               <Statistic>Média Estatística da Semana</Statistic>
-              <AmountRed>R$ {weekAverage.toFixed(2)}</AmountRed>
+              <AmountBlue>R$ {weekAverage.toFixed(2)}</AmountBlue>
             </div>
           </div>
-        </CardBlue>
+        </div>
 
         <div className="header-card card-red">
           <div className="revenue-header revenue-red">
@@ -248,6 +269,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
       </div>
 
       <section className="orders">
@@ -265,7 +287,7 @@ const Dashboard = () => {
           ))}
         </div>
       </section>
-    </main>
+    </main >
   );
 };
 
