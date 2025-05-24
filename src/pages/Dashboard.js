@@ -60,6 +60,18 @@ const TransferRed = styled(FaMoneyBillTransfer)`
   color: #FD1F4A;
 `;
 
+const CardBlue = styled.div`
+  background-color: #007BFF;
+  border-radius: 8px;
+  padding: 16px;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
 const productTypes = [
   { value: "Em Andamento", label: "Em Andamento" },
   { value: "Concluído", label: "Concluído" },
@@ -73,18 +85,30 @@ const Dashboard = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState(0);
   const [dailyAverage, setDailyAverage] = useState(0);
   const [monthlyAverage, setMonthlyAverage] = useState(0);
+  const [weekAverage, setWeekAverage] = useState(0);
+  const [weekRevenue, setWeekRevenue] = useState(0);
 
 
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get("http://localhost:8800/pedidos/soma-mensal");
-
       const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
-
       console.log("totalMes", totalMesAtual)
       console.log("mediaMesAtual", mediaMesAtual)
       setMonthlyRevenue(totalMesAtual);
       setMonthlyAverage(mediaMesAtual);
+    } catch (error) {
+      console.error("Erro ao buscar dados de faturamento:", error);
+      toast.error("Erro ao buscar faturamento mensal.");
+    }
+  };
+
+  const getWeeklyRevenue = async () => {
+    try {
+      const response = await axios.get("http://localhost:8800/pedidos/soma-semensal");
+      const { totalSemanaAtual, mediaSemanaAtual } = response.data;
+      setWeekRevenue(totalSemanaAtual);
+      setWeekAverage(mediaSemanaAtual);
     } catch (error) {
       console.error("Erro ao buscar dados de faturamento:", error);
       toast.error("Erro ao buscar faturamento mensal.");
@@ -187,6 +211,25 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+
+        <CardBlue>
+          <div className="revenue-header revenue-red">
+            <DolarRed />
+            <div className="revenue-info">
+              <h3>Faturamento desta Semana</h3>
+              <p>R$ {weekRevenue.toFixed(2)}</p>
+            </div>
+          </div>
+          <div className="revenue-transfer">
+            <div className="vertical-divider"></div>
+            <TransferRed />
+            <div className="transfer-details">
+              <Statistic>Média Estatística da Semana</Statistic>
+              <AmountRed>R$ {weekAverage.toFixed(2)}</AmountRed>
+            </div>
+          </div>
+        </CardBlue>
 
         <div className="header-card card-red">
           <div className="revenue-header revenue-red">
