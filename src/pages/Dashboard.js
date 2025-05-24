@@ -28,7 +28,7 @@ const DolarRed = styled(FaDollarSign)`
 
 const DolarBlue = styled(FaDollarSign)`
   font-size: 1.59rem;
-  background-color: blue;
+  background-color: darkblue;
   color: #ffffff;
   border-radius: 50%;
   padding: 10px;
