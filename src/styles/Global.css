@@ -14,6 +14,8 @@
   --fg-red: #f44336;
   --bg-red: #f44336;
   --bg-red-alt: #ab180e;
+  --bg-blue: blue;
+  --bg-blue-alt: darkblue;
   --btn-border-radius: 20px;
   --btn-border-size: 1px;
   --shadow-color: rgba(0, 0, 0, 0.1);
