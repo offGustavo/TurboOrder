@@ -26,6 +26,7 @@ const DolarRed = styled(FaDollarSign)`
   padding: 10px;
 `;
 
+// TODO: Modificar isso para ser css puro
 const DolarBlue = styled(FaDollarSign)`
   font-size: 1.59rem;
   background-color: darkblue;
@@ -113,7 +114,7 @@ const Dashboard = () => {
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get("http://localhost:8800/status/soma-mensal");
-      const { totalUltimos30Dias, mediaUltimos30Dias, totalMesAtual, mediaMesAtual } = response.data;
+      const { totalMesAtual, mediaMesAtual } = response.data;
       console.log("totalMes", totalMesAtual)
       console.log("mediaMesAtual", mediaMesAtual)
       setMonthlyRevenue(totalMesAtual);
@@ -122,9 +123,6 @@ const Dashboard = () => {
       console.error("Erro ao buscar dados de faturamento:", error);
       toast.error("Erro ao buscar faturamento mensal.");
     }
-  };
-
-  const getWeeklyRevenue = async () => {
     try {
       const response = await axios.get("http://localhost:8800/status/soma-semanal");
       const { totalSemanaAtual, mediaSemanaAtual } = response.data;
@@ -134,7 +132,7 @@ const Dashboard = () => {
       console.error("Erro ao buscar dados de faturamento:", error);
       toast.error("Erro ao buscar faturamento mensal.");
     }
-  };
+  }
 
   useEffect(() => {
     refreshOrders();
