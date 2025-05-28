@@ -1,31 +1,52 @@
-import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { BrowserRouter as Router, Link, Navigate, Route, Routes } from "react-router-dom";
 
+import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import EmailVerification from "./pages/EmailVerification";
 
 import "./App.css";
-import "./styles/Global.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./styles/Global.css";
 
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import ProductTable from "./pages/ProductTable";
-import Home from "./pages/Home";
-import AddClient from "./pages/AddClient";
+import axios from "axios";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import Breadcrumb from "./components/Breadcrumb";
-import Calendar from "./pages/Calendar";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import AddClient from "./pages/AddClient";
 import AddOrder from "./pages/AddOrder";
+import Calendar from "./pages/Calendar";
 import ClientTable from "./pages/ClientTable";
+import Desempenho from "./pages/Desempenho"; // Importar a página de desempenho
 import EditClient from "./pages/EditClient";
-import Historico from "./pages/Historico";
-import Login from "./pages/Login";
 import EmployeeManagement from "./pages/EmployeeManagement";
+import Historico from "./pages/Historico";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import ProductTable from "./pages/ProductTable";
 
-import { AuthProvider, AuthContext } from "./context/AuthContext";
+
+
+import Breadcrumb from "./components/Breadcrumb.js";
+import Header from "./components/Header.js";
+import Sidebar from "./components/Sidebar.js";
+import AddClient from "./pages/AddClient.js";
+import AddOrder from "./pages/AddOrder.js";
+import Calendar from "./pages/Calendar.js";
+import ClientTable from "./pages/ClientTable.js";
+import Dashboard from "./pages/Dashboard.js";
+import EditClient from "./pages/EditClient.js";
+import ProductTable from "./pages/ProductTable.js";
+/* importar o import desempenho do gráfico aqui */
+
+
+
+
+import { AuthContext, AuthProvider } from "./context/AuthContext";
 
 function ProtectedRoute({ children, role }) {
   const { auth } = useContext(AuthContext);
@@ -81,10 +102,10 @@ function AppContent() {
           element={
             <div>
               <div className="login-prompt">
-              <div>
-                <h3 className="text-loginPrompt">Faça login para acessar o sistema</h3>
-                <Link to="/login" className="btn-loginPrompt">Ir para Login</Link>
-              </div>
+                <div>
+                  <h3 className="text-loginPrompt">Faça login para acessar o sistema</h3>
+                  <Link to="/login" className="btn-loginPrompt">Ir para Login</Link>
+                </div>
               </div>
             </div>
           }
@@ -92,6 +113,13 @@ function AppContent() {
       </Routes>
     );
   }
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8800/produtos")
+      .then((response) => setProducts(response.data))
+      .catch(() => toast.error("Erro ao buscar produtos."));
+  }, []);
 
   return (
     <div className="app">
@@ -131,6 +159,7 @@ function AppContent() {
             />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/redefinir-senha" element={<ResetPassword />} />
+            <Route path="/desempenho" element={<Desempenho products={products} />} />
             <Route path="*" element={<div>Página não encontrada</div>} />
           </Routes>
         </div>

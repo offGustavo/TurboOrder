@@ -154,8 +154,9 @@ const SearchContainer = styled.div`
   }
 `;
 
-const ProductTable = () => {
-  const [products, setProducts] = useState([]);
+const ProductTable = ({ products, setProducts }) => {
+  // Remova este trecho inteiro:
+  // const [products, setProducts] = useState([]);
   const [proNome, setProNome] = useState("");
   const [proTipo, setProTipo] = useState("");
   const [filter, setFilter] = useState("Todos");
@@ -253,6 +254,15 @@ const ProductTable = () => {
       }
     };
   }, [searchTimeout]);
+
+  // Remova este trecho inteiro:
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8800/produtos")
+  //     .then((response) => setProducts(response.data))
+  //     .catch(() => toast.error("Erro ao buscar produtos."));
+  // }, []);
 
   const handleSave = () => {
     if (!proNome || !proTipo) {

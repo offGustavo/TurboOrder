@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt, FaUserTie } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { IoIosStats } from "react-icons/io";
 import { BiFoodMenu } from "react-icons/bi";
 
 import "./../styles/Sidebar.css";
@@ -42,6 +44,9 @@ const Sidebar = () => {
             <a href="/clientes"><FaUsers /> <p className="NavLinkText">Clientes</p></a>
           </li>
 
+
+
+
           {auth.role === "admin" && (
             <>
               <li>
@@ -50,8 +55,16 @@ const Sidebar = () => {
               <li>
                 <a href="/funcionarios"><FaUserTie /> <p className="NavLinkText">Funcionários</p></a>
               </li>
+              { /*aqui sera o link para colocar os gráficos */}
+              <li>
+                <NavLink to="/desempenho">
+                  <IoIosStats /> <p className="NavLinkText">Desempenho</p>
+                </NavLink >
+
+              </li>
             </>
           )}
+
 
           <li>
             <a className="logout-button" onClick={handleLogout}><FaSignOutAlt /> <p className="NavLinkText">Sair</p></a>
