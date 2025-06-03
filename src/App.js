@@ -15,6 +15,8 @@ import AddOrder from "./pages/AddOrder.js";
 import ClientTable from "./pages/ClientTable.js";
 import EditClient from "./pages/EditClient.js";
 import Historico from "./pages/Historico.js";
+import Register from "./pages/Register.js";
+import Login from "./pages/Login.js";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -37,6 +39,8 @@ function App() {
               <Route path="/clientes" element={<ClientTable />} />
               <Route path="/clientes/:id/edit" element={<EditClient />} />
               <Route path="/historico" element={<Historico />} />
+              <Route path="/cadastro" element={<Register />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </div>
         </main>
