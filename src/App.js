@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import "./App.css";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import "./styles/Global.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Sidebar from "./components/Sidebar.js";
 import Header from "./components/Header.js";
@@ -20,31 +24,90 @@ import Login from "./pages/Login.js";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [auth, setAuth] = useState(false);
+  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState("");
+
+  axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8800")
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setAuth(true);
+          setUsername(res.data.username);
+        } else {
+          setAuth(false);
+          setMessage(res.data.Error);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Router>
-      <div className="app">
-        <Sidebar />
-        <main>
-          <Header />
-          <Breadcrumb />
-          <div className="content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/produtos" element={<ProductTable products={products} setProducts={setProducts} />} />
-              <Route path="*" element={<div>Página não encontrada</div>} />
-              <Route path="/cadastro-de-cliente" element={<AddClient />} />
-              <Route path="/cardapio" element={<Calendar />} />
-              <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
-              <Route path="/clientes" element={<ClientTable />} />
-              <Route path="/clientes/:id/edit" element={<EditClient />} />
-              <Route path="/historico" element={<Historico />} />
-              <Route path="/cadastro" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-            </Routes>
-          </div>
-        </main>
-        <ToastContainer position="bottom-left" autoClose={3000} />
+      <div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/cadastro" element={<Register />} />
+
+          {auth ? (
+            <Route
+              path="*"
+              element={
+                <div className="app">
+                  <Sidebar />
+                  <main>
+                    <Header />
+                    <Breadcrumb />
+                    <div className="content">
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route
+                          path="/produtos"
+                          element={
+                            <ProductTable
+                              products={products}
+                              setProducts={setProducts}
+                            />
+                          }
+                        />
+                        <Route
+                          path="/cadastro-de-cliente"
+                          element={<AddClient />}
+                        />
+                        <Route path="/cardapio" element={<Calendar />} />
+                        <Route
+                          path="/cadastro-de-cliente/pedidos"
+                          element={<AddOrder />}
+                        />
+                        <Route path="/clientes" element={<ClientTable />} />
+                        <Route
+                          path="/clientes/:id/edit"
+                          element={<EditClient />}
+                        />
+                        <Route path="/historico" element={<Historico />} />
+                        <Route path="*" element={<div>Página não encontrada</div>} />
+                      </Routes>
+                    </div>
+                  </main>
+                  <ToastContainer position="bottom-left" autoClose={3000} />
+                </div>
+              }
+            />
+          ) : (
+            <Route
+              path="*"
+              element={
+                <div className="login-prompt">
+                  <h3>Faça login para acessar o sistema</h3>
+                  <Link to="/login">Ir para Login</Link>
+                </div>
+              }
+            />
+          )}
+        </Routes>
       </div>
     </Router>
   );

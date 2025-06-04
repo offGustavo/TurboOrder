@@ -111,26 +111,6 @@ const Home = () => {
   const [weekAverage, setWeekAverage] = useState(0);
   const [weekRevenue, setWeekRevenue] = useState(0);
 
-  const [auth, setAuth] = useState(false);
-  const [message, setMessage] = useState("");
-  const [username, setUsername] = useState("");
-
-  axios.defaults.withCredentials = true;
-
-  useEffect(() => {
-    axios.get("http://localhost:8800")
-      .then(res => {
-        if (res.data.Status === "Success") {
-          setAuth(true);
-          setUsername(res.data.username);
-        } else {
-          setAuth(false);
-          setMessage(res.data.Error);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get(
@@ -252,13 +232,7 @@ const Home = () => {
   const filteredOrders = orders.filter((order) => order.visible !== false);
 
   return (
-      <div>
-      {
-        auth ?
-
         <main className="dashboard">
-          <h3>{message}</h3>
-          <h4>{username}</h4>
           <div className="revenue-section">
             <div className="header-card card-green">
               <div className="revenue-header revenue-green">
@@ -334,17 +308,6 @@ const Home = () => {
             </div>
           </section>
         </main>
-
-       :
-
-        <div>
-          <h3>{}</h3>
-          <h3>Login Now</h3>
-          <Link to="/login">Login</Link>
-        </div>
-      }
-
-    </div>
   );
 };
 
