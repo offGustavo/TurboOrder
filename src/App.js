@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from "./components/Sidebar.js";
 import Header from "./components/Header.js";
 import ProductTable from "./pages/ProductTable.js";
-import Dashboard from "./pages/Dashboard.js";
+import Home from "./pages/Home.js";
 import AddClient from "./pages/AddClient.js";
 import Breadcrumb from "./components/Breadcrumb.js";
 import Calendar from "./pages/Calendar.js";
@@ -30,7 +30,7 @@ function App() {
           <Breadcrumb />
           <div className="content">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Home />} />
               <Route path="/produtos" element={<ProductTable products={products} setProducts={setProducts} />} />
               <Route path="*" element={<div>Página não encontrada</div>} />
               <Route path="/cadastro-de-cliente" element={<AddClient />} />
