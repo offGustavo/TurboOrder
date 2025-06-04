@@ -1,7 +1,8 @@
 import React from "react";
-import { NavLink  } from "react-router-dom";
+import { useNavigate, Link  } from "react-router-dom";
 import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
+
 import "./../styles/Sidebar.css";
 import logo from "../image/logo.png";
 
@@ -14,36 +15,22 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <NavLink  to="/">
-              <FaHome /> <p className="NavLinkText">Home</p>
-            </NavLink >
+              <Link to="/"><FaHome /> <p className="NavLinkText">Home</p></Link>
           </li>
           <li>
-            <NavLink  to="/cardapio">
-              <BiFoodMenu /> <p className="NavLinkText">Cardápio</p>
-            </NavLink >
+            <Link to="/cardapio"><BiFoodMenu /> <p className="NavLinkText">Cardápio</p></Link>
           </li>
           <li>
-            <NavLink  to="/produtos">
-              <FaUtensils /> <p className="NavLinkText">Produtos</p>
-            </NavLink >
+            <Link to="/produtos"><FaUtensils /> <p className="NavLinkText">Produtos</p></Link>
           </li>
           <li>
-            <NavLink  to="/clientes">
-              <FaUsers /> <p className="NavLinkText">Clientes</p>
-            </NavLink >
+            <Link to="/clientes"><FaUsers /> <p className="NavLinkText">Clientes</p></Link>
           </li>
           <li>
-            <NavLink  to="/historico">
-              <FaHistory /> <p className="NavLinkText">Histórico de Pedidos</p>
-            </NavLink >
+            <Link to="/historico"><FaHistory /> <p className="NavLinkText">Histórico de Pedido</p></Link>
           </li>
           <li>
-
-            {/* TODO modificar isso pra um link/button  */}
-            <NavLink  to="/sair">
-              <FaSignOutAlt /> <p className="NavLinkText">Sair</p>
-            </NavLink >
+            <Link to="/"><FaSignOutAlt /> <p className="NavLinkText">Sair</p></Link>
           </li>
         </ul>
       </nav>
