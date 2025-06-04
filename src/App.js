@@ -23,6 +23,7 @@ import Register from "./pages/Register.js";
 import Login from "./pages/Login.js";
 
 function App() {
+  
   const [products, setProducts] = useState([]);
   const [auth, setAuth] = useState(false);
   const [message, setMessage] = useState("");
@@ -30,7 +31,7 @@ function App() {
 
   axios.defaults.withCredentials = true;
 
-  useEffect(() => {
+  const checkAuth = () => {
     axios
       .get("http://localhost:8800")
       .then((res) => {
@@ -39,17 +40,24 @@ function App() {
           setUsername(res.data.username);
         } else {
           setAuth(false);
-          setMessage(res.data.Error);
+          setUsername("");
         }
       })
-      .catch((err) => console.log(err));
+      .catch(() => {
+        setAuth(false);
+        setUsername("");
+      });
+  };
+
+  useEffect(() => {
+    checkAuth();
   }, []);
 
   return (
     <Router>
       <div>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setAuth={setAuth} />} />
           <Route path="/cadastro" element={<Register />} />
 
           {auth ? (
