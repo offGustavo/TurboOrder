@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MdEmail } from "react-icons/md";
 import { FaLock, FaUser } from "react-icons/fa";
+
 import "../styles/Register.css";
 
 function Register() {
@@ -29,13 +30,14 @@ function Register() {
   };
 
   return (
-    <div className="container">
+    <div className="register-body">
+    <div className="register-container">
       <div className="toggle-box" style={{ order: 1 }}>
         <div>
-          <h1>Bem-vindo!</h1>
-          <p>Já tem uma conta?</p>
+          <h1>Olá, Amigo!</h1>
+          <p>Cadastre-se para simplificar e otimizar o gerenciamento dos seus produtos!</p>
           <Link to="/login" className="btn-register">
-            Login
+            Já possuí uma conta?
           </Link>
         </div>
       </div>
@@ -77,14 +79,12 @@ function Register() {
             />
             <FaLock />
           </div>
-          <div className="forgot-link">
-            <Link to="/login">Já é cadastrado?</Link>
-          </div>
           <button type="submit" className="btn-login">
             Cadastrar
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 }

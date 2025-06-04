@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: "Poppins", serif;
 }
 
@@ -25,8 +24,7 @@
 }
 
 body {
-  /* height: 100vh; */
-  background-color: var(--bg-grey);
+  background-color: var(--bg-white);
 }
 
 

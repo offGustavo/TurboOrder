@@ -7,7 +7,7 @@ import { FaLock } from "react-icons/fa";
 
 import "../styles/Login.css";
 
-function Login() {
+function Login({ setAuth }) {
   const [values, setValues] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
@@ -18,6 +18,7 @@ function Login() {
       .post("http://localhost:8800/login", values)
       .then((res) => {
         if (res.data.Status === "Success") {
+          setAuth(true);
           navigate("/");
         } else {
           alert(res.data.Error);
@@ -27,10 +28,11 @@ function Login() {
   };
 
   return (
-    <div className="container">
+    <div className="login-body">
+    <div className="login-container">
       <div className="form-box" style={{ order: 1 }}>
         <form onSubmit={handleSubmit}>
-          <h1>Login</h1>
+          <h1>Entrar</h1>
           <div className="input-box">
             <input
               type="email"
@@ -64,13 +66,14 @@ function Login() {
 
       <div className="toggle-box" style={{ order: 2 }}>
         <div>
-          <h1>Bem-vindo de volta!</h1>
-          <p>Não tem conta? Crie agora</p>
+          <h1>Bem-vindo de Volta!</h1>
+          <p>Acesse sua conta para gerenciar seus pedidos com facilidade!</p>
           <Link to="/cadastro" className="btn-register">
-            Cadastrar
+            Não tem conta? Crie uma agora
           </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 }
