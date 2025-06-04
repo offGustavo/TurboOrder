@@ -16,7 +16,7 @@ function Login() {
         event.preventDefault();
         console.log("Enviando login com dados:", values);
     
-        axios.post('/', values)
+        axios.post('http://localhost:8800/login', values)
             .then(res => {
                 console.log("Resposta do backend:", res.data);
     
