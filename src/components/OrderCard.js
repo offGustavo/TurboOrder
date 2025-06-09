@@ -22,16 +22,17 @@ const OrderCard = ({
     const nextIndex = (currentIndex + 1) % statusOptions.length;
     const nextStatus = statusOptions[nextIndex];
 
-    const isReactivating = currentStatus !== 'Em Andamento' && nextStatus === 'Em Andamento';
+    const isReactivating = (currentStatus === 'Concluído' || currentStatus === 'Cancelado') && nextStatus === 'Em Andamento';
+    const isConcludedChange = currentStatus === 'Concluído' && nextStatus !== 'Concluído';
 
-    if (isReactivating && updatedAt) {
+    if ((isReactivating || isConcludedChange) && updatedAt) {
       const lastUpdate = new Date(updatedAt);
       const now = new Date();
       const diffMs = now - lastUpdate;
       const diffMinutes = diffMs / (1000 * 60);
 
       if (diffMinutes > 5) {
-        toast.error('Não é possível reativar pedidos após 5 minutos da desativação.');
+        toast.error('Não é possível alterar o status após 5 minutos da conclusão/cancelamento.');
         return;
       }
     }
@@ -44,8 +45,9 @@ const OrderCard = ({
       toast.success(`Status atualizado para: ${nextStatus}`);
       if (onStatusChange) onStatusChange();
     } catch (error) {
+      const msg = error.response?.data?.error || 'Erro ao atualizar o status do pedido.';
+      toast.error(msg);
       console.error(`Erro ao atualizar o pedido ${id}:`, error);
-      toast.error('Erro ao atualizar o status do pedido.');
     }
   };
 
