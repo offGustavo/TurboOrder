@@ -9,7 +9,7 @@ import { useLocation } from 'react-router';
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
 const OrderCard = ({
-  id, name, details, status, data, day_order, products, valor, onStatusChange
+  id, name, details, status, data, day_order, products, onStatusChange, updatedAt
 }) => {
   const location = useLocation();
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
@@ -21,6 +21,20 @@ const OrderCard = ({
     const currentIndex = statusOptions.indexOf(currentStatus);
     const nextIndex = (currentIndex + 1) % statusOptions.length;
     const nextStatus = statusOptions[nextIndex];
+
+    const isReactivating = currentStatus !== 'Em Andamento' && nextStatus === 'Em Andamento';
+
+    if (isReactivating && updatedAt) {
+      const lastUpdate = new Date(updatedAt);
+      const now = new Date();
+      const diffMs = now - lastUpdate;
+      const diffMinutes = diffMs / (1000 * 60);
+
+      if (diffMinutes > 5) {
+        toast.error('Não é possível reativar pedidos após 5 minutos da desativação.');
+        return;
+      }
+    }
 
     try {
       await axios.put(`http://localhost:8800/pedidos/${id}/status`, {
@@ -47,7 +61,6 @@ const OrderCard = ({
           </div>
           <div className='order-date-day'>
             <span className="order-date">{data}</span>
-
             {location.pathname !== '/historico' && (
               <div className='order-day-order'><span>{day_order}</span></div>
             )}
