@@ -14,6 +14,8 @@ import Calendar from "./pages/Calendar.js";
 import AddOrder from "./pages/AddOrder.js";
 import ClientTable from "./pages/ClientTable.js";
 import EditClient from "./pages/EditClient.js";
+import CompanyTable from "./pages/CompanyTable.js";
+import AddCompany from "./pages/AddCompany.js";
 import Historico from "./pages/Historico.js";
 
 function App() {
@@ -35,7 +37,8 @@ function App() {
               <Route path="/cardapio" element={<Calendar />} />
               <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
               <Route path="/clientes" element={<ClientTable />} />
-              <Route path="/clientes/:id/edit" element={<EditClient />} />
+              <Route path="/empresas" element={<CompanyTable />} />
+              <Route path="/empresas/cadastro" element={<AddCompany />} />
               <Route path="/historico" element={<Historico />} />
             </Routes>
           </div>

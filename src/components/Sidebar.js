@@ -1,6 +1,6 @@
 import React from "react";
-import { NavLink  } from "react-router-dom";
-import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt, FaBuilding } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 import "./../styles/Sidebar.css";
 import logo from "../image/logo.png";
@@ -14,34 +14,39 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <NavLink  to="/">
+            <NavLink to="/">
               <FaHome /> <p className="NavLinkText">Home</p>
             </NavLink >
           </li>
           <li>
-            <NavLink  to="/cardapio">
+            <NavLink to="/cardapio">
               <BiFoodMenu /> <p className="NavLinkText">Cardápio</p>
             </NavLink >
           </li>
           <li>
-            <NavLink  to="/produtos">
+            <NavLink to="/produtos">
               <FaUtensils /> <p className="NavLinkText">Produtos</p>
             </NavLink >
           </li>
           <li>
-            <NavLink  to="/clientes">
+            <NavLink to="/clientes">
               <FaUsers /> <p className="NavLinkText">Clientes</p>
             </NavLink >
           </li>
           <li>
-            <NavLink  to="/historico">
+            <NavLink to="/empresas">
+              <FaBuilding /> <p className="NavLinkText">Empresas</p>
+            </NavLink >
+          </li>
+          <li>
+            <NavLink to="/historico">
               <FaHistory /> <p className="NavLinkText">Histórico de Pedidos</p>
             </NavLink >
           </li>
           <li>
 
             {/* TODO modificar isso pra um link/button  */}
-            <NavLink  to="/sair">
+            <NavLink to="/sair">
               <FaSignOutAlt /> <p className="NavLinkText">Sair</p>
             </NavLink >
           </li>
