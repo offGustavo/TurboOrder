@@ -20,6 +20,7 @@ import EditClient from "./pages/EditClient";
 import Historico from "./pages/Historico";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import EmployeeManagement from "./pages/EmployeeManagement";
 
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
@@ -66,63 +67,11 @@ function AppContent() {
     checkAuth();
   }, []);
 
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Register />} />
-
-      {auth.isAuthenticated ? (
-        <Route
-          path="*"
-          element={
-            <div className="app">
-              <Sidebar />
-              <main>
-                <Header />
-                <Breadcrumb />
-                <div className="content">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route
-                      path="/produtos"
-                      element={
-                        <ProductTable
-                          products={products}
-                          setProducts={setProducts}
-                        />
-                      }
-                    />
-                    <Route
-                      path="/cadastro-de-cliente"
-                      element={<AddClient />}
-                    />
-                    <Route path="/cardapio" element={<Calendar />} />
-                    <Route
-                      path="/cadastro-de-cliente/pedidos"
-                      element={<AddOrder />}
-                    />
-                    <Route path="/clientes" element={<ClientTable />} />
-                    <Route
-                      path="/clientes/:id/edit"
-                      element={<EditClient />}
-                    />
-                    <Route
-                      path="/historico"
-                      element={
-                        <ProtectedRoute role="admin">
-                          <Historico />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route path="*" element={<div>Página não encontrada</div>} />
-                  </Routes>
-                </div>
-              </main>
-              <ToastContainer position="bottom-left" autoClose={3000} />
-            </div>
-          }
-        />
-      ) : (
+  if (!auth.isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Register />} />
         <Route
           path="*"
           element={
@@ -132,8 +81,52 @@ function AppContent() {
             </div>
           }
         />
-      )}
-    </Routes>
+      </Routes>
+    );
+  }
+
+  return (
+    <div className="app">
+      <Sidebar />
+      <main>
+        <Header />
+        <Breadcrumb />
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/produtos"
+              element={
+                <ProductTable products={products} setProducts={setProducts} />
+              }
+            />
+            <Route path="/cadastro-de-cliente" element={<AddClient />} />
+            <Route path="/cardapio" element={<Calendar />} />
+            <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
+            <Route path="/clientes" element={<ClientTable />} />
+            <Route path="/clientes/:id/edit" element={<EditClient />} />
+            <Route
+              path="/historico"
+              element={
+                <ProtectedRoute role="admin">
+                  <Historico />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/funcionarios"
+              element={
+                <ProtectedRoute role="admin">
+                  <EmployeeManagement />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<div>Página não encontrada</div>} />
+          </Routes>
+        </div>
+      </main>
+      <ToastContainer position="bottom-left" autoClose={3000} />
+    </div>
   );
 }
 
