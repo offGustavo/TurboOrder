@@ -22,6 +22,8 @@ function Register() {
       .then((res) => {
         if (res.data.Status === "Success") {
           navigate("/login");
+        } else if (res.data.Error) {
+          alert(res.data.Error);
         } else {
           alert("Erro ao cadastrar");
         }

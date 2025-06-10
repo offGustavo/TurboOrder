@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
+
+
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -7,9 +11,10 @@ import { FaLock } from "react-icons/fa";
 
 import "../styles/Login.css";
 
-function Login({ setAuth }) {
+function Login() {
   const [values, setValues] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const { auth, setAuth } = useContext(AuthContext);
   axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
@@ -18,7 +23,22 @@ function Login({ setAuth }) {
       .post("http://localhost:8800/login", values)
       .then((res) => {
         if (res.data.Status === "Success") {
-          setAuth(true);
+          const token = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('token='))
+            ?.split('=')[1];
+          if (token) {
+            const decoded = jwtDecode(token);
+            setAuth({
+              isAuthenticated: true,
+              role: decoded.role,
+            });
+          } else {
+            setAuth({
+              isAuthenticated: true,
+              role: null,
+            });
+          }
           navigate("/");
         } else {
           alert(res.data.Error);
