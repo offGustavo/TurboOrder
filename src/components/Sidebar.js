@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt, FaUserTie } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 
@@ -9,12 +9,13 @@ import logo from "../image/logo.png";
 import { AuthContext } from "../context/AuthContext";
 
 const Sidebar = () => {
-  const { auth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleDelete = async () => {
+  const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:8800/logout");
+      await axios.get("http://localhost:8800/logout", { withCredentials: true });
+      setAuth({ isAuthenticated: false, role: null });
       navigate("/login");
     } catch (err) {
       console.error("Erro ao fazer logout:", err);
@@ -29,29 +30,31 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/"><FaHome /> <p className="NavLinkText">Home</p></Link>
+            <a href="/"><FaHome /> <p className="NavLinkText">Home</p></a>
           </li>
           <li>
-            <Link to="/cardapio"><BiFoodMenu /> <p className="NavLinkText">Cardápio</p></Link>
+            <a href="/cardapio"><BiFoodMenu /> <p className="NavLinkText">Cardápio</p></a>
           </li>
           <li>
-            <Link to="/produtos"><FaUtensils /> <p className="NavLinkText">Produtos</p></Link>
+            <a href="/produtos"><FaUtensils /> <p className="NavLinkText">Produtos</p></a>
           </li>
           <li>
-            <Link to="/clientes"><FaUsers /> <p className="NavLinkText">Clientes</p></Link>
+            <a href="/clientes"><FaUsers /> <p className="NavLinkText">Clientes</p></a>
           </li>
+
           {auth.role === "admin" && (
             <>
               <li>
-                <Link to="/historico"><FaHistory /> <p className="NavLinkText">Histórico de Pedido</p></Link>
+                <a href="/historico"><FaHistory /> <p className="NavLinkText">Histórico de Pedido</p></a>
               </li>
               <li>
-                <Link to="/funcionarios"><FaUserTie /> <p className="NavLinkText">Funcionários</p></Link>
+                <a href="/funcionarios"><FaUserTie /> <p className="NavLinkText">Funcionários</p></a>
               </li>
             </>
           )}
+
           <li>
-            <Link to="#" onClick={handleDelete}><FaSignOutAlt /> <p className="NavLinkText">Sair</p></Link>
+            <a className="logout-button" onClick={handleLogout}><FaSignOutAlt /> <p className="NavLinkText">Sair</p></a>
           </li>
         </ul>
       </nav>
