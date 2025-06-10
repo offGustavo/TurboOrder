@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditEmployeeModal from "../components/EditEmployeeModal";
+import PopupModal from "../components/PopupModal";
 import "./../styles/ProductTable.css";
 
 const FormContainer = styled.div`
@@ -22,6 +23,8 @@ const EmployeeManagement = () => {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState(null);
 
   const fetchEmployees = async () => {
     try {
@@ -59,15 +62,22 @@ const EmployeeManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Tem certeza que deseja deletar este funcionário?")) {
-      try {
-        await axios.delete(`http://localhost:8800/funcionarios/${id}`);
-        toast.success("Funcionário deletado com sucesso");
-        fetchEmployees();
-      } catch (err) {
-        toast.error("Erro ao deletar funcionário");
-      }
+  const confirmDelete = (employee) => {
+    setEmployeeToDelete(employee);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    if (!employeeToDelete) return;
+    try {
+      await axios.delete(`http://localhost:8800/funcionarios/${employeeToDelete.fun_id}`);
+      toast.success("Funcionário deletado com sucesso");
+      fetchEmployees();
+    } catch (err) {
+      toast.error("Erro ao deletar funcionário");
+    } finally {
+      setShowDeleteModal(false);
+      setEmployeeToDelete(null);
     }
   };
 
@@ -138,7 +148,7 @@ const EmployeeManagement = () => {
                   <button className="edit-btn" onClick={() => openEditModal(emp)}>
                     Editar
                   </button>
-                  <button className="delete-btn" onClick={() => handleDelete(emp.fun_id)}>
+                  <button className="delete-btn" onClick={() => confirmDelete(emp)}>
                     Deletar
                   </button>
                 </div>
@@ -153,6 +163,13 @@ const EmployeeManagement = () => {
         onClose={closeEditModal}
         employee={editingEmployee}
         onSave={onEditSave}
+      />
+
+      <PopupModal
+        showModal={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        actionType="confirmarExclusaoFuncionario"
       />
     </div>
   );

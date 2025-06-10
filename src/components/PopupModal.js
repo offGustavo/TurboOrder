@@ -36,6 +36,11 @@ const PopupModal = ({ showModal, onClose, onConfirm, actionType }) => {
           title: "Revisar Formulário",
           message: "Por favor, antes de finalizar o pedido, revise o formulário para verificar se não há nenhum erro de digitação ou falta de preenchimento de algum campo.",
       };
+      case "confirmarExclusaoFuncionario":
+        return {
+          title: "Excluir Funcionário",
+          message: "Tem certeza de que quer excluir este funcionário? Esta ação não poderá ser desfeita.",
+        };
       default:
         return {
           title: "Confirmação",
