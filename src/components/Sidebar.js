@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt, FaUserTie } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { IoIosStats } from "react-icons/io";
+import { FaHome, FaUtensils, FaUsers, FaHistory, FaSignOutAlt, FaBuilding, FaUserTie } from "react-icons/fa";
 import { BiFoodMenu } from "react-icons/bi";
 
 import "./../styles/Sidebar.css";
@@ -33,7 +31,7 @@ const Sidebar = () => {
         <ul>
           <li>
             <a href="/"><FaHome /> <p className="NavLinkText">Home</p></a>
-          </li>
+          </li >
           <li>
             <a href="/cardapio"><BiFoodMenu /> <p className="NavLinkText">Cardápio</p></a>
           </li>
@@ -43,9 +41,6 @@ const Sidebar = () => {
           <li>
             <a href="/clientes"><FaUsers /> <p className="NavLinkText">Clientes</p></a>
           </li>
-
-
-
 
           {auth.role === "admin" && (
             <>
@@ -60,18 +55,21 @@ const Sidebar = () => {
                 <NavLink to="/desempenho">
                   <IoIosStats /> <p className="NavLinkText">Desempenho</p>
                 </NavLink >
-
+              </li>
+              <li>
+                <NavLink to="/empresas">
+                  <FaBuilding /> <p className="NavLinkText">Empresas</p>
+                </NavLink >
               </li>
             </>
           )}
 
-
           <li>
             <a className="logout-button" onClick={handleLogout}><FaSignOutAlt /> <p className="NavLinkText">Sair</p></a>
           </li>
-        </ul>
-      </nav>
-    </div>
+        </ul >
+      </nav >
+    </div >
   );
 };
 

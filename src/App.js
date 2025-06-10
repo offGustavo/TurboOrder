@@ -27,6 +27,10 @@ import Historico from "./pages/Historico";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProductTable from "./pages/ProductTable";
+import CompanyTable from "./pages/CompanyTable.js";
+import AddCompany from "./pages/AddCompany.js";
+
+import { AuthProvider, AuthContext } from "./context/AuthContext";
 
 function ProtectedRoute({ children, role }) {
   const { auth } = useContext(AuthContext);
@@ -138,6 +142,9 @@ function AppContent() {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="/empresas" element={<CompanyTable />} />
+            <Route path="/empresas/cadastro" element={<AddCompany />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/redefinir-senha" element={<ResetPassword />} />
             <Route path="/desempenho" element={<Desempenho products={products} />} />
