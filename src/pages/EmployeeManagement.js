@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditEmployeeModal from "../components/EditEmployeeModal";
 import PopupModal from "../components/PopupModal";
-import "./../styles/ProductTable.css";
+import "./../styles/EmployeeManagement.css";
 
 const FormContainer = styled.div`
   display: flex;
@@ -96,7 +96,7 @@ const EmployeeManagement = () => {
   };
 
   return (
-    <div className="product-table">
+    <div className="employee-table">
       <h1 className="title">Gerenciamento de Funcionários</h1>
 
       <Box component="form" noValidate autoComplete="off" sx={{ marginBottom: 2 }}>
@@ -106,7 +106,14 @@ const EmployeeManagement = () => {
             name="username"
             value={form.username}
             onChange={handleChange}
-            sx={{ marginRight: 2, width: "30%" }}
+            sx={{
+              marginRight: 2,
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              width: "30%",
+            }}
           />
           <TextField
             label="Email"
@@ -114,7 +121,14 @@ const EmployeeManagement = () => {
             type="email"
             value={form.email}
             onChange={handleChange}
-            sx={{ marginRight: 2, width: "30%" }}
+            sx={{
+              marginRight: 2,
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              width: "30%",
+            }}
           />
           <TextField
             label="Senha"
@@ -122,9 +136,16 @@ const EmployeeManagement = () => {
             type="password"
             value={form.password}
             onChange={handleChange}
-            sx={{ marginRight: 2, width: "30%" }}
+            sx={{
+              marginRight: 2,
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+              width: "30%",
+            }}
           />
-          <Button variant="contained" color="primary" onClick={handleCreate} startIcon={<FaPlus />}>
+          <Button variant="contained" className="btn-salvar" type="button" onClick={handleCreate} startIcon={<FaPlus />}>
             Criar
           </Button>
         </FormContainer>
@@ -145,12 +166,8 @@ const EmployeeManagement = () => {
               <td>{emp.fun_email}</td>
               <td>
                 <div className="control-box">
-                  <button className="edit-btn" onClick={() => openEditModal(emp)}>
-                    Editar
-                  </button>
-                  <button className="delete-btn" onClick={() => confirmDelete(emp)}>
-                    Deletar
-                  </button>
+                  <FaEdit onClick={() => openEditModal(emp)} size={16} className='icon-size icon-edit' />
+                  <FaTrash onClick={() => confirmDelete(emp)} size={16} className='icon-size icon-delete' />
                 </div>
               </td>
             </tr>

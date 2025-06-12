@@ -31,6 +31,25 @@
     padding: 20px 50px;
   }
 
+  .login-prompt {
+    height: 95vh;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.text-loginPrompt {
+  margin-bottom: 20px;
+}
+
+  .btn-loginPrompt {
+    padding: 10px 15px;
+    border-radius: 20px;
+    background-color: var(--bg-login);
+    color: var(--fg-white);
+  }
+
 @media (max-width: 959px) {
   .content {
     padding: 20px 10px;

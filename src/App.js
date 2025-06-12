@@ -75,9 +75,13 @@ function AppContent() {
         <Route
           path="*"
           element={
-            <div className="login-prompt">
-              <h3>Faça login para acessar o sistema</h3>
-              <Link to="/login">Ir para Login</Link>
+            <div>
+              <div className="login-prompt">
+              <div>
+                <h3 className="text-loginPrompt">Faça login para acessar o sistema</h3>
+                <Link to="/login" className="btn-loginPrompt">Ir para Login</Link>
+              </div>
+              </div>
             </div>
           }
         />
