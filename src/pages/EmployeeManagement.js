@@ -18,9 +18,15 @@ const FormContainer = styled.div`
   width: 100%;
 `;
 
+const getTokenFromCookie = () => {
+  const match = document.cookie.match(new RegExp('(^| )token=([^;]+)'));
+  if (match) return match[2];
+  return null;
+};
+
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({ username: "", email: "", password: "", role: "user" });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -28,7 +34,12 @@ const EmployeeManagement = () => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/funcionarios");
+      const token = getTokenFromCookie();
+      const res = await axios.get("http://localhost:8800/funcionarios", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setEmployees(res.data);
     } catch (err) {
       toast.error("Erro ao buscar funcionários");
@@ -53,9 +64,15 @@ const EmployeeManagement = () => {
       return;
     }
     try {
-      await axios.post("http://localhost:8800/funcionarios", form);
+      const token = getTokenFromCookie();
+      const payload = { ...form };
+      await axios.post("http://localhost:8800/funcionarios", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Funcionário criado com sucesso");
-      setForm({ username: "", email: "", password: "" });
+      setForm({ username: "", email: "", password: "", role: "user" });
       fetchEmployees();
     } catch (err) {
       toast.error(err.response?.data?.error || "Erro ao criar funcionário");
@@ -70,7 +87,12 @@ const EmployeeManagement = () => {
   const handleDelete = async () => {
     if (!employeeToDelete) return;
     try {
-      await axios.delete(`http://localhost:8800/funcionarios/${employeeToDelete.fun_id}`);
+      const token = getTokenFromCookie();
+      await axios.delete(`http://localhost:8800/funcionarios/${employeeToDelete.fun_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Funcionário deletado com sucesso");
       fetchEmployees();
     } catch (err) {
@@ -142,9 +164,26 @@ const EmployeeManagement = () => {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
                 "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
               },
-              width: "30%",
+              width: "20%",
             }}
           />
+          <TextField
+            select
+            label="Função"
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            SelectProps={{
+              native: true,
+            }}
+            sx={{
+              marginRight: 2,
+              width: "20%",
+            }}
+          >
+            <option value="user">Usuário</option>
+            <option value="admin">Administrador</option>
+          </TextField>
           <Button variant="contained" className="btn-salvar" type="button" onClick={handleCreate} startIcon={<FaPlus />}>
             Criar
           </Button>
@@ -156,6 +195,7 @@ const EmployeeManagement = () => {
           <tr>
             <th>Nome</th>
             <th>Email</th>
+            <th>Função</th>
             <th>Configurações</th>
           </tr>
         </thead>
@@ -164,6 +204,7 @@ const EmployeeManagement = () => {
             <tr key={emp.fun_id}>
               <td>{emp.fun_nome}</td>
               <td>{emp.fun_email}</td>
+              <td>{emp.fun_role}</td>
               <td>
                 <div className="control-box">
                   <FaEdit onClick={() => openEditModal(emp)} size={16} className='icon-size icon-edit' />
@@ -191,5 +232,4 @@ const EmployeeManagement = () => {
     </div>
   );
 };
-
 export default EmployeeManagement;

@@ -22,11 +22,13 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
 
   useEffect(() => {
     if (employee) {
       setUsername(employee.fun_nome || "");
       setEmail(employee.fun_email || "");
+      setRole(employee.fun_role || "user");
       setPassword("");
     }
   }, [employee]);
@@ -41,7 +43,7 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
       return;
     }
     try {
-      const payload = { username, email };
+      const payload = { username, email, role };
       if (password) {
         payload.password = password;
       }
@@ -75,6 +77,20 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        <TextField
+          fullWidth
+          select
+          label="Função"
+          margin="normal"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          SelectProps={{
+            native: true,
+          }}
+        >
+          <option value="user">Usuário</option>
+          <option value="admin">Administrador</option>
+        </TextField>
         <TextField
           fullWidth
           label="Nova Senha (deixe em branco para manter)"
