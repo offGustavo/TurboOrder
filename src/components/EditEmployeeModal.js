@@ -18,7 +18,7 @@ const style = {
   p: 4,
 };
 
-const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
+const EditEmployeeModal = ({ open, onClose, employee, onSave, token }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +47,11 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
       if (password) {
         payload.password = password;
       }
-      await axios.put(`http://localhost:8800/funcionarios/${employee.fun_id}`, payload);
+      await axios.put(`http://localhost:8800/funcionarios/${employee.fun_id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Funcionário atualizado com sucesso");
       onSave();
       onClose();

@@ -221,6 +221,7 @@ const EmployeeManagement = () => {
         onClose={closeEditModal}
         employee={editingEmployee}
         onSave={onEditSave}
+        token={getTokenFromCookie()}
       />
 
       <PopupModal
