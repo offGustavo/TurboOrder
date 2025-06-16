@@ -1,31 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import "../styles/Header.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ nome: "", foto: "" });
-
-  useEffect(() => {
-    axios.get("http://localhost:8800/api/me", { withCredentials: true })
-      .then((res) => {
-        setUser({
-          nome: res.data.fun_nome,
-          foto: res.data.fun_foto ? `http://localhost:8800/${res.data.fun_foto}` : ""
-        });
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar dados do usuário", err);
-      });
-  }, []);
+  const { auth } = useContext(AuthContext);
 
   const handleSearchChange = (e) => {
     const searchValue = e.target.value;
     navigate(`/?search=${encodeURIComponent(searchValue)}`);
   };
+
+  const fotoUrl = auth.foto && !auth.foto.startsWith("http")
+    ? `http://localhost:8800/uploads/${auth.foto}`
+    : auth.foto;
 
   return (
     <header className="header">
@@ -46,11 +37,11 @@ const Header = () => {
             <FaPlus className="btn-plus" />
           </NavLink>
 
-          <span className="user-name">{user.nome || "Funcionário"}</span>
+          <span className="user-name">{auth.nome || "Funcionário"}</span>
 
           <NavLink to="/perfil">
-            {user.foto ? (
-              <img src={user.foto} alt="Avatar" className="user-avatar" />
+            {fotoUrl ? (
+              <img src={fotoUrl} alt="Avatar" className="user-avatar" />
             ) : (
               <div className="user-avatar default-avatar" />
             )}

@@ -1,128 +1,130 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
-const EditProfile = () => {
+function EditProfile() {
   const { auth, setAuth } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    foto: null,
-    fotoUrl: "",
-  });
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(null);
-  const navigate = useNavigate();
+
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [foto, setFoto] = useState("");
+  const [preview, setPreview] = useState("");
+  const [error, setError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
 
   useEffect(() => {
+    // Carregar dados do usuário via API
     axios
-      .get("http://localhost:8800/api/me", { withCredentials: true })
+      .get("http://localhost:8800/user/me", { withCredentials: true })
       .then((res) => {
-        setFormData({
-          nome: res.data.fun_nome,
-          email: res.data.fun_email,
-          foto: null,
-          fotoUrl: res.data.fun_foto_url || "",
-        });
-        setLoading(false);
+        if (res.data.Status === "Success") {
+          setNome(res.data.nome);
+          setEmail(res.data.email);
+          setFoto(res.data.foto);
+          setPreview(res.data.foto);
+        } else {
+          setError("Erro ao carregar os dados do perfil.");
+        }
       })
       .catch(() => {
-        setMessage("Erro ao carregar os dados do perfil.");
-        setLoading(false);
+        setError("Erro ao carregar os dados do perfil.");
       });
   }, []);
 
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handleFileChange(e) {
+  const handleFotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        foto: file,
-        fotoUrl: URL.createObjectURL(file),
-      }));
+      setFoto(file);
+
+      // preview da imagem
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccessMsg(null);
 
-    const data = new FormData();
-    data.append("nome", formData.nome);
-    data.append("email", formData.email);
-    if (formData.foto) data.append("foto", formData.foto);
+    if (!nome || !email) {
+      setError("Nome e email são obrigatórios.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("nome", nome);
+    formData.append("email", email);
+    if (foto && typeof foto !== "string") {
+      // só envia a foto se for um arquivo (não string)
+      formData.append("foto", foto);
+    }
 
     axios
-      .put("http://localhost:8800/api/me", data, {
+      .put("http://localhost:8800/user/update-profile", formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       })
-      .then(() => {
-        setMessage("Perfil atualizado com sucesso!");
-        // Atualiza nome/email no contexto auth se quiser
-        setAuth((prev) => ({
-          ...prev,
-          username: formData.nome,
-          email: formData.email,
-        }));
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setSuccessMsg("Perfil atualizado com sucesso!");
+          // Atualiza o contexto auth
+          setAuth((prev) => ({
+            ...prev,
+            nome: nome,
+            foto: preview,
+          }));
+        } else {
+          setError("Erro ao atualizar o perfil.");
+        }
       })
       .catch(() => {
-        setMessage("Erro ao atualizar o perfil.");
+        setError("Erro ao atualizar o perfil.");
       });
-  }
-
-  if (loading) return <p>Carregando...</p>;
+  };
 
   return (
-    <div className="edit-profile">
+    <div>
       <h2>Editar Perfil</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div>
-          <label>Nome:</label>
-          <input
-            type="text"
-            name="nome"
-            value={formData.nome}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
+      <form onSubmit={handleSubmit}>
+        <label>Nome:</label>
+        <input
+          type="text"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          required
+        />
 
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-        <div>
-          <label>Foto do Perfil:</label>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          {formData.fotoUrl && (
-            <div style={{ marginTop: 10 }}>
-              <img
-                src={formData.fotoUrl}
-                alt="Preview"
-                style={{ width: 120, height: 120, objectFit: "cover", borderRadius: "50%" }}
-              />
-            </div>
-          )}
-        </div>
+        <label>Foto do Perfil:</label>
+        <input type="file" onChange={handleFotoChange} accept="image/*" />
+        {preview && (
+          <div>
+            <p>Preview</p>
+            <img
+              src={preview}
+              alt="Preview da foto"
+              style={{ width: "100px", height: "100px", objectFit: "cover" }}
+            />
+          </div>
+        )}
 
         <button type="submit">Salvar</button>
       </form>
     </div>
   );
-};
+}
 
 export default EditProfile;
