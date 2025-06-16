@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import "../styles/Header.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState({ nome: "", foto: "" });
+
+  useEffect(() => {
+    axios.get("http://localhost:8800/api/me", { withCredentials: true })
+      .then((res) => {
+        setUser({
+          nome: res.data.fun_nome,
+          foto: res.data.fun_foto ? `http://localhost:8800/${res.data.fun_foto}` : ""
+        });
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar dados do usuário", err);
+      });
+  }, []);
 
   const handleSearchChange = (e) => {
     const searchValue = e.target.value;
@@ -30,8 +45,16 @@ const Header = () => {
             <span className="btn-pedido">Pedido</span>
             <FaPlus className="btn-plus" />
           </NavLink>
-          <span className="user-name">Funcionário</span>
-          <div className="user-avatar"></div>
+
+          <span className="user-name">{user.nome || "Funcionário"}</span>
+
+          <NavLink to="/perfil">
+            {user.foto ? (
+              <img src={user.foto} alt="Avatar" className="user-avatar" />
+            ) : (
+              <div className="user-avatar default-avatar" />
+            )}
+          </NavLink>
         </div>
       </div>
 
