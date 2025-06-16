@@ -2,6 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import axios from "axios";
 
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import EmailVerification from "./pages/EmailVerification";
+
 import "./App.css";
 import "./styles/Global.css";
 import { ToastContainer } from "react-toastify";
@@ -72,6 +76,8 @@ function AppContent() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/redefinir-senha" element={<ResetPassword />} />
         <Route
           path="*"
           element={
@@ -125,6 +131,8 @@ function AppContent() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/redefinir-senha" element={<ResetPassword />} />
             <Route path="*" element={<div>Página não encontrada</div>} />
           </Routes>
         </div>

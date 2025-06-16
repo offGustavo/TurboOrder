@@ -76,7 +76,7 @@ function Login() {
             <FaLock />
           </div>
           <div className="forgot-link">
-            <a href="#">Esqueceu a senha?</a>
+            <a href="/forgot-password">Esqueceu a senha?</a>
           </div>
           <button type="submit" className="btn-login">
             Entrar
