@@ -6,10 +6,11 @@ import "../styles/Address.css";
 const Address = ({ formData, handleChange, setFormData }) => {
   const { cli_cep } = formData;
 
-  useEffect(() => {
-    const fetchAddress = async () => {
-      const cep = cli_cep.replace(/\D/g, "");
+ useEffect(() => {
+  const fetchAddress = async () => {
+    if (!cli_cep) return; // Se estiver vazio, não faz nada
 
+    const cep = cli_cep.replace(/\D/g, "");
       if (cep.length === 8) {
         try {
           const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);

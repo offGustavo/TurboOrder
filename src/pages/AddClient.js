@@ -91,70 +91,73 @@ const AddClient = () => {
     setShowModal(true);
   };
 
-  const handleConfirm = async () => {
-    const telefone = formData.con_telefone.replace(/[^\d]/g, "");
+const handleConfirm = async () => {
+  console.log("Confirmando cadastro...");
+  const telefone = formData.con_telefone.replace(/[^\d]/g, "");
 
-    const dataToSend = {
-      clientInfo: {
-        cli_nome: formData.cli_nome,
-        cli_sobrenome: formData.cli_sobrenome,
-        cli_numero: formData.cli_numero,
-        cli_complemento: formData.cli_complemento,
-      },
-      address: {
-        end_cep: formData.cli_cep,
-        end_cidade: formData.cli_cidade,
-        end_bairro: formData.cli_bairro,
-        end_rua: formData.cli_rua,
-      },
-      con_telefone: telefone,
-    };
+const dataToSend = {
+  clientInfo: {
+    cli_nome: formData.cli_nome,
+    cli_sobrenome: formData.cli_sobrenome,
+    cli_numero: formData.cli_numero,
+    cli_complemento: formData.cli_complemento,
+  },
+  address: {
+    end_cep: formData.cli_cep,
+    end_cidade: formData.cli_cidade,
+    end_bairro: formData.cli_bairro,
+    end_rua: formData.cli_rua,
+  },
+  con_telefone: telefone,
+  empresa_fk: null, // 👉 ou um ID se quiser vincular
+};
 
-    try {
-      const checkResponse = await axios.get(`http://localhost:8800/clientes/telefone/${telefone}`);
-      if (checkResponse.data) {
-        toast.error("Este cliente já está cadastrado com este número de telefone.");
-        return;
-      }
-    } catch (error) {
-      if (error.response && error.response.status !== 404) {
-        console.error("Erro ao verificar cliente existente:", error);
-        toast.error("Erro ao verificar se o cliente já está cadastrado.");
-        return;
-      }
+
+  try {
+    const checkResponse = await axios.get(`http://localhost:8800/clientes/telefone/${telefone}`);
+    if (checkResponse.data) {
+      toast.error("Este cliente já está cadastrado com este número de telefone.");
+      return;
     }
-
-    try {
-      const response = await axios.post("http://localhost:8800/clientes", dataToSend);
-
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Cliente cadastrado com sucesso!");
-        setFormData({
-          cli_nome: "",
-          cli_sobrenome: "",
-          con_telefone: "",
-          cli_cep: "",
-          cli_cidade: "",
-          cli_bairro: "",
-          cli_rua: "",
-          cli_numero: "",
-          cli_complemento: ""
-        });
-        setShowModal(false);
-        navigate("/cadastro-de-cliente/pedidos");
-      } else {
-        toast.error("Erro inesperado ao cadastrar o cliente.");
-      }
-    } catch (error) {
-      console.error("Erro ao cadastrar cliente:", error);
-      const mensagemErro =
-        error?.response?.data?.message ||
-        error?.response?.data ||
-        error?.message ||
-        "Erro ao cadastrar o cliente.";
-      toast.error(mensagemErro);
+  } catch (error) {
+    if (error.response && error.response.status !== 404) {
+      console.error("Erro ao verificar cliente existente:", error);
+      toast.error("Erro ao verificar se o cliente já está cadastrado.");
+      return;
     }
-  };
+  }
+
+  try {
+    const response = await axios.post("http://localhost:8800/clientes", dataToSend);
+
+    if (response.status === 200 || response.status === 201) {
+      toast.success("Cliente cadastrado com sucesso!");
+      setFormData({
+        cli_nome: "",
+        cli_sobrenome: "",
+        con_telefone: "",
+        cli_cep: "",
+        cli_cidade: "",
+        cli_bairro: "",
+        cli_rua: "",
+        cli_numero: "",
+        cli_complemento: ""
+      });
+      setShowModal(false);
+      navigate("/cadastro-de-cliente/pedidos");
+    } else {
+      toast.error("Erro inesperado ao cadastrar o cliente.");
+    }
+  } catch (error) {
+    console.error("Erro ao cadastrar cliente:", error);
+    if (error.response) {
+      console.log("Resposta do servidor:", error.response.data);
+    } else {
+      console.log("Erro genérico:", error.message);
+    }
+    toast.error("Erro ao cadastrar cliente. Verifique o console para mais detalhes.");
+  }
+};
 
   const handleCloseModal = () => {
     setShowModal(false);
