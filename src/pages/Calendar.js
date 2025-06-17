@@ -11,7 +11,7 @@ import { IoMdClose } from "react-icons/io";
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [produtos, setProdutos] = useState([]);
+  const [produtos, setProdutos] = useState([]);  // precisa ser array
   const [selectedTipo, setSelectedTipo] = useState(null);
   const [selectedProdutos, setSelectedProdutos] = useState({});
   const [isModified, setIsModified] = useState(false); // Novo estado
@@ -19,12 +19,20 @@ export default function Calendar() {
   const h3Refs = useRef({});
   const tiposProdutos = ["Arroz", "Feijão", "Massa", "Carne", "Acompanhamento", "Salada"];
 
+  // Carregar produtos — corrigido para pegar só o array de produtos dentro de response.data.data
   useEffect(() => {
     fetch('http://localhost:8800/produtos')
       .then((res) => res.json())
       .then((data) => {
-        console.log("Produtos recebidos:", data);
-        setProdutos(data);
+        // Se paginado, pode ser data.data, se não, use só data
+        if (data.data && Array.isArray(data.data)) {
+          setProdutos(data.data);
+        } else if (Array.isArray(data)) {
+          setProdutos(data);
+        } else {
+          console.error('Formato inesperado do retorno dos produtos:', data);
+          setProdutos([]);
+        }
       })
       .catch((err) => console.error('Erro ao carregar produtos:', err));
   }, []);
@@ -48,7 +56,7 @@ export default function Calendar() {
         } else {
           setSelectedProdutos({});
         }
-        setIsModified(false); // Resetar ao carregar
+        setIsModified(false);
       })
       .catch((err) => {
         console.error('Erro ao carregar cardápio:', err);
@@ -75,7 +83,6 @@ export default function Calendar() {
   const saveCardapio = () => {
     const dataAtual = currentDate.format('YYYY-MM-DD');
 
-    // Validação: todos os tipos de produtos devem estar preenchidos
     const tiposFaltando = tiposProdutos.filter(tipo => !selectedProdutos[tipo] || selectedProdutos[tipo].length === 0);
     if (tiposFaltando.length > 0) {
       toast.error(`Preencha todos os campos antes de salvar o cardápio`, { position: "top-right" });
@@ -223,38 +230,22 @@ ${getProdutosPorTipo("Salada") || "nenhuma salada disponível para hoje"}
           <IconButton
             aria-label="close"
             onClick={() => setSelectedTipo(null)}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
           >
             <IoMdClose />
           </IconButton>
         </DialogTitle>
-
-        <DialogContent dividers id='dialog-list-container'>
-          <div className='modal-list-container'>
-            <ul className='calendar-ul-produtos'>
-              {produtos.filter(produto =>
-                produto.pro_tipo === selectedTipo &&
-                !(selectedProdutos[selectedTipo] || []).some(p => p.pro_id === produto.pro_id)
-              ).map(produto => (
-                <li key={produto.pro_id} className='modal-list-item'>
+        <DialogContent dividers style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+          <ul className="product-list-ul">
+            {produtos
+              .filter(p => p.pro_tipo === selectedTipo)
+              .map((produto) => (
+                <li key={produto.pro_id} className="product-list-li-decoration" style={{ cursor: 'pointer' }} onClick={() => addProductToMenu(produto)}>
                   {produto.pro_nome}
-                  <button
-                    onClick={() => addProductToMenu(produto)}
-                    className='btn-add calendar-add-btn'
-                  >
-                    Adicionar
-                  </button>
                 </li>
               ))}
-            </ul>
-          </div>
+          </ul>
         </DialogContent>
-
       </Dialog>
     </main>
   );

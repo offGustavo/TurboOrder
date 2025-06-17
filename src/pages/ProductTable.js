@@ -25,13 +25,25 @@ const Button = styled.button`
   margin-left: auto;
 `;
 
-
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
   const [proNome, setProNome] = useState("");
   const [proTipo, setProTipo] = useState("");
   const [filter, setFilter] = useState("Todos");
   const [onEdit, setOnEdit] = useState(null);
+
+  const [editProNome, setEditProNome] = useState("");
+  const [editProTipo, setEditProTipo] = useState("");
+  const [onProductEdit, setProductEdit] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20); // Número de itens por página
+  const [pagination, setPagination] = useState({
+    totalPages: 1,
+    currentPage: 1,
+  });
+
   const productTypes = [
     { value: "Arroz", label: "Arroz" },
     { value: "Feijão", label: "Feijão" },
@@ -41,18 +53,15 @@ const ProductTable = () => {
     { value: "Salada", label: "Salada" },
   ];
 
-  const [editProNome, setEditProNome] = useState('');
-  const [editProTipo, setEditProTipo] = useState('');
-  const [onProductEdit, setProductEdit] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-
   useEffect(() => {
     axios
-      .get("http://localhost:8800/produtos")
-      .then((response) => setProducts(response.data))
+      .get(`http://localhost:8800/produtos?page=${page}&limit=${limit}`)
+      .then((response) => {
+        setProducts(response.data.data);
+        setPagination(response.data.pagination);
+      })
       .catch(() => toast.error("Erro ao buscar produtos."));
-  }, []);
+  }, [page, limit]);
 
   const handleSave = () => {
     if (!proNome || !proTipo) {
@@ -62,15 +71,16 @@ const ProductTable = () => {
 
     if (onEdit) {
       axios
-        .put(`http://localhost:8800/produtos/${onEdit.pro_id}`, { pro_nome: proNome, pro_tipo: proTipo })
+        .put(`http://localhost:8800/produtos/${onEdit.pro_id}`, {
+          pro_nome: proNome,
+          pro_tipo: proTipo,
+        })
         .then(() => {
-          console.log('Produto atualizado com sucesso!');
           const updatedProducts = products.map((product) =>
             product.pro_id === onEdit.pro_id
               ? { ...product, pro_nome: proNome, pro_tipo: proTipo }
               : product
           );
-
           setProducts(updatedProducts);
           setProNome("");
           setProTipo("");
@@ -81,7 +91,10 @@ const ProductTable = () => {
         .catch(() => toast.error("Erro ao atualizar o produto."));
     } else {
       axios
-        .post("http://localhost:8800/produtos", { pro_nome: proNome, pro_tipo: proTipo })
+        .post("http://localhost:8800/produtos", {
+          pro_nome: proNome,
+          pro_tipo: proTipo,
+        })
         .then((response) => {
           setProducts([...products, response.data]);
           setProNome("");
@@ -91,8 +104,6 @@ const ProductTable = () => {
         .catch(() => toast.error("Erro ao salvar o produto."));
     }
   };
-
-
 
   const handleDelete = async (pro_id) => {
     await axios
@@ -187,10 +198,10 @@ const ProductTable = () => {
               <td>
                 <div className="control-box">
                   <button className="edit-btn">
-                    <FaEdit onClick={() => handleEdit(product)} size={16} className='icon-size' />
+                    <FaEdit onClick={() => handleEdit(product)} size={16} className="icon-size" />
                   </button>
                   <button className="delete-btn">
-                    <FaTrash onClick={() => handleDelete(product.pro_id)} size={16} className='icon-size' />
+                    <FaTrash onClick={() => handleDelete(product.pro_id)} size={16} className="icon-size" />
                   </button>
                 </div>
               </td>
@@ -199,6 +210,19 @@ const ProductTable = () => {
         </tbody>
       </table>
 
+      {/* Paginação */}
+      <div className="pagination">
+        <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
+          Anterior
+        </button>
+        <span>Página {pagination.currentPage} de {pagination.totalPages}</span>
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, pagination.totalPages))}
+          disabled={page === pagination.totalPages}
+        >
+          Próxima
+        </button>
+      </div>
 
       <EditProductModal
         open={isEditModalOpen}
@@ -210,8 +234,7 @@ const ProductTable = () => {
         setProducts={setProducts}
         productTypes={productTypes}
       />
-
-    </div >
+    </div>
   );
 };
 
