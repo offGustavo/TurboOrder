@@ -11,7 +11,7 @@ import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Printer, Text, Br, Line, Cut, render } from "react-thermal-printer";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const TitlePedido = styled.h1`
   margin: 0px;
