@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, MenuItem
@@ -6,6 +6,21 @@ import {
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import "../styles/Global.css";
+import "../styles/EditOrderDialog.css";
+
+import {
+  Printer,
+  Print,
+  Text,
+  Row,
+  Line,
+  Br,
+  Cut,
+  Barcode,
+  QRCode,
+  Image,
+  render,
+} from "react-thermal-printer";
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
@@ -20,6 +35,18 @@ const tipoPorField = {
 };
 
 const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
+  const [clientInfo, setClientInfo] = useState({
+    cli_nome: "",
+    cli_sobrenome: "",
+    con_telefone: "",
+    cli_numero: "",
+    cli_complemento: "",
+    end_cep: "",
+    end_cidade: "",
+    end_bairro: "",
+    end_rua: ""
+  });
+
   const [form, setForm] = useState({
     ped_status: '',
     ped_data: '',
@@ -44,7 +71,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
     },
   });
 
-
   const inputFormat = {
     "& .MuiOutlinedInput-root": {
       "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -57,6 +83,7 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
   };
 
   const [products, setProducts] = useState([]);
+  const printerRef = useRef(null);
 
   useEffect(() => {
     if (open && id) {
@@ -70,14 +97,33 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           console.error(err);
         });
 
-      // Buscar pedido
-      axios.get('http://localhost:8800/pedidos')
+      axios.get(`http://localhost:8800/pedidos/id/${id}`)
         .then(res => {
-          const pedido = res.data.find(p => p.ped_id === id);
+          const pedido = res.data;
           if (!pedido) {
             toast.error("Pedido não encontrado.");
             return;
           }
+
+          // Buscar informações do cliente
+          axios.get(`http://localhost:8800/clientes/${pedido.cliente_fk}`)
+            .then(clienteRes => {
+              const cliente = clienteRes.data;
+              setClientInfo({
+                cli_nome: cliente.cli_nome,
+                cli_sobrenome: cliente.cli_sobrenome,
+                con_telefone: cliente.contato?.con_telefone || '',
+                cli_numero: cliente.endereco?.cli_numero || '',
+                cli_complemento: cliente.endereco?.cli_complemento || '',
+                end_cep: cliente.endereco?.end_cep || '',
+                end_cidade: cliente.endereco?.end_cidade || '',
+                end_bairro: cliente.endereco?.end_bairro || '',
+                end_rua: cliente.endereco?.end_rua || ''
+              });
+            })
+            .catch(err => {
+              console.error("Erro ao buscar informações do cliente:", err);
+            });
 
           const itens = {
             arroz_fk: pedido.arroz_fk || '',
@@ -88,11 +134,11 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             carne01_fk: pedido.carne01_fk || '',
             carne02_fk: pedido.carne02_fk || '',
           };
-          // Preencher form com os dados do pedido
+
           setForm({
             ped_status: pedido.ped_status || '',
             ped_data: pedido.ped_data?.split('T')[0] || '',
-            ped_horarioRetirada: pedido.ped_horarioRetirada || '', // <== novo campo
+            ped_horarioRetirada: pedido.ped_horarioRetirada || '',
             ped_observacao: pedido.ped_observacao || '',
             ped_valor: pedido.ped_valor || '',
             ped_tipoPagamento: pedido.ped_tipoPagamento || '',
@@ -114,11 +160,52 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setForm((prev) => ({
       ...prev,
       [name]: name === "ped_valor" ? Number(value) : value,
     }));
+  };
+
+  const handlePrint = async () => {
+    const receipt = (
+      <Printer type="epson" width={42}>
+        <Text size={{ width: 2, height: 2 }} bold>
+          Pedido #{id}
+        </Text>
+        <Br />
+        <Line />
+        <Text>Cliente: {form.cli_nome} {form.cli_sobrenome}</Text>
+        <Text>Telefone: {clientInfo.con_telefone}</Text>
+        <Text>Endereço: {clientInfo.end_rua}, {clientInfo.cli_numero} {clientInfo.cli_complemento}</Text>
+        <Text>Bairro: {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep}</Text>
+        <Text>Valor: R$ {form.ped_valor?.toFixed(2)}, Tipo: {form.ped_tipoPagamento}</Text>
+        <Text>Observações: {form.ped_observacao}</Text>
+        <Text>Itens do Pedido:</Text>
+        {Object.entries(form.itens).map(([key, productId]) => {
+          if (!productId) return null;
+          const product = products.find(p => p.pro_id === productId);
+          return product ? <Text key={key}>- {tipoPorField[key]}: {product.pro_nome}</Text> : null;
+        })}
+        {form.ped_horarioRetirada && (
+          <Text>Retirada: {form.ped_horarioRetirada}</Text>
+        )}
+        <Cut />
+      </Printer>
+    );
+
+    try {
+      const data = await render(receipt);
+      const port = await window.navigator.serial.requestPort();
+      await port.open({ baudRate: 9600 });
+      const writer = port.writable?.getWriter();
+      if (writer) {
+        await writer.write(data);
+        writer.releaseLock();
+      }
+    } catch (error) {
+      alert("Erro ao imprimir o pedido: " + error.message);
+      console.error(error);
+    }
   };
 
   const handleSubmit = async () => {
@@ -164,7 +251,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
         />
-
 
         {form.ped_horarioRetirada && (
           <TextField
@@ -239,7 +325,6 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         />
 
         {Object.keys(tipoPorField).map((field) => {
-          // Oculta carne02_fk se o valor do pedido for diferente de 22
           if (field === 'carne02_fk' && Number(form.ped_valor) !== 22) return null;
           const tipo = tipoPorField[field];
           const produtosFiltrados = products.filter(
@@ -274,10 +359,10 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
             </TextField>
           );
         })}
-
       </DialogContent>
 
       <DialogActions>
+        <button onClick={handlePrint} className="btn-print">Imprimir</button>
         <button onClick={onClose} className="btn-cancel">Cancelar</button>
         <button onClick={handleSubmit} className="btn-add">Salvar</button>
       </DialogActions>
