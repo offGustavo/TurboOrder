@@ -4,24 +4,18 @@ import styled from "styled-components";
 import DeliverySelect from "../components/DeliverySelect.js";
 import "../styles/AddOrder.css";
 import "../styles/Global.css";
-import { Box, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
+import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
 import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
 import { toast } from 'react-toastify';
-
 import {
   Printer,
-  Print,
   Text,
-  Row,
-  Line,
   Br,
+  Line,
   Cut,
-  Barcode,
-  QRCode,
-  Image,
   render,
 } from "react-thermal-printer";
 
@@ -55,9 +49,10 @@ const AlreadyRegistered = styled.button`
 
 const AddOrder = () => {
   const location = useLocation();
+  const debounceTimeout = useRef(null);
+  const printerRef = useRef(null);
 
   const [phoneOptions, setPhoneOptions] = useState([]);
-  const [options, setOptions] = useState([]);
   const [clientInfo, setClientInfo] = useState({
     cli_nome: "",
     cli_sobrenome: "",
@@ -72,10 +67,8 @@ const AddOrder = () => {
   const [phoneInput, setPhoneInput] = useState("");
   const [loadingClient, setLoadingClient] = useState(false);
   const [clientError, setClientError] = useState(null);
-  const [observacao, setObservacao] = useState("");
-  const [pagamento, setPagamento] = useState("");
-  const [selectedTime, setSelectedTime] = useState(null);
 
+  const [options, setOptions] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState({
     Arroz: null,
     Feijão: null,
@@ -85,11 +78,116 @@ const AddOrder = () => {
     Salada: null,
     Acompanhamento: null
   });
-
   const [isTwoMeats, setIsTwoMeats] = useState(false);
-  const debounceTimeout = useRef(null);
+  const [observacao, setObservacao] = useState("");
+  const [pagamento, setPagamento] = useState("");
+  const [selectedTime, setSelectedTime] = useState(null);
 
-  const printerRef = useRef(null);
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  useEffect(() => {
+    if (location.state && location.state.client) {
+      setClientInfo(location.state.client);
+      setPhoneInput(location.state.client.con_telefone || "");
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      const sanitized = phoneInput.replace(/\D/g, '');
+      if (sanitized.length >= 8) {
+        fetchClientInfo(phoneInput);
+      }
+    }, 500);
+  }, [phoneInput]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const response = await axios.get(`http://localhost:8800/cardapio?data=${today}`);
+        setOptions(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar produtos do cardápio:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const handlePhoneChange = (event) => {
+    const value = event.target.value;
+    setPhoneInput(value);
+    setClientError(null);
+  };
+
+  const fetchClientInfo = async (phone) => {
+    if (!phone || phone.length < 8) {
+      setClientInfo({
+        cli_nome: "",
+        cli_sobrenome: "",
+        con_telefone: phone || "",
+        cli_numero: "",
+        cli_complemento: "",
+        end_cep: "",
+        end_cidade: "",
+        end_bairro: "",
+        end_rua: ""
+      });
+      return;
+    }
+
+    setLoadingClient(true);
+    try {
+      const sanitizedPhone = phone.replace(/\D/g, "");
+      const response = await axios.get(
+        `http://localhost:8800/clientes/telefone/${sanitizedPhone}`
+      );
+
+      setClientInfo(response.data);
+      setClientError(null);
+      setPhoneInput(response.data.con_telefone || "");
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setClientInfo({
+          cli_nome: "",
+          cli_sobrenome: "",
+          con_telefone: phone || "",
+          cli_numero: "",
+          cli_complemento: "",
+          end_cep: "",
+          end_cidade: "",
+          end_bairro: "",
+          end_rua: ""
+        });
+        setClientError("Cliente não encontrado");
+      } else {
+        setClientError("Erro ao buscar cliente");
+      }
+      setPhoneInput(phone || "");
+    } finally {
+      setLoadingClient(false);
+    }
+  };
+
+  const handleProductChange = (tipo, produto) => {
+    setSelectedProducts(prev => ({
+      ...prev,
+      [tipo]: produto,
+    }));
+  };
+
+  const handleTwoMeatsChange = (event) => {
+    setIsTwoMeats(event.target.checked);
+    if (!event.target.checked) {
+      setSelectedProducts(prev => ({ ...prev, Carne2: null }));
+    }
+  };
 
   const handlePrint = async () => {
     if (!clientInfo.cli_nome) {
@@ -107,7 +205,6 @@ const AddOrder = () => {
         <Text>Cliente: {clientInfo.cli_nome} {clientInfo.cli_sobrenome}</Text>
         <Text>Telefone: {clientInfo.con_telefone}</Text>
         <Text> Endereço: {clientInfo.end_rua},  {clientInfo.cli_numero} {clientInfo.cli_complemento} - {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep} </Text>
-        {/* FIXME: Fix pagamento calculo */}
         <Text>Pagamento: {isTwoMeats ? 22.00 : 20.00}, Tipo: {pagamento}</Text>
         <Text>Observações: {observacao}</Text>
         <Text>Produtos:</Text>
@@ -136,116 +233,6 @@ const AddOrder = () => {
     }
   };
 
-  useEffect(() => {
-    if (location.state && location.state.client) {
-      setClientInfo(location.state.client);
-      setPhoneInput(location.state.client.con_telefone || "");
-    }
-  }, [location.state]);
-
-  useEffect(() => {
-    clearTimeout(debounceTimeout.current);
-    debounceTimeout.current = setTimeout(() => {
-      const sanitized = phoneInput.replace(/\D/g, '');
-      if (sanitized.length >= 8) {
-        fetchClientInfo(phoneInput);
-      }
-    }, 500);
-  }, [phoneInput]);
-
-  useEffect(() => {
-    // Fetch products for today's menu from backend
-    const fetchProducts = async () => {
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        const response = await axios.get(`http://localhost:8800/cardapio?data=${today}`);
-        setOptions(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar produtos do cardápio:", error);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  const handlePhoneChange = (event) => {
-    const value = event.target.value;
-    setPhoneInput(value);
-    setClientError(null);
-  };
-
-  const fetchClientInfo = async (phone) => {
-    // Se o telefone for inválido ou muito curto, limpa apenas o nome/sobrenome e mantém o telefone no estado
-    if (!phone || phone.length < 8) {
-      setClientInfo({
-        cli_nome: "",
-        cli_sobrenome: "",
-        con_telefone: phone || "",
-        cli_numero: "",
-        cli_complemento: "",
-        end_cep: "",
-        end_cidade: "",
-        end_bairro: "",
-        end_rua: ""
-      });
-      return;
-    }
-
-    setLoadingClient(true);
-    try {
-      const sanitizedPhone = phone.replace(/\D/g, "");
-      const response = await axios.get(
-        `http://localhost:8800/clientes/telefone/${sanitizedPhone}`
-      );
-
-      // Cliente encontrado: preenche todos os campos retornados pelo backend
-      setClientInfo(response.data);
-      console.log(response.data);
-      setClientError(null);
-      setPhoneInput(response.data.con_telefone || "");
-    } catch (error) {
-      // Se o servidor respondeu 404 => cliente não existe
-      if (error.response && error.response.status === 404) {
-        setClientInfo({
-          cli_nome: "",
-          cli_sobrenome: "",
-          con_telefone: phone || "",
-          cli_numero: "",
-          cli_complemento: "",
-          end_cep: "",
-          end_cidade: "",
-          end_bairro: "",
-          end_rua: ""
-        });
-        setClientError("Cliente não encontrado");
-      } else {
-        // Qualquer outro erro de requisição
-        setClientError("Erro ao buscar cliente");
-      }
-      setPhoneInput(phone || "");
-    } finally {
-      setLoadingClient(false);
-    }
-  };
-
-  // Handle product selection change
-  const handleProductChange = (tipo, produto) => {
-    console.log("Produto selecionado para", tipo, ":", produto);
-    setSelectedProducts(prev => ({
-      ...prev,
-      [tipo]: produto,
-    }));
-  };
-
-  // Handle checkbox change for two meats
-  const handleTwoMeatsChange = (event) => {
-    setIsTwoMeats(event.target.checked);
-    if (!event.target.checked) {
-      // Clear second meat selection if unchecked
-      setSelectedProducts(prev => ({ ...prev, Carne2: null }));
-    }
-  };
-
-  // Submit order to backend
   const handleSubmitOrder = async () => {
     if (!clientInfo.cli_nome) {
       toast.error("Por favor, informe um cliente válido.");
@@ -257,11 +244,9 @@ const AddOrder = () => {
       return;
     }
 
-    if (isTwoMeats) {
-      if (!selectedProducts.Carne || !selectedProducts.Carne2) {
-        toast.error("Por favor, selecione as duas carnes.");
-        return;
-      }
+    if (isTwoMeats && (!selectedProducts.Carne || !selectedProducts.Carne2)) {
+      toast.error("Por favor, selecione as duas carnes.");
+      return;
     }
 
     const itens = {
@@ -274,10 +259,8 @@ const AddOrder = () => {
       carne02_fk: isTwoMeats ? (selectedProducts.Carne2?.pro_id || null) : null,
     };
 
-    //TODO: transformart esse valores em variaveis do banco de dados
     const ped_valor = isTwoMeats ? 22.00 : 20.00;
 
-    // TODO: Criar funcionario
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
       funcionario_fk: 1,
@@ -292,12 +275,25 @@ const AddOrder = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8800/pedidos", pedidoData);
+      const token = getCookie("token");
+      if (!token) {
+        toast.error("Usuário não autenticado. Por favor, faça login.");
+        return;
+      }
+
+      const response = await axios.post(
+        "http://localhost:8800/pedidos",
+        pedidoData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       toast.success("Pedido cadastrado com sucesso!");
       handlePrint();
-      console.log(response.data);
 
-      // → Limpar todos os inputs após criar o pedido
       setClientInfo({
         cli_nome: "",
         cli_sobrenome: "",
@@ -305,7 +301,6 @@ const AddOrder = () => {
       });
       setPhoneInput("");
       setClientError(null);
-      //FIX: não está limpando as escolhas
       setSelectedProducts({
         Arroz: null,
         Feijão: null,
@@ -321,14 +316,11 @@ const AddOrder = () => {
       setSelectedTime(null);
       setPhoneOptions([]);
 
-
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
       toast.error("Erro ao cadastrar pedido.");
     }
-    console.log(pedidoData);
   };
-
 
   return (
     <main className="p-10 ContainerPedido">
@@ -338,10 +330,6 @@ const AddOrder = () => {
           <NavLink to="/cadastro-de-cliente">
             <AlreadyRegistered>Cliente não cadastrado</AlreadyRegistered>
           </NavLink>
-          {/* <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button> */}
-          {/* <Button variant="outlined" color="primary" onClick={handlePrint} sx={{ marginLeft: 2 }}> */}
-          {/*   Imprimir Pedido */}
-          {/* </Button> */}
         </div>
       </header>
       <ProgressBar />
@@ -515,10 +503,7 @@ const AddOrder = () => {
 
       <hr />
       <section>
-        <SubText>
-          Observações
-        </SubText>
-
+        <SubText>Observações</SubText>
         <div style={{ display: "flex", gap: "20px" }}>
           <TextField
             id="ped_observacao"
@@ -539,15 +524,11 @@ const AddOrder = () => {
             }}
           />
         </div>
-
       </section>
 
       <hr />
       <section>
-        <SubText>
-          Pagamento
-        </SubText>
-
+        <SubText>Pagamento</SubText>
         <div style={{ display: "flex", gap: "20px" }}>
           <TextField
             id="ped_tipoPagamento"
@@ -567,14 +548,12 @@ const AddOrder = () => {
             }}
           />
         </div>
-
       </section>
 
       <hr />
       <footer>
         <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button>
       </footer>
-
     </main>
   );
 };
