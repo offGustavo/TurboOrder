@@ -37,16 +37,25 @@ const CompanyTable = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8800/empresas/${selectedEmpresa}`);
+      const response = await axios.patch(
+        `http://localhost:8800/empresas/${selectedEmpresa}`,
+        { emp_ativo: false }
+      );
+
       if (response.status === 200) {
-        toast.success("Empresa excluída com sucesso!");
-        setEmpresas(empresas.filter(empresa => empresa.emp_id !== selectedEmpresa));
+        toast.success("Empresa desativada com sucesso!");
+        // Atualiza a lista de empresas marcando a desativada como inativa
+        setEmpresas(empresas.map(empresa =>
+          empresa.emp_id === selectedEmpresa
+            ? { ...empresa, emp_ativo: false }
+            : empresa
+        ));
       } else {
-        toast.error("Erro ao excluir empresa.");
+        toast.error("Erro ao desativar empresa.");
       }
     } catch (error) {
-      console.error("Erro ao excluir empresa:", error);
-      toast.error("Erro ao excluir empresa.");
+      console.error("Erro ao desativar empresa:", error);
+      toast.error("Erro ao desativar empresa.");
     }
     setShowModal(false);
   };
