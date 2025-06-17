@@ -16,8 +16,7 @@
   --bg-red-alt: #ab180e;
   --bg-login: #B50A2B;
   --text-login: #333;
-  --bg-blue: blue;
-  --bg-blue-alt: darkblue;
+  --inox: #acaba9;
   --btn-border-radius: 20px;
   --btn-border-size: 1px;
   --shadow-color: rgba(0, 0, 0, 0.1);
@@ -62,9 +61,6 @@ main{
   background-color: var(--bg-red-alt);
 }
 
-
-
-
 .title {
   color: #000000;
   font-size: 1.5rem;
@@ -92,9 +88,6 @@ main{
   position:relative;
   top:2em;
 }
-
-
-
 
 .RegisterBtn {
   height: auto;

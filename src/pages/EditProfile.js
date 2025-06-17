@@ -1,33 +1,60 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import "../styles/EditProfile.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function EditProfile() {
   const { auth, setAuth } = useContext(AuthContext);
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [foto, setFoto] = useState("");
+  const [foto, setFoto] = useState(null); // agora foto começa null
   const [preview, setPreview] = useState("");
-  const [error, setError] = useState(null);
-  const [successMsg, setSuccessMsg] = useState(null);
 
   useEffect(() => {
-    // Carregar dados do usuário via API
+    const getTokenFromCookie = () => {
+      const tokenCookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="));
+      return tokenCookie ? tokenCookie.split("=")[1] : null;
+    };
+
+    const token = getTokenFromCookie();
+    if (!token) {
+      toast.error("Token de autenticação não encontrado.", {
+        position: "top-center",
+      });
+      return;
+    }
+
     axios
-      .get("http://localhost:8800/user/me", { withCredentials: true })
+      .get("http://localhost:8800/user/me", {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.Status === "Success") {
           setNome(res.data.nome);
           setEmail(res.data.email);
-          setFoto(res.data.foto);
-          setPreview(res.data.foto);
+
+          const fotoUrl = res.data.foto
+            ? res.data.foto.startsWith("http")
+              ? res.data.foto
+              : `http://localhost:8800/uploads/${res.data.foto}`
+            : "";
+          setPreview(fotoUrl);
         } else {
-          setError("Erro ao carregar os dados do perfil.");
+          toast.error("Erro ao carregar dados do usuário.", {
+            position: "top-center",
+          });
         }
       })
       .catch(() => {
-        setError("Erro ao carregar os dados do perfil.");
+        toast.error("Erro ao carregar dados do usuário.", {
+          position: "top-center",
+        });
       });
   }, []);
 
@@ -35,8 +62,6 @@ function EditProfile() {
     const file = e.target.files[0];
     if (file) {
       setFoto(file);
-
-      // preview da imagem
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -45,21 +70,19 @@ function EditProfile() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitInfo = (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMsg(null);
 
     if (!nome || !email) {
-      setError("Nome e email são obrigatórios.");
+      toast.error("Preencha todos os campos!", { position: "top-center" });
       return;
     }
 
     const formData = new FormData();
     formData.append("nome", nome);
     formData.append("email", email);
-    if (foto && typeof foto !== "string") {
-      // só envia a foto se for um arquivo (não string)
+
+    if (foto) {
       formData.append("foto", foto);
     }
 
@@ -70,59 +93,97 @@ function EditProfile() {
       })
       .then((res) => {
         if (res.data.Status === "Success") {
-          setSuccessMsg("Perfil atualizado com sucesso!");
-          // Atualiza o contexto auth
+          toast.success("Informações atualizadas com sucesso!", {
+            position: "top-center",
+          });
+
           setAuth((prev) => ({
             ...prev,
-            nome: nome,
-            foto: preview,
+            nome,
+            foto: res.data.foto
+              ? res.data.foto.startsWith("http")
+                ? res.data.foto
+                : `http://localhost:8800/uploads/${res.data.foto}`
+              : prev.foto,
           }));
+
+          setFoto(null); // limpa foto nova após salvar
         } else {
-          setError("Erro ao atualizar o perfil.");
+          toast.error("Erro ao atualizar informações.", {
+            position: "top-center",
+          });
         }
       })
       .catch(() => {
-        setError("Erro ao atualizar o perfil.");
+        toast.error("Erro ao atualizar informações.", {
+          position: "top-center",
+        });
       });
   };
 
   return (
-    <div>
-      <h2>Editar Perfil</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>Nome:</label>
-        <input
-          type="text"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          required
-        />
-
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <label>Foto do Perfil:</label>
-        <input type="file" onChange={handleFotoChange} accept="image/*" />
-        {preview && (
-          <div>
-            <p>Preview</p>
+    <div className="edit-profile-wrapper">
+      <div className="edit-profile-container">
+        <div className="left-side">
+          {preview ? (
             <img
+              className="edit-profile-photo"
               src={preview}
-              alt="Preview da foto"
-              style={{ width: "100px", height: "100px", objectFit: "cover" }}
+              alt="Foto do perfil"
             />
-          </div>
-        )}
+          ) : (
+            <div
+              style={{
+                width: 140,
+                height: 140,
+                borderRadius: "50%",
+                backgroundColor: "#ddd",
+                marginBottom: 20,
+              }}
+            />
+          )}
 
-        <button type="submit">Salvar</button>
-      </form>
+          <label className="custom-file-upload">
+            Escolher nova foto
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFotoChange}
+              style={{ display: "none" }}
+            />
+          </label>
+        </div>
+
+        <div className="right-side">
+          <form onSubmit={handleSubmitInfo}>
+            <label>Nome:</label>
+            <input
+              className="input-line"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Seu nome"
+              required
+            />
+
+            <label>Email:</label>
+            <input
+              className="input-line"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Seu email"
+              required
+            />
+
+            <button className="btn-primary" type="submit">
+              Salvar informações
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <ToastContainer />
     </div>
   );
 }
