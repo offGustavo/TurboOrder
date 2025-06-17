@@ -15,7 +15,8 @@ function Login() {
   const [values, setValues] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
-  axios.defaults.withCredentials = true;
+  // Remove withCredentials since we won't use cookies for auth
+  // axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,11 +24,9 @@ function Login() {
       .post("http://localhost:8800/login", values)
       .then((res) => {
         if (res.data.Status === "Success") {
-          const token = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('token='))
-            ?.split('=')[1];
+          const token = res.data.token;
           if (token) {
+            localStorage.setItem("token", token);
             const decoded = jwtDecode(token);
             setAuth({
               isAuthenticated: true,

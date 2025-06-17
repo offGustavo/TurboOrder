@@ -12,8 +12,20 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setAuth({
+        isAuthenticated: false,
+        role: null,
+        nome: null,
+        foto: null,
+      });
+      return;
+    }
     axios
-      .get("http://localhost:8800/user/me", { withCredentials: true })
+      .get("http://localhost:8800/user/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         if (res.data.Status === "Success") {
           setAuth({
