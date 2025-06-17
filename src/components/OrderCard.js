@@ -9,7 +9,7 @@ import { useLocation } from 'react-router';
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
 const OrderCard = ({
-  id, name, details, status, data, day_order, products, valor, onStatusChange
+  id, name, details, status, data, day_order, products, onStatusChange, updatedAt
 }) => {
   const location = useLocation();
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
@@ -22,6 +22,21 @@ const OrderCard = ({
     const nextIndex = (currentIndex + 1) % statusOptions.length;
     const nextStatus = statusOptions[nextIndex];
 
+    const isReactivating = (currentStatus === 'Concluído' || currentStatus === 'Cancelado') && nextStatus === 'Em Andamento';
+    const isConcludedChange = currentStatus === 'Concluído' && nextStatus !== 'Concluído';
+
+    if ((isReactivating || isConcludedChange) && updatedAt) {
+      const lastUpdate = new Date(updatedAt);
+      const now = new Date();
+      const diffMs = now - lastUpdate;
+      const diffMinutes = diffMs / (1000 * 60);
+
+      if (diffMinutes > 5) {
+        toast.error('Não é possível alterar o status após 5 minutos da conclusão/cancelamento.');
+        return;
+      }
+    }
+
     try {
       await axios.put(`http://localhost:8800/pedidos/${id}/status`, {
         status: nextStatus,
@@ -30,8 +45,9 @@ const OrderCard = ({
       toast.success(`Status atualizado para: ${nextStatus}`);
       if (onStatusChange) onStatusChange();
     } catch (error) {
+      const msg = error.response?.data?.error || 'Erro ao atualizar o status do pedido.';
+      toast.error(msg);
       console.error(`Erro ao atualizar o pedido ${id}:`, error);
-      toast.error('Erro ao atualizar o status do pedido.');
     }
   };
 
@@ -47,7 +63,6 @@ const OrderCard = ({
           </div>
           <div className='order-date-day'>
             <span className="order-date">{data}</span>
-
             {location.pathname !== '/historico' && (
               <div className='order-day-order'><span>{day_order}</span></div>
             )}
