@@ -6,14 +6,17 @@ import PopupModal from "../components/PopupModal";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./../styles/ClientTable.css";
+import EditCompanyModal from "../components/EditCompanyModal";
 
 const CompanyTable = () => {
   const [empresas, setEmpresas] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedEmpresa, setSelectedEmpresa] = useState(null);
   const [actionType, setActionType] = useState("confirmarExclusao");
+  const [editingEmpresa, setEditingEmpresa] = useState(null);
   const location = useLocation();
-  const [shouldRefresh, setShouldRefresh] = useState(false); // Novo estado para controle de atualização
+  const [shouldRefresh, setShouldRefresh] = useState(false);
 
   const fetchEmpresas = async () => {
     try {
@@ -27,12 +30,24 @@ const CompanyTable = () => {
 
   useEffect(() => {
     fetchEmpresas();
-  }, [location, shouldRefresh]); // Adicionado shouldRefresh como dependência
+  }, [location, shouldRefresh]);
 
   const handleDelete = async (empresaId) => {
     setSelectedEmpresa(empresaId);
     setActionType("confirmarExclusaoEmpresa");
-    setShowModal(true);
+    setShowDeleteModal(true);
+  };
+
+  const handleEdit = async (empresa) => {
+    try {
+      // Busca os dados completos da empresa
+      const response = await axios.get(`http://localhost:8800/empresa/${empresa.emp_id}`);
+      setEditingEmpresa(response.data);
+      setShowEditModal(true);
+    } catch (error) {
+      console.error("Erro ao buscar dados da empresa:", error);
+      toast.error("Erro ao carregar dados para edição.");
+    }
   };
 
   const confirmDelete = async () => {
@@ -44,10 +59,7 @@ const CompanyTable = () => {
 
       if (response.status === 200) {
         toast.success("Empresa desativada com sucesso!");
-        // Atualiza a lista de empresas filtrando a desativada
         setEmpresas(empresas.filter(empresa => empresa.emp_id !== selectedEmpresa));
-        // Alternativamente, você pode recarregar todas as empresas:
-        // setShouldRefresh(prev => !prev); // Força recarregamento dos dados
       } else {
         toast.error("Erro ao desativar empresa.");
       }
@@ -55,7 +67,27 @@ const CompanyTable = () => {
       console.error("Erro ao desativar empresa:", error);
       toast.error(`Erro ao desativar empresa: ${error.response?.data?.message || error.message}`);
     }
-    setShowModal(false);
+    setShowDeleteModal(false);
+  };
+
+  const handleSaveEdit = async (updatedData) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8800/empresa/${editingEmpresa.emp_id}`,
+        updatedData
+      );
+
+      if (response.status === 200) {
+        toast.success("Empresa atualizada com sucesso!");
+        setShouldRefresh(prev => !prev);
+        setShowEditModal(false);
+      } else {
+        toast.error("Erro ao atualizar empresa.");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar empresa:", error);
+      toast.error(`Erro ao atualizar empresa: ${error.response?.data?.message || error.message}`);
+    }
   };
 
   const formatPhone = (phone) => {
@@ -75,7 +107,7 @@ const CompanyTable = () => {
   };
 
   const handleModalClose = () => {
-    setShowModal(false);
+    setShowDeleteModal(false);
   };
 
   return (
@@ -113,9 +145,12 @@ const CompanyTable = () => {
               <td>{formatAddress(empresa)}</td>
               <td>
                 <div className="control-box">
-                  <NavLink to={`/empresas/${empresa.emp_id}/edit`} id='edit-btn'>
+                  <button
+                    id='edit-btn'
+                    onClick={() => handleEdit(empresa)}
+                  >
                     <FaEdit size={16} />
-                  </NavLink>
+                  </button>
                   <button
                     className="delete-btn"
                     onClick={() => handleDelete(empresa.emp_id)}
@@ -130,11 +165,19 @@ const CompanyTable = () => {
       </table>
 
       <PopupModal
-        showModal={showModal}
+        showModal={showDeleteModal}
         onClose={handleModalClose}
         onConfirm={confirmDelete}
         actionType={actionType}
       />
+
+      {showEditModal && editingEmpresa && (
+        <EditCompanyModal
+          empresa={editingEmpresa}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleSaveEdit}
+        />
+      )}
 
       <ToastContainer />
     </div>
