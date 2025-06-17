@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import '../styles/ResetPassword.css';
+
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -52,39 +54,41 @@ function ResetPassword() {
   };
 
   return (
-    <div className="reset-password-container">
-      <h2>Redefinir Senha</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} readOnly />
-        </div>
-        <div>
-          <label>Código de Verificação:</label>
-          <input type="text" value={code} readOnly />
-        </div>
-        <div>
-          <label>Nova Senha:</label>
-          <input
-            type="password"
-            value={novaSenha}
-            onChange={(e) => setNovaSenha(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirmar Nova Senha:</label>
-          <input
-            type="password"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Redefinir Senha</button>
-      </form>
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
+    <div className="reset-password-wrapper">
+      <div className="reset-password-container">
+        <h2>Redefinir Senha</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Email:</label>
+            <input type="email" value={email} readOnly />
+          </div>
+          <div>
+            <label>Código de Verificação:</label>
+            <input type="text" value={code} readOnly />
+          </div>
+          <div>
+            <label>Nova Senha:</label>
+            <input
+              type="password"
+              value={novaSenha}
+              onChange={(e) => setNovaSenha(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Confirmar Nova Senha:</label>
+            <input
+              type="password"
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Redefinir Senha</button>
+        </form>
+        {message && <p className="success-message">{message}</p>}
+        {error && <p className="error-message">{error}</p>}
+      </div>
     </div>
   );
 }
