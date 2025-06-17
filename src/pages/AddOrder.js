@@ -4,20 +4,14 @@ import styled from "styled-components";
 import DeliverySelect from "../components/DeliverySelect.js";
 import "../styles/AddOrder.css";
 import "../styles/Global.css";
-import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
+import { Box, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import InputMask from "react-input-mask";
 import ComboBox from "../components/ComboBox.js";
 import ProgressBar from "../components/ProgressBar.js";
 import axios from "axios";
-import { toast } from 'react-toastify';
-import {
-  Printer,
-  Text,
-  Br,
-  Line,
-  Cut,
-  render,
-} from "react-thermal-printer";
+import { toast } from "react-toastify";
+import { Printer, Text, Br, Line, Cut, render } from "react-thermal-printer";
+import jwtDecode from "jwt-decode";
 
 const TitlePedido = styled.h1`
   margin: 0px;
@@ -62,7 +56,7 @@ const AddOrder = () => {
     end_cep: "",
     end_cidade: "",
     end_bairro: "",
-    end_rua: ""
+    end_rua: "",
   });
   const [phoneInput, setPhoneInput] = useState("");
   const [loadingClient, setLoadingClient] = useState(false);
@@ -76,7 +70,7 @@ const AddOrder = () => {
     Carne: null,
     Carne2: null,
     Salada: null,
-    Acompanhamento: null
+    Acompanhamento: null,
   });
   const [isTwoMeats, setIsTwoMeats] = useState(false);
   const [observacao, setObservacao] = useState("");
@@ -86,7 +80,7 @@ const AddOrder = () => {
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
     return null;
   };
 
@@ -100,7 +94,7 @@ const AddOrder = () => {
   useEffect(() => {
     clearTimeout(debounceTimeout.current);
     debounceTimeout.current = setTimeout(() => {
-      const sanitized = phoneInput.replace(/\D/g, '');
+      const sanitized = phoneInput.replace(/\D/g, "");
       if (sanitized.length >= 8) {
         fetchClientInfo(phoneInput);
       }
@@ -110,8 +104,10 @@ const AddOrder = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const today = new Date().toISOString().split('T')[0];
-        const response = await axios.get(`http://localhost:8800/cardapio?data=${today}`);
+        const today = new Date().toISOString().split("T")[0];
+        const response = await axios.get(
+          `http://localhost:8800/cardapio?data=${today}`
+        );
         setOptions(response.data);
       } catch (error) {
         console.error("Erro ao buscar produtos do cardápio:", error);
@@ -137,7 +133,7 @@ const AddOrder = () => {
         end_cep: "",
         end_cidade: "",
         end_bairro: "",
-        end_rua: ""
+        end_rua: "",
       });
       return;
     }
@@ -163,7 +159,7 @@ const AddOrder = () => {
           end_cep: "",
           end_cidade: "",
           end_bairro: "",
-          end_rua: ""
+          end_rua: "",
         });
         setClientError("Cliente não encontrado");
       } else {
@@ -176,7 +172,7 @@ const AddOrder = () => {
   };
 
   const handleProductChange = (tipo, produto) => {
-    setSelectedProducts(prev => ({
+    setSelectedProducts((prev) => ({
       ...prev,
       [tipo]: produto,
     }));
@@ -185,7 +181,7 @@ const AddOrder = () => {
   const handleTwoMeatsChange = (event) => {
     setIsTwoMeats(event.target.checked);
     if (!event.target.checked) {
-      setSelectedProducts(prev => ({ ...prev, Carne2: null }));
+      setSelectedProducts((prev) => ({ ...prev, Carne2: null }));
     }
   };
 
@@ -202,18 +198,29 @@ const AddOrder = () => {
         </Text>
         <Br />
         <Line />
-        <Text>Cliente: {clientInfo.cli_nome} {clientInfo.cli_sobrenome}</Text>
+        <Text>
+          Cliente: {clientInfo.cli_nome} {clientInfo.cli_sobrenome}
+        </Text>
         <Text>Telefone: {clientInfo.con_telefone}</Text>
-        <Text> Endereço: {clientInfo.end_rua},  {clientInfo.cli_numero} {clientInfo.cli_complemento} - {clientInfo.end_bairro}, {clientInfo.end_cidade} - CEP: {clientInfo.end_cep} </Text>
-        <Text>Pagamento: {isTwoMeats ? 22.00 : 20.00}, Tipo: {pagamento}</Text>
+        <Text>
+          {" "}
+          Endereço: {clientInfo.end_rua}, {clientInfo.cli_numero}{" "}
+          {clientInfo.cli_complemento} - {clientInfo.end_bairro},{" "}
+          {clientInfo.end_cidade} - CEP: {clientInfo.end_cep}{" "}
+        </Text>
+        <Text>
+          Pagamento: {isTwoMeats ? 22.0 : 20.0}, Tipo: {pagamento}
+        </Text>
         <Text>Observações: {observacao}</Text>
         <Text>Produtos:</Text>
         {Object.entries(selectedProducts).map(([key, product]) =>
-          product ? <Text key={key}>- {key}: {product.pro_nome}</Text> : null
+          product ? (
+            <Text key={key}>
+              - {key}: {product.pro_nome}
+            </Text>
+          ) : null
         )}
-        {selectedTime && (
-          <Text>Retirada: {selectedTime.format("HH:mm")}</Text>
-        )}
+        {selectedTime && <Text>Retirada: {selectedTime.format("HH:mm")}</Text>}
         <Cut />
       </Printer>
     );
@@ -256,22 +263,29 @@ const AddOrder = () => {
       salada_fk: selectedProducts.Salada?.pro_id || null,
       acompanhamento_fk: selectedProducts.Acompanhamento?.pro_id || null,
       carne01_fk: selectedProducts.Carne?.pro_id || null,
-      carne02_fk: isTwoMeats ? (selectedProducts.Carne2?.pro_id || null) : null,
+      carne02_fk: isTwoMeats ? selectedProducts.Carne2?.pro_id || null : null,
     };
 
-    const ped_valor = isTwoMeats ? 22.00 : 20.00;
+    const ped_valor = isTwoMeats ? 22.0 : 20.0;
+
+    const token = getCookie("token");
+    let funcionario_fk = null;
+    if (token) {
+      const decoded = jwtDecode(token);
+      funcionario_fk = decoded.fun_id || null;
+    }
 
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
-      funcionario_fk: 1,
+      funcionario_fk,
       itens,
       ped_status: "Em Andamento",
       ped_valor,
-      ped_data: new Date().toISOString().split('T')[0],
+      ped_data: new Date().toISOString().split("T")[0],
       ped_tipoPagamento: pagamento,
       ped_horarioRetirada: selectedTime?.format("HH:mm") || null,
       ped_observacao: observacao,
-      ped_desativado: 0
+      ped_desativado: 0,
     };
 
     try {
@@ -308,14 +322,13 @@ const AddOrder = () => {
         Carne: null,
         Carne2: null,
         Salada: null,
-        Acompanhamento: null
+        Acompanhamento: null,
       });
       setIsTwoMeats(false);
       setObservacao("");
       setPagamento("");
       setSelectedTime(null);
       setPhoneOptions([]);
-
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
       toast.error("Erro ao cadastrar pedido.");
@@ -421,12 +434,17 @@ const AddOrder = () => {
       <section>
         <SubText>Pedido</SubText>
         <FormControlLabel
-          control={<Checkbox checked={isTwoMeats} onChange={handleTwoMeatsChange} />}
+          control={
+            <Checkbox checked={isTwoMeats} onChange={handleTwoMeatsChange} />
+          }
           label="Deseja duas carnes?"
         />
-        <div className="grid-2 pedido-section" style={{ padding: '10px' }}>
+        <div className="grid-2 pedido-section" style={{ padding: "10px" }}>
           {["Arroz", "Feijão", "Massa"].map((tipo) => (
-            <Box key={tipo} sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
+            <Box
+              key={tipo}
+              sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}
+            >
               <ComboBox
                 options={options.filter((opt) => opt.pro_tipo === tipo)}
                 tipoSelecionado={tipo}
@@ -457,9 +475,13 @@ const AddOrder = () => {
 
           <Box sx={{ "& .MuiOutlinedInput-root": { width: "40ch" } }}>
             <ComboBox
-              options={options.filter((opt) => opt.pro_tipo === "Acompanhamento")}
+              options={options.filter(
+                (opt) => opt.pro_tipo === "Acompanhamento"
+              )}
               tipoSelecionado="Acompanhamento"
-              onChange={(produto) => handleProductChange("Acompanhamento", produto)}
+              onChange={(produto) =>
+                handleProductChange("Acompanhamento", produto)
+              }
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -552,7 +574,9 @@ const AddOrder = () => {
 
       <hr />
       <footer>
-        <button onClick={handleSubmitOrder} className="btn-add">Finalizar</button>
+        <button onClick={handleSubmitOrder} className="btn-add">
+          Finalizar
+        </button>
       </footer>
     </main>
   );
