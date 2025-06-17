@@ -14,6 +14,7 @@ function EditProfile() {
   const [preview, setPreview] = useState("");
 
   useEffect(() => {
+    console.log("EditProfile: useEffect started");
     const getTokenFromCookie = () => {
       const tokenCookie = document.cookie
         .split("; ")
@@ -23,6 +24,7 @@ function EditProfile() {
 
     const token = getTokenFromCookie();
     if (!token) {
+      console.error("EditProfile: Token de autenticação não encontrado.");
       toast.error("Token de autenticação não encontrado.", {
         position: "top-center",
       });
@@ -34,6 +36,7 @@ function EditProfile() {
         withCredentials: true,
       })
       .then((res) => {
+        console.log("EditProfile: /user/me response", res);
         if (res.data.Status === "Success") {
           setNome(res.data.nome);
           setEmail(res.data.email);
@@ -45,12 +48,14 @@ function EditProfile() {
             : "";
           setPreview(fotoUrl);
         } else {
+          console.error("EditProfile: Erro ao carregar dados do usuário.", res);
           toast.error("Erro ao carregar dados do usuário.", {
             position: "top-center",
           });
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("EditProfile: Erro ao carregar dados do usuário.", error);
         toast.error("Erro ao carregar dados do usuário.", {
           position: "top-center",
         });
