@@ -98,15 +98,18 @@ export default function Calendar() {
         produtos: produtosParaSalvar
       })
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data.message);
-        // alert("Cardápio salvo com sucesso!");
+      .then(async res => {
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Erro ao salvar cardápio');
+        }
+
         toast.success("Cardápio salvo com sucesso!", { position: "top-right" });
       })
       .catch(err => {
         console.error("Erro ao salvar cardápio:", err);
-        alert("Erro ao salvar cardápio");
+        toast.error(err.message || "Erro ao salvar cardápio", { position: "top-right" });
       });
   };
 

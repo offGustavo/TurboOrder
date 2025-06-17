@@ -26,6 +26,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import EditProfile from "./pages/EditProfile";
+import CompanyTable from "./pages/CompanyTable.js";
+import AddCompany from "./pages/AddCompany.js";
 
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
@@ -51,28 +53,28 @@ function AppContent() {
   axios.defaults.withCredentials = true;
 
   const checkAuth = () => {
-  axios
-    .get("http://localhost:8800/user/me")
-    .then((res) => {
-      if (res.data && res.data.nome) {
-        setAuth({
-          isAuthenticated: true,
-          role: res.data.role,
-          nome: res.data.nome,
-          email: res.data.email,
-          foto: res.data.foto,
-        });
-        setUsername(res.data.nome);
-      } else {
+    axios
+      .get("http://localhost:8800/user/me")
+      .then((res) => {
+        if (res.data && res.data.nome) {
+          setAuth({
+            isAuthenticated: true,
+            role: res.data.role,
+            nome: res.data.nome,
+            email: res.data.email,
+            foto: res.data.foto,
+          });
+          setUsername(res.data.nome);
+        } else {
+          setAuth({ isAuthenticated: false, role: null });
+          setUsername("");
+        }
+      })
+      .catch(() => {
         setAuth({ isAuthenticated: false, role: null });
         setUsername("");
-      }
-    })
-    .catch(() => {
-      setAuth({ isAuthenticated: false, role: null });
-      setUsername("");
-    });
-};
+      });
+  };
 
   useEffect(() => {
     checkAuth();
@@ -90,10 +92,10 @@ function AppContent() {
           element={
             <div>
               <div className="login-prompt">
-              <div>
-                <h3 className="text-loginPrompt">Faça login para acessar o sistema</h3>
-                <Link to="/login" className="btn-loginPrompt">Ir para Login</Link>
-              </div>
+                <div>
+                  <h3 className="text-loginPrompt">Faça login para acessar o sistema</h3>
+                  <Link to="/login" className="btn-loginPrompt">Ir para Login</Link>
+                </div>
               </div>
             </div>
           }
@@ -123,6 +125,9 @@ function AppContent() {
             <Route path="/clientes" element={<ClientTable />} />
             <Route path="/clientes/:id/edit" element={<EditClient />} />
             <Route path="/perfil" element={<EditProfile />} />
+
+            <Route path="/empresas" element={<CompanyTable />} />
+            <Route path="/empresas/cadastro" element={<AddCompany />} />
             <Route
               path="/historico"
               element={

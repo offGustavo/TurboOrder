@@ -1,0 +1,187 @@
+import React, { useState, useEffect } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { NavLink, useLocation } from "react-router-dom";
+import axios from "axios";
+import PopupModal from "../components/PopupModal";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import "./../styles/ClientTable.css";
+import EditCompanyModal from "../components/EditCompanyModal";
+
+const CompanyTable = () => {
+  const [empresas, setEmpresas] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedEmpresa, setSelectedEmpresa] = useState(null);
+  const [actionType, setActionType] = useState("confirmarExclusao");
+  const [editingEmpresa, setEditingEmpresa] = useState(null);
+  const location = useLocation();
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+
+  const fetchEmpresas = async () => {
+    try {
+      const response = await axios.get('http://localhost:8800/empresa');
+      setEmpresas(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar empresas:", error);
+      toast.error("Erro ao buscar empresas.");
+    }
+  };
+
+  useEffect(() => {
+    fetchEmpresas();
+  }, [location, shouldRefresh]);
+
+  const handleDelete = async (empresaId) => {
+    setSelectedEmpresa(empresaId);
+    setActionType("confirmarExclusaoEmpresa");
+    setShowDeleteModal(true);
+  };
+
+  const handleEdit = async (empresa) => {
+    try {
+      // Busca os dados completos da empresa
+      const response = await axios.get(`http://localhost:8800/empresa/${empresa.emp_id}`);
+      setEditingEmpresa(response.data);
+      setShowEditModal(true);
+    } catch (error) {
+      console.error("Erro ao buscar dados da empresa:", error);
+      toast.error("Erro ao carregar dados para edição.");
+    }
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8800/empresa/${selectedEmpresa}`,
+        { emp_ativo: false }
+      );
+
+      if (response.status === 200) {
+        toast.success("Empresa desativada com sucesso!");
+        setEmpresas(empresas.filter(empresa => empresa.emp_id !== selectedEmpresa));
+      } else {
+        toast.error("Erro ao desativar empresa.");
+      }
+    } catch (error) {
+      console.error("Erro ao desativar empresa:", error);
+      toast.error(`Erro ao desativar empresa: ${error.response?.data?.message || error.message}`);
+    }
+    setShowDeleteModal(false);
+  };
+
+  const handleSaveEdit = async (updatedData) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8800/empresa/${editingEmpresa.emp_id}`,
+        updatedData
+      );
+
+      if (response.status === 200) {
+        toast.success("Empresa atualizada com sucesso!");
+        setShouldRefresh(prev => !prev);
+        setShowEditModal(false);
+      } else {
+        toast.error("Erro ao atualizar empresa.");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar empresa:", error);
+      toast.error(`Erro ao atualizar empresa: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  const formatPhone = (phone) => {
+    if (!phone) return "";
+    const cleaned = phone.replace(/\D/g, "");
+    const match = cleaned.match(/^(\d{2})(\d{4,5})(\d{4})$/);
+    if (match) {
+      return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+    return phone;
+  };
+
+  const formatAddress = (empresa) => {
+    if (!empresa) return "Endereço não disponível";
+    const { end_rua, end_bairro, end_cidade, end_cep } = empresa;
+    return `${end_rua || ''}, ${end_bairro || ''}, ${end_cidade || ''}, CEP: ${end_cep || ''}`;
+  };
+
+  const handleModalClose = () => {
+    setShowDeleteModal(false);
+  };
+
+  return (
+    <div className="client-table">
+      <div className="infoClient">
+        <h1 className="title">Empresas</h1>
+        <NavLink
+          to="/empresas/cadastro"
+          className={({ isActive }) => `register-link ${isActive ? "active" : ""}`}
+        >
+          <button className="RegisterBtn">Cadastrar nova Empresa</button>
+        </NavLink>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>CNPJ</th>
+            <th>Telefone</th>
+            <th>Telefone Funcionário</th>
+            <th>Endereço</th>
+            <th>Configurações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {empresas.map((empresa) => (
+            <tr key={empresa.emp_id}>
+              <td>{empresa.emp_id}</td>
+              <td>{empresa.emp_razaoSocial}</td>
+              <td>{empresa.emp_cnpj}</td>
+              <td>{formatPhone(empresa.con_telefone)}</td>
+              <td>{formatPhone(empresa.emp_funcionario_telefone)}</td>
+              <td>{formatAddress(empresa)}</td>
+              <td>
+                <div className="control-box">
+                  <button
+                    id='edit-btn'
+                    onClick={() => handleEdit(empresa)}
+                  >
+                    <FaEdit size={16} />
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(empresa.emp_id)}
+                  >
+                    <FaTrash size={16} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <PopupModal
+        showModal={showDeleteModal}
+        onClose={handleModalClose}
+        onConfirm={confirmDelete}
+        actionType={actionType}
+      />
+
+      {showEditModal && editingEmpresa && (
+        <EditCompanyModal
+          empresa={editingEmpresa}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleSaveEdit}
+        />
+      )}
+
+      <ToastContainer />
+    </div>
+  );
+};
+
+export default CompanyTable;
