@@ -16,10 +16,20 @@ const style = {
 const PopupModal = ({ showModal, onClose, onConfirm, actionType }) => {
   const getMessage = () => {
     switch (actionType) {
+      case "confirmarCadastroEmpresa":
+        return {
+          title: "Confirmar Cadastro",
+          message: "Você tem certeza de que deseja cadastrar esta empresa? Verifique se todos os dados estão corretos antes de prosseguir.",
+        };
       case "confirmarCadastro":
         return {
           title: "Confirmar Cadastro",
           message: "Você tem certeza de que deseja cadastrar este cliente? Verifique se todos os dados estão corretos antes de prosseguir.",
+        };
+      case "confirmarExclusaoEmpresa":
+        return {
+          title: "Excluir Empresa",
+          message: "Tem certeza de que quer excluir esta empresa? Esta ação não poderá ser desfeita.",
         };
       case "confirmarExclusao":
         return {
@@ -35,7 +45,7 @@ const PopupModal = ({ showModal, onClose, onConfirm, actionType }) => {
         return {
           title: "Revisar Formulário",
           message: "Por favor, antes de finalizar o pedido, revise o formulário para verificar se não há nenhum erro de digitação ou falta de preenchimento de algum campo.",
-      };
+        };
       case "confirmarExclusaoFuncionario":
         return {
           title: "Excluir Funcionário",
