@@ -20,11 +20,11 @@ export default function Calendar() {
   const tiposProdutos = ["Arroz", "Feijão", "Massa", "Carne", "Acompanhamento", "Salada"];
 
   useEffect(() => {
-    fetch('http://localhost:8800/produtos')
+    fetch('http://localhost:8800/produtos?limit=1000')
       .then((res) => res.json())
       .then((data) => {
         console.log("Produtos recebidos:", data);
-        setProdutos(data);
+        setProdutos(data.data || data);
       })
       .catch((err) => console.error('Erro ao carregar produtos:', err));
   }, []);
@@ -35,6 +35,7 @@ export default function Calendar() {
     fetch(`http://localhost:8800/cardapio?data=${dataAtual}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log("Cardapio recebido:", data);
         if (data && data.length > 0) {
           const agrupado = {};
           data.forEach((produto) => {
