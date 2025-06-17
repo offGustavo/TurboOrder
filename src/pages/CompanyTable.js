@@ -4,7 +4,6 @@ import { NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
 import PopupModal from "../components/PopupModal";
 import { toast, ToastContainer } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
 import "./../styles/ClientTable.css";
 
@@ -14,20 +13,21 @@ const CompanyTable = () => {
   const [selectedEmpresa, setSelectedEmpresa] = useState(null);
   const [actionType, setActionType] = useState("confirmarExclusao");
   const location = useLocation();
+  const [shouldRefresh, setShouldRefresh] = useState(false); // Novo estado para controle de atualização
+
+  const fetchEmpresas = async () => {
+    try {
+      const response = await axios.get('http://localhost:8800/empresa');
+      setEmpresas(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar empresas:", error);
+      toast.error("Erro ao buscar empresas.");
+    }
+  };
 
   useEffect(() => {
-    const fetchEmpresas = async () => {
-      try {
-        const response = await axios.get('http://localhost:8800/empresa');
-        setEmpresas(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar empresas:", error);
-        toast.error("Erro ao buscar empresas.");
-      }
-    };
-
     fetchEmpresas();
-  }, [location]);
+  }, [location, shouldRefresh]); // Adicionado shouldRefresh como dependência
 
   const handleDelete = async (empresaId) => {
     setSelectedEmpresa(empresaId);
@@ -38,24 +38,22 @@ const CompanyTable = () => {
   const confirmDelete = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8800/empresas/${selectedEmpresa}`,
+        `http://localhost:8800/empresa/${selectedEmpresa}`,
         { emp_ativo: false }
       );
 
       if (response.status === 200) {
         toast.success("Empresa desativada com sucesso!");
-        // Atualiza a lista de empresas marcando a desativada como inativa
-        setEmpresas(empresas.map(empresa =>
-          empresa.emp_id === selectedEmpresa
-            ? { ...empresa, emp_ativo: false }
-            : empresa
-        ));
+        // Atualiza a lista de empresas filtrando a desativada
+        setEmpresas(empresas.filter(empresa => empresa.emp_id !== selectedEmpresa));
+        // Alternativamente, você pode recarregar todas as empresas:
+        // setShouldRefresh(prev => !prev); // Força recarregamento dos dados
       } else {
         toast.error("Erro ao desativar empresa.");
       }
     } catch (error) {
       console.error("Erro ao desativar empresa:", error);
-      toast.error("Erro ao desativar empresa.");
+      toast.error(`Erro ao desativar empresa: ${error.response?.data?.message || error.message}`);
     }
     setShowModal(false);
   };
@@ -99,6 +97,7 @@ const CompanyTable = () => {
             <th>Nome</th>
             <th>CNPJ</th>
             <th>Telefone</th>
+            <th>Telefone Funcionário</th>
             <th>Endereço</th>
             <th>Configurações</th>
           </tr>
@@ -110,6 +109,7 @@ const CompanyTable = () => {
               <td>{empresa.emp_razaoSocial}</td>
               <td>{empresa.emp_cnpj}</td>
               <td>{formatPhone(empresa.con_telefone)}</td>
+              <td>{formatPhone(empresa.emp_funcionario_telefone)}</td>
               <td>{formatAddress(empresa)}</td>
               <td>
                 <div className="control-box">
