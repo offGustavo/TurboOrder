@@ -8,44 +8,45 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./../styles/ClientTable.css";
 
-const ClientTable = () => {
-  const [clientes, setClientes] = useState([]);
+const CompanyTable = () => {
+  const [empresas, setEmpresas] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedEmpresa, setSelectedEmpresa] = useState(null);
   const [actionType, setActionType] = useState("confirmarExclusao");
   const location = useLocation();
 
   useEffect(() => {
-    const fetchClients = async () => {
+    const fetchEmpresas = async () => {
       try {
-        const response = await axios.get('http://localhost:8800/clientes');
-        setClientes(response.data);
+        const response = await axios.get('http://localhost:8800/empresa');
+        setEmpresas(response.data);
       } catch (error) {
-        console.error("Erro ao buscar clientes:", error);
+        console.error("Erro ao buscar empresas:", error);
+        toast.error("Erro ao buscar empresas.");
       }
     };
 
-    fetchClients();
+    fetchEmpresas();
   }, [location]);
 
-  const handleDelete = async (clientId) => {
-    setSelectedClient(clientId);
-    setActionType("confirmarExclusao");
+  const handleDelete = async (empresaId) => {
+    setSelectedEmpresa(empresaId);
+    setActionType("confirmarExclusaoEmpresa");
     setShowModal(true);
   };
 
   const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8800/clientes/${selectedClient}`);
+      const response = await axios.delete(`http://localhost:8800/empresas/${selectedEmpresa}`);
       if (response.status === 200) {
-        toast.success("Cliente excluído com sucesso!");
-        setClientes(clientes.filter(cliente => cliente.cli_id !== selectedClient));
+        toast.success("Empresa excluída com sucesso!");
+        setEmpresas(empresas.filter(empresa => empresa.emp_id !== selectedEmpresa));
       } else {
-        toast.error("Erro ao excluir cliente.");
+        toast.error("Erro ao excluir empresa.");
       }
     } catch (error) {
-      console.error("Erro ao excluir cliente:", error);
-      toast.error("Erro ao excluir cliente.");
+      console.error("Erro ao excluir empresa:", error);
+      toast.error("Erro ao excluir empresa.");
     }
     setShowModal(false);
   };
@@ -58,6 +59,12 @@ const ClientTable = () => {
       return `(${match[1]}) ${match[2]}-${match[3]}`;
     }
     return phone;
+  };
+
+  const formatAddress = (empresa) => {
+    if (!empresa) return "Endereço não disponível";
+    const { end_rua, end_bairro, end_cidade, end_cep } = empresa;
+    return `${end_rua || ''}, ${end_bairro || ''}, ${end_cidade || ''}, CEP: ${end_cep || ''}`;
   };
 
   const handleModalClose = () => {
@@ -80,33 +87,29 @@ const ClientTable = () => {
         <thead>
           <tr>
             <th>Código</th>
-            <th>Cliente</th>
-            <th>Sobrenome</th>
+            <th>Nome</th>
+            <th>CNPJ</th>
             <th>Telefone</th>
             <th>Endereço</th>
             <th>Configurações</th>
           </tr>
         </thead>
         <tbody>
-          {clientes.map((cliente) => (
-            <tr key={cliente.cli_id}>
-              <td>{cliente.cli_id}</td>
-              <td>{cliente.cli_nome}</td>
-              <td>{cliente.cli_sobrenome}</td>
-              <td>{formatPhone(cliente.con_telefone)}</td>
-              <td>
-                {cliente.cli_bairro && cliente.cli_cidade && cliente.cli_complemento && cliente.cli_numero
-                  ? `${cliente.cli_bairro}, ${cliente.cli_cidade}, ${cliente.cli_complemento}, ${cliente.cli_numero}`
-                  : "Endereço não disponível"}
-              </td>
+          {empresas.map((empresa) => (
+            <tr key={empresa.emp_id}>
+              <td>{empresa.emp_id}</td>
+              <td>{empresa.emp_razaoSocial}</td>
+              <td>{empresa.emp_cnpj}</td>
+              <td>{formatPhone(empresa.con_telefone)}</td>
+              <td>{formatAddress(empresa)}</td>
               <td>
                 <div className="control-box">
-                  <NavLink to={`/clientes/${cliente.cli_id}/edit`} id='edit-btn'>
+                  <NavLink to={`/empresas/${empresa.emp_id}/edit`} id='edit-btn'>
                     <FaEdit size={16} />
                   </NavLink>
                   <button
                     className="delete-btn"
-                    onClick={() => handleDelete(cliente.cli_id)}
+                    onClick={() => handleDelete(empresa.emp_id)}
                   >
                     <FaTrash size={16} />
                   </button>
@@ -129,4 +132,4 @@ const ClientTable = () => {
   );
 };
 
-export default ClientTable;
+export default CompanyTable;
