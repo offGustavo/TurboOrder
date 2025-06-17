@@ -22,6 +22,7 @@ const AddClient = () => {
     emp_inscricaoEstado: "",
     emp_cnpj: "",
     con_telefone: "",
+    emp_funcionario_telefone: "",
     end_cep: "",
     end_cidade: "",
     end_bairro: "",
@@ -48,6 +49,7 @@ const AddClient = () => {
       !formData.emp_razaoSocial.trim() ||
       !formData.emp_cnpj.trim() ||
       !formData.con_telefone.trim() ||
+      !formData.emp_funcionario_telefone.trim() ||
       !formData.end_cep.trim() ||
       !formData.end_cidade.trim() ||
       !formData.end_bairro.trim() ||
@@ -64,6 +66,7 @@ const AddClient = () => {
 
   const handleConfirm = async () => {
     const telefone = formData.con_telefone.replace(/[^\d]/g, "");
+    const funcionarioTelefone = formData.emp_funcionario_telefone.replace(/[^\d]/g, "");
     const cnpj = formData.emp_cnpj.replace(/[^\d]/g, "");
 
     const dataToSend = {
@@ -80,7 +83,8 @@ const AddClient = () => {
         end_bairro: formData.end_bairro,
         end_rua: formData.end_rua
       },
-      con_telefone: telefone
+      con_telefone: telefone,
+      emp_funcionario_telefone: funcionarioTelefone
     };
 
     console.log("Dados enviados para cadastro:", dataToSend);
@@ -95,6 +99,7 @@ const AddClient = () => {
           emp_inscricaoEstado: "",
           emp_cnpj: "",
           con_telefone: "",
+          emp_funcionario_telefone: "",
           end_cep: "",
           end_cidade: "",
           end_bairro: "",
@@ -149,7 +154,7 @@ const AddClient = () => {
     const formatted = formatPhone(e.target.value);
     handleChange({
       target: {
-        name: "con_telefone",
+        name: e.target.name,
         value: formatted
       }
     });
@@ -181,7 +186,7 @@ const AddClient = () => {
                 label="CNPJ"
                 variant="outlined"
                 name="emp_cnpj"
-                require
+                required
                 value={formData.emp_cnpj}
                 onChange={handleCNPJChange}
                 placeholder="99.999.999/9999-99"
@@ -199,7 +204,7 @@ const AddClient = () => {
               />
             </div>
 
-            <div className="CliForm">
+            <div className="CliForm" sx={{ marginTop: 2 }}>  {/* 16px = 1 unidade do tema */}
               <TextField
                 id="emp_razaoSocial"
                 label="Razão Social"
@@ -207,7 +212,6 @@ const AddClient = () => {
                 name="emp_razaoSocial"
                 value={formData.emp_razaoSocial}
                 onChange={handleChange}
-                required
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -216,43 +220,44 @@ const AddClient = () => {
                   "& .MuiInputBase-input": {
                     color: "black"
                   },
-                  width: "30ch"
+                  width: "30ch",
+                  marginTop: 1
                 }}
               />
             </div>
 
-            <div className="CliForm">
-              <TextField
-                id="emp_inscricaoEstado"
-                label="Inscrição Estadual"
-                variant="outlined"
-                name="emp_inscricaoEstado"
-                value={formData.emp_inscricaoEstado}
-                onChange={handleChange}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "&:hover fieldset": { borderColor: "#FD1F4A" },
-                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" }
-                  },
-                  "& .MuiInputBase-input": {
-                    color: "black"
-                  },
-                  width: "30ch"
-                }}
-              />
-            </div>
+            {/* <div className="CliForm"> */}
+            {/*   <TextField */}
+            {/*     id="emp_inscricaoEstado" */}
+            {/*     label="Inscrição Estadual" */}
+            {/*     variant="outlined" */}
+            {/*     name="emp_inscricaoEstado" */}
+            {/*     value={formData.emp_inscricaoEstado} */}
+            {/*     onChange={handleChange} */}
+            {/*     sx={{ */}
+            {/*       "& .MuiOutlinedInput-root": { */}
+            {/*         "&:hover fieldset": { borderColor: "#FD1F4A" }, */}
+            {/*         "&.Mui-focused fieldset": { borderColor: "#FD1F4A" } */}
+            {/*       }, */}
+            {/*       "& .MuiInputBase-input": { */}
+            {/*         color: "black" */}
+            {/*       }, */}
+            {/*       width: "30ch" */}
+            {/*     }} */}
+            {/*   /> */}
+            {/* </div> */}
 
             <hr />
 
-            <h2 className="sub-text">Telefone</h2>
+            <h2 className="sub-text">Contato</h2>
             <div className="CliForm tel">
               <TextField
                 id="con_telefone"
-                label="Telefone"
+                label="Telefone da Empresa"
                 variant="outlined"
                 name="con_telefone"
                 value={formData.con_telefone}
-                onChange={handlePhoneChange}
+                onChange={(e) => handlePhoneChange(e)}
                 placeholder="(99) 99999-9999"
                 inputProps={{ maxLength: 15 }}
                 required
@@ -268,6 +273,7 @@ const AddClient = () => {
                 }}
               />
             </div>
+
 
             <hr />
 
@@ -370,6 +376,7 @@ const AddClient = () => {
                   width: "10ch"
                 }}
               />
+
               <TextField
                 label="Complemento"
                 variant="outlined"
@@ -385,6 +392,32 @@ const AddClient = () => {
                     color: "black"
                   },
                   width: "25ch"
+                }}
+              />
+            </div>
+
+            <hr />
+            <h2 className="sub-text">Contato Funcionário</h2>
+            <div className="CliForm tel">
+              <TextField
+                id="emp_funcionario_telefone"
+                label="Telefone do Funcionário"
+                variant="outlined"
+                name="emp_funcionario_telefone"
+                value={formData.emp_funcionario_telefone}
+                onChange={(e) => handlePhoneChange(e)}
+                placeholder="(99) 99999-9999"
+                inputProps={{ maxLength: 15 }}
+                required
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover fieldset": { borderColor: "#FD1F4A" },
+                    "&.Mui-focused fieldset": { borderColor: "#FD1F4A" }
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "black"
+                  },
+                  width: "30ch"
                 }}
               />
             </div>
