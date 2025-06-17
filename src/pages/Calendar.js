@@ -20,7 +20,7 @@ export default function Calendar() {
   const tiposProdutos = ["Arroz", "Feijão", "Massa", "Carne", "Acompanhamento", "Salada"];
 
   useEffect(() => {
-    fetch('http://localhost:8800/produtos')
+    fetch('http://localhost:8800/produtos/all')
       .then((res) => res.json())
       .then((data) => {
         console.log("Produtos recebidos:", data);
