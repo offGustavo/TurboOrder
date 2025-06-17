@@ -1,4 +1,67 @@
-.abaixar-titulo {
-    position: relative;
-    top: 38px;
+.container-desempenho {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.box-desempenho {
+  display: flex;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 800px;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.left-info {
+  width: 200px;
+}
+
+.left-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.left-info h1.total {
+  font-size: 1.5rem;
+  margin: 0.3rem 0;
+}
+
+.left-info h3.media {
+  font-size: 1rem;
+  margin-top: 0.8rem;
+}
+
+.descricao {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.filtro {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filtro input[type="date"] {
+  padding: 0.3rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.filtro button {
+  padding: 0.3rem;
+  font-size: 0.8rem;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
