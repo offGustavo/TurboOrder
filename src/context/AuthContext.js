@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -7,28 +7,38 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     isAuthenticated: false,
     role: null,
+    nome: null,
+    foto: null,
   });
 
   useEffect(() => {
-    const token = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('token='))
-      ?.split('=')[1];
-
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setAuth({
-          isAuthenticated: true,
-          role: decoded.role,
-        });
-      } catch (error) {
+    axios
+      .get("http://localhost:8800/user/me", { withCredentials: true })
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setAuth({
+            isAuthenticated: true,
+            role: res.data.role,
+            nome: res.data.nome,
+            foto: res.data.foto,
+          });
+        } else {
+          setAuth({
+            isAuthenticated: false,
+            role: null,
+            nome: null,
+            foto: null,
+          });
+        }
+      })
+      .catch(() => {
         setAuth({
           isAuthenticated: false,
           role: null,
+          nome: null,
+          foto: null,
         });
-      }
-    }
+      });
   }, []);
 
   return (

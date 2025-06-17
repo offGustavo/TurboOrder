@@ -25,6 +25,7 @@ import Historico from "./pages/Historico";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import EmployeeManagement from "./pages/EmployeeManagement";
+import EditProfile from "./pages/EditProfile";
 
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
@@ -50,22 +51,28 @@ function AppContent() {
   axios.defaults.withCredentials = true;
 
   const checkAuth = () => {
-    axios
-      .get("http://localhost:8800")
-      .then((res) => {
-        if (res.data.Status === "Success") {
-          setAuth({ isAuthenticated: true, role: res.data.role });
-          setUsername(res.data.username);
-        } else {
-          setAuth({ isAuthenticated: false, role: null });
-          setUsername("");
-        }
-      })
-      .catch(() => {
+  axios
+    .get("http://localhost:8800/user/me")
+    .then((res) => {
+      if (res.data && res.data.nome) {
+        setAuth({
+          isAuthenticated: true,
+          role: res.data.role,
+          nome: res.data.nome,
+          email: res.data.email,
+          foto: res.data.foto,
+        });
+        setUsername(res.data.nome);
+      } else {
         setAuth({ isAuthenticated: false, role: null });
         setUsername("");
-      });
-  };
+      }
+    })
+    .catch(() => {
+      setAuth({ isAuthenticated: false, role: null });
+      setUsername("");
+    });
+};
 
   useEffect(() => {
     checkAuth();
@@ -115,6 +122,7 @@ function AppContent() {
             <Route path="/cadastro-de-cliente/pedidos" element={<AddOrder />} />
             <Route path="/clientes" element={<ClientTable />} />
             <Route path="/clientes/:id/edit" element={<EditClient />} />
+            <Route path="/perfil" element={<EditProfile />} />
             <Route
               path="/historico"
               element={

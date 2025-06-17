@@ -91,7 +91,9 @@ a {
   width: 35px;
   height: 35px;
   border-radius: 50%;
-  background-color: black;
+  object-fit: cover;
+  background-color: #ccc;
+  border: 2px solid #ddd;
 }
 
 .floating-btn {
