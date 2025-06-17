@@ -26,6 +26,11 @@ const PopupModal = ({ showModal, onClose, onConfirm, actionType }) => {
           title: "Confirmar Cadastro",
           message: "Você tem certeza de que deseja cadastrar este cliente? Verifique se todos os dados estão corretos antes de prosseguir.",
         };
+      case "confirmarExclusaoEmpresa":
+        return {
+          title: "Excluir Empresa",
+          message: "Tem certeza de que quer excluir esta empresa? Esta ação não poderá ser desfeita.",
+        };
       case "confirmarExclusao":
         return {
           title: "Excluir Cliente",
