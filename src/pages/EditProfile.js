@@ -31,7 +31,6 @@ function EditProfile() {
 
     axios
       .get("http://localhost:8800/user/me", {
-        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
       .then((res) => {
