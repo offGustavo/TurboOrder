@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./../styles/ProductTable.css";
 import FilterComponent from "../components/FilterComponent";
-import EditProductModal from "./EditProductModal"; // Importando o modal
+import EditProductModal from "./EditProductModal";
 
 const FormContainer = styled.div`
   display: flex;

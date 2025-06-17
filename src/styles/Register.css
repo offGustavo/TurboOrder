@@ -1,0 +1,122 @@
+.register-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.register-container {
+  position: relative;
+  width: 900px;
+  height: 550px;
+  background: var(--bg-white, #fff);
+  border-radius: 30px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, .2);
+  overflow: hidden;
+  display: flex;
+}
+
+.register-container .form-box {
+  width: 50%;
+  height: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--fg-black);
+  z-index: 1;
+  text-align: center;
+}
+
+.register-container form {
+  width: 100%;
+}
+
+.register-container h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.register-container .input-box {
+  position: relative;
+  margin: 20px 0;
+}
+
+.register-container .input-box input {
+  width: 80%;
+  padding: 13px 50px 13px 20px;
+  background: #eee;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.register-container .input-box svg {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #888;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: #333 !important;
+  box-shadow: 0 0 0px 1000px #eee inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+.register-container .btn-login,
+.btn-register {
+  width: 100%;
+  height: 48px;
+  background: var(--bg-yellow);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--fg-black);
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.register-container .toggle-box {
+  width: 50%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-yellow);
+  color: var(--fg-black);
+  text-align: center;
+  padding: 40px;
+}
+
+.register-container .toggle-box h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.register-container .toggle-box p {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.register-container .toggle-box .btn-register {
+  width: 160px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #795800;
+  text-decoration: underline;
+  transition: all .3s ease-in-out;
+}
+
+.register-container .toggle-box .btn-register:hover {
+  color: #000;
+}
