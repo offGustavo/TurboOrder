@@ -6,11 +6,28 @@ import { toast } from 'react-toastify';
 import EditOrderDialog from './EditOrderDialog';
 import { useLocation } from 'react-router';
 
+import { jwtDecode } from "jwt-decode";
+
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
+
+
 
 const OrderCard = ({
   id, name, details, status, data, day_order, products, valor, onStatusChange
 }) => {
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  };
+  const token = getCookie("token");
+  let funcionario_fk = null;
+  if (token) {
+    const decoded = jwtDecode(token);
+    funcionario_fk = decoded.fun_id || null;
+  }
   const location = useLocation();
   const [currentStatus, setCurrentStatus] = useState(status || 'Desconhecido');
   const [editOpen, setEditOpen] = useState(false);
@@ -25,7 +42,14 @@ const OrderCard = ({
     try {
       await axios.put(`http://localhost:8800/pedidos/${id}/status`, {
         status: nextStatus,
-      });
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        },
+      );
       setCurrentStatus(nextStatus);
       toast.success(`Status atualizado para: ${nextStatus}`);
       if (onStatusChange) onStatusChange();
