@@ -53,8 +53,16 @@ export default function EditProductModal({
         toast.success("Produto atualizado com sucesso!");
         handleClose();
       })
-      .catch(() => toast.error("Erro ao atualizar o produto."));
-  };
+      .catch((error) => {
+        if (error.response && error.response.data && error.response.data.error) {
+          // Se o backend retornou uma mensagem de erro específica
+          toast.error(error.response.data.error);
+        } else {
+          // Para outros tipos de erro
+          toast.error("Erro ao atualizar o produto.");
+        }
+      });
+  }
 
   const handleClose = () => {
     setLocalNome('');
