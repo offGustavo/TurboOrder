@@ -9,6 +9,7 @@ import OrderCard from "../components/OrderCard.js";
 import "./../styles/Home.css";
 import "react-toastify/dist/ReactToastify.css";
 import FilterComponent from "../components/FilterComponent.js";
+import { jwtDecode } from "jwt-decode";
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 1.59rem;
@@ -100,6 +101,8 @@ const productTypes = [
   { value: "Cancelado", label: "Cancelado" },
 ];
 
+
+
 const Home = () => {
   const [filter, setFilter] = useState("Todos");
   const [orders, setOrders] = useState([]);
@@ -110,6 +113,19 @@ const Home = () => {
   const [monthlyAverage, setMonthlyAverage] = useState(0);
   const [weekAverage, setWeekAverage] = useState(0);
   const [weekRevenue, setWeekRevenue] = useState(0);
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  };
+  const token = getCookie("token");
+  let funcionario_fk = null;
+  if (token) {
+    const decoded = jwtDecode(token);
+    funcionario_fk = decoded.fun_id || null;
+  }
 
   const fetchRevenueData = async () => {
     try {
@@ -141,7 +157,14 @@ const Home = () => {
   const refreshOrders = async () => {
     try {
       const [ordersResponse, productsResponse] = await Promise.all([
-        axios.get("http://localhost:8800/pedidos"),
+        axios.get("http://localhost:8800/pedidos",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          },
+        ),
         axios.get("http://localhost:8800/produtos"),
       ]);
 
@@ -232,82 +255,82 @@ const Home = () => {
   const filteredOrders = orders.filter((order) => order.visible !== false);
 
   return (
-        <main className="dashboard">
-          <div className="revenue-section">
-            <div className="header-card card-green">
-              <div className="revenue-header revenue-green">
-                <DolarGreen />
-                <div className="revenue-info">
-                  <h3>Faturamento de Hoje</h3>
-                  <p>R$ {dailyRevenue.toFixed(2)}</p>
-                </div>
-              </div>
-              <div className="revenue-transfer">
-                <div className="vertical-divider"></div>
-                <TransferGreen />
-                <div className="transfer-details">
-                  <Statistic>Média Estatística</Statistic>
-                  <AmountGreen>R$ {dailyAverage.toFixed(2)}</AmountGreen>
-                </div>
-              </div>
-            </div>
-
-            <div className="header-card card-blue">
-              <div className="revenue-header revenue-blue">
-                <DolarBlue />
-                <div className="revenue-info">
-                  <h3>Faturamento desta Semana</h3>
-                  <p>R$ {weekRevenue.toFixed(2)}</p>
-                </div>
-              </div>
-              <div className="revenue-transfer">
-                <div className="vertical-divider"></div>
-                <TransferBlue />
-                <div className="transfer-details">
-                  <Statistic>Média Estatística da Semana</Statistic>
-                  <AmountBlue>R$ {weekAverage.toFixed(2)}</AmountBlue>
-                </div>
-              </div>
-            </div>
-
-            <div className="header-card card-red">
-              <div className="revenue-header revenue-red">
-                <DolarRed />
-                <div className="revenue-info">
-                  <h3>Faturamento deste Mês</h3>
-                  <p>R$ {monthlyRevenue.toFixed(2)}</p>
-                </div>
-              </div>
-              <div className="revenue-transfer">
-                <div className="vertical-divider"></div>
-                <TransferRed />
-                <div className="transfer-details">
-                  <Statistic>Média Estatística do mês</Statistic>
-                  <AmountRed>R$ {monthlyAverage.toFixed(2)}</AmountRed>
-                </div>
-              </div>
+    <main className="dashboard">
+      <div className="revenue-section">
+        <div className="header-card card-green">
+          <div className="revenue-header revenue-green">
+            <DolarGreen />
+            <div className="revenue-info">
+              <h3>Faturamento de Hoje</h3>
+              <p>R$ {dailyRevenue.toFixed(2)}</p>
             </div>
           </div>
-
-          <section className="orders">
-            <h2>Pedidos</h2>
-            <FilterComponent
-              filterState={filter}
-              setFilter={setFilter}
-              filterItens={productTypes}
-              orders={orders}
-            />
-            <div className="order-cards">
-              {filteredOrders.map((order) => (
-                <OrderCard
-                  key={order.id}
-                  {...order}
-                  onStatusChange={refreshOrders}
-                />
-              ))}
+          <div className="revenue-transfer">
+            <div className="vertical-divider"></div>
+            <TransferGreen />
+            <div className="transfer-details">
+              <Statistic>Média Estatística</Statistic>
+              <AmountGreen>R$ {dailyAverage.toFixed(2)}</AmountGreen>
             </div>
-          </section>
-        </main>
+          </div>
+        </div>
+
+        <div className="header-card card-blue">
+          <div className="revenue-header revenue-blue">
+            <DolarBlue />
+            <div className="revenue-info">
+              <h3>Faturamento desta Semana</h3>
+              <p>R$ {weekRevenue.toFixed(2)}</p>
+            </div>
+          </div>
+          <div className="revenue-transfer">
+            <div className="vertical-divider"></div>
+            <TransferBlue />
+            <div className="transfer-details">
+              <Statistic>Média Estatística da Semana</Statistic>
+              <AmountBlue>R$ {weekAverage.toFixed(2)}</AmountBlue>
+            </div>
+          </div>
+        </div>
+
+        <div className="header-card card-red">
+          <div className="revenue-header revenue-red">
+            <DolarRed />
+            <div className="revenue-info">
+              <h3>Faturamento deste Mês</h3>
+              <p>R$ {monthlyRevenue.toFixed(2)}</p>
+            </div>
+          </div>
+          <div className="revenue-transfer">
+            <div className="vertical-divider"></div>
+            <TransferRed />
+            <div className="transfer-details">
+              <Statistic>Média Estatística do mês</Statistic>
+              <AmountRed>R$ {monthlyAverage.toFixed(2)}</AmountRed>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section className="orders">
+        <h2>Pedidos</h2>
+        <FilterComponent
+          filterState={filter}
+          setFilter={setFilter}
+          filterItens={productTypes}
+          orders={orders}
+        />
+        <div className="order-cards">
+          {filteredOrders.map((order) => (
+            <OrderCard
+              key={order.id}
+              {...order}
+              onStatusChange={refreshOrders}
+            />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 };
 
