@@ -10,6 +10,18 @@ import { jwtDecode } from "jwt-decode";
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+};
+const token = getCookie("token");
+let funcionario_fk = null;
+if (token) {
+  const decoded = jwtDecode(token);
+  funcionario_fk = decoded.fun_id || null;
+}
 
 
 const OrderCard = ({
