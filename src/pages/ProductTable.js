@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight, FaBars } from "react-icons/fa";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -8,7 +8,6 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./../styles/ProductTable.css";
-import FilterComponent from "../components/FilterComponent";
 import EditProductModal from "./EditProductModal";
 
 const FormContainer = styled.div`
@@ -25,6 +24,109 @@ const Button = styled.button`
   margin-left: auto;
 `;
 
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+`;
+
+const PaginationButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: ${props => props.active ? '#FD1F4A' : 'white'};
+  color: ${props => props.active ? 'white' : 'black'};
+  cursor: pointer;
+  border-radius: 4px;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const FilterSection = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+
+  .hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none;
+    padding: 5px;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    transition: all 0.3s ease;
+
+    &.open {
+      display: flex;
+    }
+  }
+
+  .filter-label {
+    font-weight: bold;
+    margin-right: 10px;
+    align-self: center;
+  }
+
+  .filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &.active {
+      background-color: #FD1F4A;
+      color: white;
+      border-color: #FD1F4A;
+    }
+  }
+
+  .filter-badge {
+    background-color: #f5f5f5;
+    color: #333;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .hamburger {
+      display: block;
+    }
+
+    .filter-buttons {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+
+      &.open {
+        display: flex;
+      }
+    }
+  }
+`;
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
@@ -32,6 +134,13 @@ const ProductTable = () => {
   const [proTipo, setProTipo] = useState("");
   const [filter, setFilter] = useState("Todos");
   const [onEdit, setOnEdit] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Estados de paginação
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
   const productTypes = [
     { value: "Arroz", label: "Arroz" },
     { value: "Feijão", label: "Feijão" },
@@ -46,13 +155,24 @@ const ProductTable = () => {
   const [onProductEdit, setProductEdit] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-
   useEffect(() => {
+    fetchProducts();
+  }, [currentPage]);
+
+  const fetchProducts = () => {
     axios
-      .get("http://localhost:8800/produtos")
-      .then((response) => setProducts(response.data))
-      .catch(() => toast.error("Erro ao buscar produtos."));
-  }, []);
+      .get(`http://localhost:8800/produtos?page=${currentPage}`)
+      .then((response) => {
+        console.log("Resposta da API:", response.data);
+        setProducts(response.data.data);
+        setTotalPages(response.data.pagination.totalPages);
+        setTotalItems(response.data.pagination.totalItems);
+      })
+      .catch((error) => {
+        console.error("Erro na requisição:", error);
+        toast.error("Erro ao buscar produtos.");
+      });
+  };
 
   const handleSave = () => {
     if (!proNome || !proTipo) {
@@ -64,14 +184,7 @@ const ProductTable = () => {
       axios
         .put(`http://localhost:8800/produtos/${onEdit.pro_id}`, { pro_nome: proNome, pro_tipo: proTipo })
         .then(() => {
-          console.log('Produto atualizado com sucesso!');
-          const updatedProducts = products.map((product) =>
-            product.pro_id === onEdit.pro_id
-              ? { ...product, pro_nome: proNome, pro_tipo: proTipo }
-              : product
-          );
-
-          setProducts(updatedProducts);
+          fetchProducts();
           setProNome("");
           setProTipo("");
           setOnEdit(null);
@@ -82,8 +195,8 @@ const ProductTable = () => {
     } else {
       axios
         .post("http://localhost:8800/produtos", { pro_nome: proNome, pro_tipo: proTipo })
-        .then((response) => {
-          setProducts([...products, response.data]);
+        .then(() => {
+          fetchProducts();
           setProNome("");
           setProTipo("");
           toast.success("Produto salvo com sucesso!");
@@ -92,15 +205,12 @@ const ProductTable = () => {
     }
   };
 
-
-
   const handleDelete = async (pro_id) => {
     await axios
       .delete(`http://localhost:8800/produtos/${pro_id}`)
-      .then(({ data }) => {
-        const newArray = products.filter((product) => product.pro_id !== pro_id);
-        setProducts(newArray);
-        toast.success(data);
+      .then(() => {
+        fetchProducts();
+        toast.success("Produto excluído com sucesso!");
       })
       .catch(({ response }) => toast.error(response.data));
   };
@@ -112,62 +222,124 @@ const ProductTable = () => {
     setIsEditModalOpen(true);
   };
 
+  // Corrected position - declare filteredProducts before using it
   const filteredProducts = filter === "Todos"
     ? products
     : products.filter((product) => product.pro_tipo === filter);
 
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const goToFirstPage = () => {
+    setCurrentPage(1);
+  };
+
+  const goToLastPage = () => {
+    setCurrentPage(totalPages);
+  };
+
+  const goToPreviousPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <PaginationButton
+          key={i}
+          active={i === currentPage}
+          onClick={() => goToPage(i)}
+        >
+          {i}
+        </PaginationButton>
+      );
+    }
+
+    return pages;
+  };
+
+  const allTypes = ['Todos', ...productTypes.map((type) => type.value)];
 
   return (
     <div className="product-table">
       <h1 className="title">Cadastro de Produtos</h1>
 
-      <div className="filter-section">
-        <Box component="form" noValidate autoComplete="off" sx={{ marginBottom: 2 }}>
-          <FormContainer>
-            <TextField
-              label="Nome do Produto"
-              value={proNome}
-              onChange={(e) => setProNome(e.target.value)}
-              sx={{
-                marginRight: 2,
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
-              }}
-            />
-            <TextField
-              select
-              label="Tipo do Produto"
-              value={proTipo}
-              onChange={(e) => setProTipo(e.target.value)}
-              helperText="Por favor selecione um tipo"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#FD1F4A" },
-                  "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
-                },
+      <Box component="form" noValidate autoComplete="off" sx={{ marginBottom: 2 }}>
+        <FormContainer>
+          <TextField
+            label="Nome do Produto"
+            value={proNome}
+            onChange={(e) => setProNome(e.target.value)}
+            sx={{
+              marginRight: 2,
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+            }}
+          />
+          <TextField
+            select
+            label="Tipo do Produto"
+            value={proTipo}
+            onChange={(e) => setProTipo(e.target.value)}
+            helperText="Por favor selecione um tipo"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
+            }}
+          >
+            {productTypes.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button className="btn-salvar" type="button" onClick={handleSave}>
+            Salvar
+          </Button>
+        </FormContainer>
+      </Box>
+
+      <FilterSection>
+        <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+          <FaBars size={24} />
+        </button>
+
+        <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
+          <span className="filter-label">Filtro</span>
+          {allTypes.map((type, index) => (
+            <button
+              key={index}
+              className={`filter-btn ${filter === type ? "active" : ""}`}
+              onClick={() => {
+                setFilter(type);
+                setMenuOpen(false);
               }}
             >
-              {productTypes.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Button className="btn-salvar" type="button" onClick={handleSave}>
-              Salvar
-            </Button>
-          </FormContainer>
-        </Box>
-
-        <FilterComponent
-          filterState={filter}
-          setFilter={setFilter}
-          filterItens={productTypes}
-          menuOpen={false}
-        />
-      </div>
+              <span className='filter-btn-text'>
+                {type}
+              </span>
+            </button>
+          ))}
+        </div>
+      </FilterSection>
 
       <table>
         <thead>
@@ -199,6 +371,27 @@ const ProductTable = () => {
         </tbody>
       </table>
 
+      <PaginationContainer>
+        <PaginationButton onClick={goToFirstPage} disabled={currentPage === 1}>
+          <FaAngleDoubleLeft />
+        </PaginationButton>
+        <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
+          <FaAngleLeft />
+        </PaginationButton>
+
+        {renderPageNumbers()}
+
+        <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
+          <FaAngleRight />
+        </PaginationButton>
+        <PaginationButton onClick={goToLastPage} disabled={currentPage === totalPages}>
+          <FaAngleDoubleRight />
+        </PaginationButton>
+      </PaginationContainer>
+
+      <div style={{ textAlign: 'center', marginTop: '10px' }}>
+        Página {currentPage} de {totalPages} | Total de itens: {totalItems}
+      </div>
 
       <EditProductModal
         open={isEditModalOpen}
@@ -210,8 +403,7 @@ const ProductTable = () => {
         setProducts={setProducts}
         productTypes={productTypes}
       />
-
-    </div >
+    </div>
   );
 };
 
