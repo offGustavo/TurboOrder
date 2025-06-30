@@ -29,17 +29,42 @@ function Login() {
             ?.split('=')[1];
           if (token) {
             const decoded = jwtDecode(token);
-            setAuth({
-              isAuthenticated: true,
-              role: decoded.role,
-            });
+            axios
+              .get("http://localhost:8800/user/me", { withCredentials: true })
+              .then((res) => {
+                if (res.data.Status === "Success") {
+                  setAuth({
+                    isAuthenticated: true,
+                    role: decoded.role,
+                    nome: res.data.nome,
+                    foto: res.data.foto,
+                  });
+                } else {
+                  setAuth({
+                    isAuthenticated: true,
+                    role: decoded.role,
+                    nome: null,
+                    foto: null,
+                  });
+                }
+                navigate("/");
+              })
+              .catch(() => {
+                setAuth({
+                  isAuthenticated: true,
+                  role: decoded.role,
+                  nome: null,
+                  foto: null,
+                });
+                navigate("/");
+              });
           } else {
             setAuth({
               isAuthenticated: true,
               role: null,
             });
+            navigate("/");
           }
-          navigate("/");
         } else {
           alert(res.data.Error);
         }
