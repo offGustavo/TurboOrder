@@ -297,6 +297,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 0px;
 }
 
 @media (max-width: 768px) {

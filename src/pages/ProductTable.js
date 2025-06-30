@@ -51,7 +51,6 @@ const PaginationButton = styled.button`
 const FilterSection = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
   gap: 10px;
 
   .hamburger {
@@ -134,6 +133,7 @@ const SearchContainer = styled.div`
   width: 100%;
   max-width: 400px;
   position: relative;
+  margin-top: 10px;
 
   input {
     width: 100%;
