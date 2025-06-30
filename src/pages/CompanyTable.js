@@ -6,7 +6,9 @@ import PopupModal from "../components/PopupModal";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./../styles/ClientTable.css";
+import "../styles/CompanyTable.css";
 import EditCompanyModal from "../components/EditCompanyModal";
+import { color } from "@mui/system";
 
 const CompanyTable = () => {
   const [empresas, setEmpresas] = useState([]);
@@ -146,6 +148,7 @@ const CompanyTable = () => {
               <td>
                 <div className="control-box">
                   <button
+                    className='edit-btn'
                     id='edit-btn'
                     onClick={() => handleEdit(empresa)}
                   >
@@ -171,16 +174,18 @@ const CompanyTable = () => {
         actionType={actionType}
       />
 
-      {showEditModal && editingEmpresa && (
-        <EditCompanyModal
-          empresa={editingEmpresa}
-          onClose={() => setShowEditModal(false)}
-          onSave={handleSaveEdit}
-        />
-      )}
+      {
+        showEditModal && editingEmpresa && (
+          <EditCompanyModal
+            empresa={editingEmpresa}
+            onClose={() => setShowEditModal(false)}
+            onSave={handleSaveEdit}
+          />
+        )
+      }
 
       <ToastContainer />
-    </div>
+    </div >
   );
 };
 
