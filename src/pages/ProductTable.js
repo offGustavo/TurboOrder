@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./../styles/ProductTable.css";
+import "../styles/ProductTable.css";
 import EditProductModal from "./EditProductModal";
 
 const FormContainer = styled.div`
@@ -155,15 +155,18 @@ const ProductTable = () => {
   const [onProductEdit, setProductEdit] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  const [allProducts, setAllProducts] = useState([]);
+
   useEffect(() => {
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, filter]);
 
   const fetchProducts = () => {
     axios
-      .get(`http://localhost:8800/produtos?page=${currentPage}`)
+      .get(`http://localhost:8800/produtos/paginador?page=${currentPage}&filter=${filter === "Todos" ? "" : filter}`)
       .then((response) => {
         console.log("Resposta da API:", response.data);
+        setAllProducts(response.data.data);
         setProducts(response.data.data);
         setTotalPages(response.data.pagination.totalPages);
         setTotalItems(response.data.pagination.totalItems);
@@ -172,6 +175,18 @@ const ProductTable = () => {
         console.error("Erro na requisição:", error);
         toast.error("Erro ao buscar produtos.");
       });
+  };
+
+  const applyFilter = (type) => {
+    setFilter(type);
+    setMenuOpen(false);
+    setCurrentPage(1);
+
+    if (type === "Todos") {
+      setProducts(allProducts);
+    } else {
+      setProducts(allProducts.filter((product) => product.pro_tipo === type));
+    }
   };
 
   const handleSave = () => {
@@ -222,7 +237,6 @@ const ProductTable = () => {
     setIsEditModalOpen(true);
   };
 
-  // Corrected position - declare filteredProducts before using it
   const filteredProducts = filter === "Todos"
     ? products
     : products.filter((product) => product.pro_tipo === filter);
@@ -328,12 +342,10 @@ const ProductTable = () => {
             <button
               key={index}
               className={`filter-btn ${filter === type ? "active" : ""}`}
-              onClick={() => {
-                setFilter(type);
-                setMenuOpen(false);
-              }}
+              onClick={() => applyFilter(type)}
             >
-              <span className='filter-btn-text'>
+              {/* <span className='filter-btn-text'> */}
+              <span >
                 {type}
               </span>
             </button>
