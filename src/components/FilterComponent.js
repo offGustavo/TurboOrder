@@ -31,7 +31,6 @@ const FilterComponent = ({ filterState, setFilter, filterItens, orders = [] }) =
             <span className='filter-btn-text'>
               {type}
             </span>
-            {/* FIXME: Modificar esse componente para que ele se adapte corretamente a variação de estilo */}
             {location.pathname !== '/produtos' && (
               <span className="filter-badge">{getCount(type)}</span>
             )}

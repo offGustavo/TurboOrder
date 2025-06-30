@@ -99,7 +99,6 @@ button.hamburger:hover{
     display: flex;
   }
   .filter-buttons .filter-btn {
-    /* TODO: add border-radius var */
     border-radius: 10px;
   }
 }

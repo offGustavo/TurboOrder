@@ -88,7 +88,6 @@
   background-color: #FFBD0D;
   color: var(--fg-black);
   border: none;
-  /* FIXME: border-radius var not working */
   border-radius: 20px;
   padding: 6px 10px;
   font-weight: bold;
@@ -131,7 +130,6 @@
   position: absolute;
   background-color: var(--bg-white);
   border: 1px solid var(--bg-white-alt);
-  /* TODO: Add var to box-shadow */
   box-shadow: 0 4px 6px var(--shadow-color);
   padding: 20px;
   z-index: 1000;

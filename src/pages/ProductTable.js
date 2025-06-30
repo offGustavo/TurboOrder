@@ -216,7 +216,7 @@ const ProductTable = () => {
     }
   };
 
-  //FIXME: Modificar a forma que a pesquisa é feita
+  //TODO: Modificar a forma que a pesquisa é feita
   const [searchTimeout, setSearchTimeout] = useState(null);
 
   const handleSearch = (term) => {
