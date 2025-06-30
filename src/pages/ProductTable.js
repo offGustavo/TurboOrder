@@ -217,6 +217,7 @@ const ProductTable = () => {
     }
   };
 
+  //FIXME: arrumar para que puxe novamente o produto quando a pesquisa for feita
   const handleSearch = (term) => {
     setSearchTerm(term);
     if (term === "") {
