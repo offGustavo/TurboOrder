@@ -182,7 +182,7 @@ const Historico = () => {
               name={`${order.cli_nome} ${order.cli_sobrenome}`}
               details={`Funcionário: ${order.fun_nome} - Tipo Pagamento: ${order.ped_tipoPagamento}`}
               status={order.ped_status}
-              data={new Date().toISOString().split('T')[0]}
+              data={dayjs(order.ped_data).format("DD/MM/YYYY")}
             />
           ))}
         </div>

@@ -10,6 +10,7 @@ import "./../styles/Home.css";
 import "react-toastify/dist/ReactToastify.css";
 import FilterComponent from "../components/FilterComponent.js";
 import { jwtDecode } from "jwt-decode";
+import dayjs from 'dayjs';
 
 const DolarGreen = styled(FaDollarSign)`
   font-size: 1.59rem;
@@ -200,7 +201,7 @@ const Home = () => {
           products: productNames.join(", "),
           details: order.ped_observacao,
           status: order.ped_status,
-          data: new Date().toISOString().split("T")[0],
+          data: dayjs(order.ped_data).format("DD/MM/YYYY"),
           valor: order.ped_valor,
           day_order: order.ped_ordem_dia,
           visible: true,
