@@ -505,7 +505,7 @@ const ProductTable = () => {
         </PaginationButton>
       </PaginationContainer>
 
-      <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '40px' }}>
         Página {currentPage} de {totalPages} | Total de itens: {totalItems}
       </div>
 
