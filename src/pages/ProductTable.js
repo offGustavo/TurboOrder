@@ -37,7 +37,7 @@ const PaginationButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 5px 10px;
-  border: 1px solid #ddd;
+  border: none;
   background-color: ${props => props.active ? '#FD1F4A' : 'white'};
   color: ${props => props.active ? 'white' : 'black'};
   cursor: pointer;
