@@ -26,11 +26,10 @@ export default function DeliverySelect({ formData, setFormData, selectedTime, se
     setSelectedOption(value);
 
     if (value === "delivery") {
-      setSelectedTime(null); // Zera o horário se for entrega
+      setSelectedTime(null);
     }
   };
 
-  // WARN: NÃO REMOVER ISSO, CAUSA BUG 
   const SubText = styled.h2` margin: 20px 0px 20px 0px; font-size: 16px; `;
   const Form = styled.div` display: flex; `;
   const Container = styled.div` display: flex; padding: 0px 10px;`;

@@ -293,6 +293,13 @@
     box-shadow: 0 0 4px rgba(255, 64, 128, 0.5);
 }
 
+.header-search-filter{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+}
+
 @media (max-width: 768px) {
     .product-table table th,
     .product-table table td {

@@ -88,9 +88,6 @@ function Login() {
         <div>
           <h1>Bem-vindo de Volta!</h1>
           <p>Acesse sua conta para gerenciar seus pedidos com facilidade!</p>
-          <Link to="/cadastro" className="btn-register">
-            Não tem conta? Crie uma agora
-          </Link>
         </div>
       </div>
     </div>

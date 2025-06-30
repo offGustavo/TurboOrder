@@ -7,6 +7,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
+import { jwtDecode } from "jwt-decode";
+import { InputAdornment, IconButton } from '@mui/material';
+import { MdClear } from 'react-icons/md';
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
@@ -15,6 +18,18 @@ const Historico = () => {
   const [valor, setValor] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  };
+  const token = getCookie("token");
+  let funcionario_fk = null;
+  if (token) {
+    const decoded = jwtDecode(token);
+    funcionario_fk = decoded.fun_id || null;
+  }
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,10 +41,17 @@ const Historico = () => {
         if (orderStatus) params.append("status", orderStatus);
         if (valor) params.append("valor", valor);
 
-        const response = await fetch(`http://localhost:8800/pedidos/filtred?${params.toString()}`);
+        const response = await fetch(`http://localhost:8800/pedidos/filtred?${params.toString()}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        });
+
         if (!response.ok) {
           throw new Error("Erro ao buscar pedidos");
         }
+
         const data = await response.json();
         setOrders(data);
       } catch (error) {
@@ -46,7 +68,7 @@ const Historico = () => {
   return (
     <div className="historico-container">
       <h2 className="title">Histórico de Pedidos</h2>
-      <div className="filters">
+      <div>
         <Box className="filters" display="flex" flexWrap="wrap" gap={2} mb={3}>
           <TextField
             label="Nome do Cliente"
@@ -69,8 +91,10 @@ const Historico = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
             <DatePicker
               label="Data do Pedido"
-              value={dayjs(orderDate)} // orderDate como string ou dayjs object
-              onChange={(newValue) => setOrderDate(newValue?.format("YYYY-MM-DD"))}
+              value={orderDate ? dayjs(orderDate) : null}
+              onChange={(newValue) =>
+                setOrderDate(newValue ? newValue.format("YYYY-MM-DD") : null)
+              }
               slotProps={{
                 textField: {
                   variant: "outlined",
@@ -84,6 +108,21 @@ const Historico = () => {
                     },
                     width: "20ch",
                   },
+                  InputProps: orderDate
+                    ? {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setOrderDate(null)}
+                            edge="end"
+                            size="small"
+                          >
+                            <MdClear />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
+                    : {},
                 },
               }}
             />
@@ -113,9 +152,9 @@ const Historico = () => {
           </TextField>
 
           <TextField
+            select
             label="Valor"
             variant="outlined"
-            type="number"
             value={valor}
             onChange={(e) => setValor(e.target.value)}
             sx={{
@@ -128,7 +167,12 @@ const Historico = () => {
               },
               width: "15ch",
             }}
-          />
+          >
+            <MenuItem value={''}>Todos</MenuItem>
+            <MenuItem value={20}>R$ 20,00</MenuItem>
+            <MenuItem value={22}>R$ 22,00</MenuItem>
+          </TextField>
+
         </Box>
       </div>
 
@@ -143,7 +187,7 @@ const Historico = () => {
               name={`${order.cli_nome} ${order.cli_sobrenome}`}
               details={`Funcionário: ${order.fun_nome} - Tipo Pagamento: ${order.ped_tipoPagamento}`}
               status={order.ped_status}
-              data={new Date().toISOString().split('T')[0]}
+              data={dayjs(order.ped_data).format("DD/MM/YYYY")}
             />
           ))}
         </div>

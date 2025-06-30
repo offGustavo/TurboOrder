@@ -178,15 +178,23 @@ const EmployeeManagement = () => {
             }}
             sx={{
               marginRight: 2,
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "#FD1F4A" },
+                "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+              },
               width: "20%",
             }}
           >
             <option value="user">Usuário</option>
             <option value="admin">Administrador</option>
+            {/* FIXME: botão levemente desalinhado */}
           </TextField>
-          <Button variant="contained" className="btn-salvar" type="button" onClick={handleCreate} startIcon={<FaPlus />}>
-            Criar
-          </Button>
+          <button className="btn-salvar btn-add-employee" onClick={handleCreate} >
+            <span>
+              Criar
+            </span>
+            <FaPlus />
+          </button>
         </FormContainer>
       </Box>
 
@@ -230,7 +238,7 @@ const EmployeeManagement = () => {
         onConfirm={handleDelete}
         actionType="confirmarExclusaoFuncionario"
       />
-    </div>
+    </div >
   );
 };
 export default EmployeeManagement;

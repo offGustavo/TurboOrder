@@ -22,7 +22,6 @@ import AddOrder from "./pages/AddOrder";
 import ClientTable from "./pages/ClientTable";
 import EditClient from "./pages/EditClient";
 import Historico from "./pages/Historico";
-import Register from "./pages/Register";
 import Login from "./pages/Login";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import EditProfile from "./pages/EditProfile";
@@ -82,7 +81,6 @@ function AppContent() {
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/redefinir-senha" element={<ResetPassword />} />
         <Route
