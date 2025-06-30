@@ -131,7 +131,6 @@ const FilterSection = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
   width: 100%;
   max-width: 400px;
   position: relative;
@@ -140,7 +139,7 @@ const SearchContainer = styled.div`
     width: 100%;
     padding: 10px 15px 10px 35px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 16px;
 
     &:focus {
@@ -410,6 +409,25 @@ const ProductTable = () => {
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
           />
+          {searchTerm && (
+            <button
+              onClick={() => handleSearch('')}
+              style={{
+                position: 'absolute',
+                right: '8px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#999',
+                fontSize: '30px',
+                marginRight: '10px'
+              }}
+            >
+              ×
+            </button>
+          )}
         </SearchContainer>
       </div>
 
