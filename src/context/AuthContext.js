@@ -11,6 +11,8 @@ export const AuthProvider = ({ children }) => {
     foto: null,
   });
 
+  const [toggle, setToggle] = useState(false);
+
   useEffect(() => {
     axios
       .get("http://localhost:8800/user/me", { withCredentials: true })
@@ -42,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, toggle, setToggle }}>
       {children}
     </AuthContext.Provider>
   );
