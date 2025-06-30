@@ -68,7 +68,7 @@ const Historico = () => {
   return (
     <div className="historico-container">
       <h2 className="title">Histórico de Pedidos</h2>
-      <div className="filters">
+      <div>
         <Box className="filters" display="flex" flexWrap="wrap" gap={2} mb={3}>
           <TextField
             label="Nome do Cliente"
@@ -152,9 +152,9 @@ const Historico = () => {
           </TextField>
 
           <TextField
+            select
             label="Valor"
             variant="outlined"
-            type="number"
             value={valor}
             onChange={(e) => setValor(e.target.value)}
             sx={{
@@ -167,7 +167,12 @@ const Historico = () => {
               },
               width: "15ch",
             }}
-          />
+          >
+            <MenuItem value={''}>Todos</MenuItem>
+            <MenuItem value={20}>R$ 20,00</MenuItem>
+            <MenuItem value={22}>R$ 22,00</MenuItem>
+          </TextField>
+
         </Box>
       </div>
 
