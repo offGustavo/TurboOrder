@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
+import { jwtDecode } from "jwt-decode";
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
@@ -15,6 +16,18 @@ const Historico = () => {
   const [valor, setValor] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  };
+  const token = getCookie("token");
+  let funcionario_fk = null;
+  if (token) {
+    const decoded = jwtDecode(token);
+    funcionario_fk = decoded.fun_id || null;
+  }
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,10 +39,17 @@ const Historico = () => {
         if (orderStatus) params.append("status", orderStatus);
         if (valor) params.append("valor", valor);
 
-        const response = await fetch(`http://localhost:8800/pedidos/filtred?${params.toString()}`);
+        const response = await fetch(`http://localhost:8800/pedidos/filtred?${params.toString()}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        });
+
         if (!response.ok) {
           throw new Error("Erro ao buscar pedidos");
         }
+
         const data = await response.json();
         setOrders(data);
       } catch (error) {
