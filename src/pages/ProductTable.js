@@ -217,18 +217,43 @@ const ProductTable = () => {
     }
   };
 
-  //FIXME: arrumar para que puxe novamente o produto quando a pesquisa for feita
+  //FIXME: Modificar a forma que a pesquisa é feita
+  const [searchTimeout, setSearchTimeout] = useState(null);
+
   const handleSearch = (term) => {
     setSearchTerm(term);
-    if (term === "") {
-      setProducts(allProducts);
-    } else {
-      const filtered = allProducts.filter(product =>
-        product.pro_nome.toLowerCase().includes(term.toLowerCase())
-      );
-      setProducts(filtered);
+
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
     }
+
+    setSearchTimeout(setTimeout(() => {
+      if (term === "") {
+        fetchProducts();
+      } else {
+        axios
+          .get(`http://localhost:8800/produtos/search?term=${term}`)
+          .then((response) => {
+            setProducts(response.data);
+            setTotalPages(1);
+            setTotalItems(response.data.length);
+            setCurrentPage(1);
+          })
+          .catch((error) => {
+            console.error("Erro na pesquisa:", error);
+            toast.error("Erro ao buscar produtos.");
+          });
+      }
+    }, 200));
   };
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, [searchTimeout]);
 
   const handleSave = () => {
     if (!proNome || !proTipo) {
