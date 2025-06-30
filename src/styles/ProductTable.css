@@ -293,6 +293,11 @@
     box-shadow: 0 0 4px rgba(255, 64, 128, 0.5);
 }
 
+.header-search-filter{
+  display: flex;
+  justify-content: space-between;
+}
+
 @media (max-width: 768px) {
     .product-table table th,
     .product-table table td {

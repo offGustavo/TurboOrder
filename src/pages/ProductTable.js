@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight, FaBars } from "react-icons/fa";
+import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight, FaBars, FaSearch } from "react-icons/fa";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -128,6 +128,34 @@ const FilterSection = styled.div`
   }
 `;
 
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+
+  input {
+    width: 100%;
+    padding: 10px 15px 10px 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+
+    &:focus {
+      outline: none;
+      border-color: #FD1F4A;
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #777;
+  }
+`;
+
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
   const [proNome, setProNome] = useState("");
@@ -135,6 +163,7 @@ const ProductTable = () => {
   const [filter, setFilter] = useState("Todos");
   const [onEdit, setOnEdit] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1);
@@ -189,6 +218,18 @@ const ProductTable = () => {
     }
   };
 
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (term === "") {
+      setProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter(product =>
+        product.pro_nome.toLowerCase().includes(term.toLowerCase())
+      );
+      setProducts(filtered);
+    }
+  };
+
   const handleSave = () => {
     if (!proNome || !proTipo) {
       toast.error("Por favor, preencha todos os campos.");
@@ -240,6 +281,12 @@ const ProductTable = () => {
   const filteredProducts = filter === "Todos"
     ? products
     : products.filter((product) => product.pro_tipo === filter);
+
+  const searchedProducts = searchTerm === ""
+    ? filteredProducts
+    : filteredProducts.filter(product =>
+      product.pro_nome.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   const goToPage = (page) => {
     setCurrentPage(page);
@@ -331,27 +378,40 @@ const ProductTable = () => {
         </FormContainer>
       </Box>
 
-      <FilterSection>
-        <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-          <FaBars size={24} />
-        </button>
 
-        <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
-          <span className="filter-label">Filtro</span>
-          {allTypes.map((type, index) => (
-            <button
-              key={index}
-              className={`filter-btn ${filter === type ? "active" : ""}`}
-              onClick={() => applyFilter(type)}
-            >
-              {/* <span className='filter-btn-text'> */}
-              <span >
-                {type}
-              </span>
-            </button>
-          ))}
-        </div>
-      </FilterSection>
+      <div className="header-search-filter">
+        <FilterSection>
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            <FaBars size={24} />
+          </button>
+
+          <div className={`filter-buttons ${menuOpen ? "open" : ""}`}>
+            <span className="filter-label">Filtro</span>
+            {allTypes.map((type, index) => (
+              <button
+                key={index}
+                className={`filter-btn ${filter === type ? "active" : ""}`}
+                onClick={() => applyFilter(type)}
+              >
+                <span>
+                  {type}
+                </span>
+              </button>
+            ))}
+
+          </div>
+        </FilterSection>
+
+        <SearchContainer>
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Pesquisar por nome do produto..."
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </SearchContainer>
+      </div>
 
       <table>
         <thead>
@@ -363,7 +423,7 @@ const ProductTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((product) => (
+          {searchedProducts.map((product) => (
             <tr key={product.pro_id}>
               <td>{product.pro_id}</td>
               <td>{product.pro_nome}</td>
