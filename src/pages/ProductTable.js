@@ -472,7 +472,7 @@ const ProductTable = () => {
           setOnEdit(null);
         }}
         onEdit={onProductEdit}
-        setProducts={setProducts}
+        setProducts={fetchProducts}
         productTypes={productTypes}
       />
     </div>
