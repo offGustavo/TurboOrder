@@ -80,9 +80,8 @@ const FilterSection = styled.div`
 
   .filter-btn {
     padding: 8px 16px;
-    border: 1px solid #ddd;
-    background-color: white;
-    border-radius: 4px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
