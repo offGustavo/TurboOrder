@@ -72,6 +72,20 @@
     padding: 0;
 }
 
+.btn-add-employee{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0;
+}
+
+.btn-add-employee span{
+  margin-right: 5px;
+}
+
+
+
 
 @media (max-width: 768px) {
     .employee-table table th,
