@@ -8,6 +8,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import { jwtDecode } from "jwt-decode";
+import { InputAdornment, IconButton } from '@mui/material';
+import { MdClear } from 'react-icons/md';
 
 const Historico = () => {
   const [customerName, setCustomerName] = useState("");
@@ -89,8 +91,10 @@ const Historico = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
             <DatePicker
               label="Data do Pedido"
-              value={dayjs(orderDate)} // orderDate como string ou dayjs object
-              onChange={(newValue) => setOrderDate(newValue?.format("YYYY-MM-DD"))}
+              value={orderDate ? dayjs(orderDate) : null}
+              onChange={(newValue) =>
+                setOrderDate(newValue ? newValue.format("YYYY-MM-DD") : null)
+              }
               slotProps={{
                 textField: {
                   variant: "outlined",
@@ -104,6 +108,21 @@ const Historico = () => {
                     },
                     width: "20ch",
                   },
+                  InputProps: orderDate
+                    ? {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setOrderDate(null)}
+                            edge="end"
+                            size="small"
+                          >
+                            <MdClear />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
+                    : {},
                 },
               }}
             />
