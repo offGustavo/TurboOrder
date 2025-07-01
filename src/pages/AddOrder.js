@@ -77,6 +77,8 @@ const AddOrder = () => {
   const [pagamento, setPagamento] = useState("");
   const [selectedTime, setSelectedTime] = useState(null);
 
+  const isEditable = !phoneInput || clientError === "Cliente não encontrado";
+
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -115,6 +117,7 @@ const AddOrder = () => {
     };
     fetchProducts();
   }, []);
+
 
   const handlePhoneChange = (event) => {
     const value = event.target.value;
@@ -383,7 +386,7 @@ const AddOrder = () => {
             label="Nome"
             variant="outlined"
             value={clientInfo.cli_nome || ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{ readOnly: !isEditable }}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -394,12 +397,13 @@ const AddOrder = () => {
               },
               width: "30ch",
             }}
+            onChange={(e) => setClientInfo(prev => ({ ...prev, cli_nome: e.target.value }))}
           />
           <TextField
             label="Sobrenome"
             variant="outlined"
             value={clientInfo.cli_sobrenome || ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{ readOnly: !isEditable }}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": { borderColor: "#FD1F4A" },
@@ -410,6 +414,7 @@ const AddOrder = () => {
               },
               width: "30ch",
             }}
+            onChange={(e) => setClientInfo(prev => ({ ...prev, cli_sobrenome: e.target.value }))}
           />
         </div>
 
