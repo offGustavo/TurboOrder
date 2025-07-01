@@ -278,8 +278,20 @@ const AddOrder = () => {
       funcionario_fk = decoded.fun_id || null;
     }
 
+    // Objeto de dados do pedido com informações do cliente incorporadas
     const pedidoData = {
       cliente_fk: clientInfo.cli_id,
+      // Informações do cliente direto no objeto
+      cli_nome: clientInfo.cli_nome,
+      cli_sobrenome: clientInfo.cli_sobrenome,
+      cli_telefone: clientInfo.con_telefone,
+      cli_end_cep: clientInfo.end_cep,
+      cli_end_cidade: clientInfo.end_cidade,
+      cli_end_bairro: clientInfo.end_bairro,
+      cli_end_rua: clientInfo.end_rua,
+      cli_numero: clientInfo.cli_numero,
+      cli_complemento: clientInfo.cli_complemento,
+      // Restante dos dados do pedido
       funcionario_fk,
       itens,
       ped_status: "Em Andamento",
@@ -308,13 +320,22 @@ const AddOrder = () => {
         }
       );
 
+      console.log("Dados completos do pedido enviado:", JSON.stringify(pedidoData, null, 2));
+
       toast.success("Pedido cadastrado com sucesso!");
       handlePrint();
 
+      // Reset dos campos após o envio
       setClientInfo({
         cli_nome: "",
         cli_sobrenome: "",
         con_telefone: "",
+        cli_numero: "",
+        cli_complemento: "",
+        end_cep: "",
+        end_cidade: "",
+        end_bairro: "",
+        end_rua: "",
       });
       setPhoneInput("");
       setClientError(null);
@@ -334,7 +355,7 @@ const AddOrder = () => {
       setPhoneOptions([]);
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
-      toast.error("Erro ao cadastrar pedido.");
+      toast.error(error.response?.data?.message || "Erro ao cadastrar pedido");
     }
   };
 

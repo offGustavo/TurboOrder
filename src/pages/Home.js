@@ -168,6 +168,7 @@ const Home = () => {
         axios.get("http://localhost:8800/produtos"),
       ]);
 
+      // console.log("Dados completos dos pedidos recebidos:", JSON.stringify(ordersResponse.data, null, 2));
       const productsMap = productsResponse.data.reduce((acc, product) => {
         acc[product.pro_id] = product.pro_nome;
         return acc;
