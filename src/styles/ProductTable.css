@@ -141,7 +141,7 @@
 
 .filter-buttons .filter-btn {
     margin-right: 10px;
-    padding: 8px 12px;
+    /* padding: 8px 12px; */
     font-size: 0.9rem;
     border: none;
     border-radius: 20px;
