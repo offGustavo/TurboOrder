@@ -6,6 +6,7 @@ import {
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import "../styles/Global.css";
+import { jwtDecode } from "jwt-decode";
 
 const statusOptions = ['Em Andamento', 'Concluído', 'Cancelado'];
 
@@ -19,7 +20,22 @@ const tipoPorField = {
   carne02_fk: "Carne"
 };
 
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+};
+const token = getCookie("token");
+let funcionario_fk = null;
+if (token) {
+  const decoded = jwtDecode(token);
+  funcionario_fk = decoded.fun_id || null;
+}
+
 const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
+
+
   const [form, setForm] = useState({
     ped_status: '',
     ped_data: '',
@@ -71,7 +87,13 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
         });
 
       // Buscar pedido
-      axios.get('http://localhost:8800/pedidos')
+      axios.get('http://localhost:8800/pedidos',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        })
         .then(res => {
           const pedido = res.data.find(p => p.ped_id === id);
           if (!pedido) {
@@ -132,6 +154,8 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
       console.error(error);
     }
   };
+
+
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
