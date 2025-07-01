@@ -8,15 +8,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import "./../styles/ClientTable.css";
 import "../styles/CompanyTable.css";
 import EditCompanyModal from "../components/EditCompanyModal";
-import { color } from "@mui/system";
+import CompanyOrders from "../components/CompanyOrders.js"; // Novo componente que vamos criar
 
 const CompanyTable = () => {
   const [empresas, setEmpresas] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showOrdersModal, setShowOrdersModal] = useState(false); // Novo estado para o modal de pedidos
   const [selectedEmpresa, setSelectedEmpresa] = useState(null);
   const [actionType, setActionType] = useState("confirmarExclusao");
   const [editingEmpresa, setEditingEmpresa] = useState(null);
+  const [ordersData, setOrdersData] = useState({ pedidos: [], totalPedidos: 0 }); // Estado para armazenar os dados dos pedidos
   const location = useLocation();
   const [shouldRefresh, setShouldRefresh] = useState(false);
 
@@ -38,6 +40,42 @@ const CompanyTable = () => {
     setSelectedEmpresa(empresaId);
     setActionType("confirmarExclusaoEmpresa");
     setShowDeleteModal(true);
+  };
+
+  const handleListOrders = async (empresa) => {
+    if (!empresa.emp_funcionario_telefone) {
+      toast.error("Esta empresa não tem telefone de funcionário cadastrado.");
+      return;
+    }
+
+    try {
+      const telefone = empresa.emp_funcionario_telefone.replace(/\D/g, '');
+      console.log('Buscando pedidos para telefone:', telefone); // Log para depuração
+
+      const response = await axios.get(`http://localhost:8800/empresa/${telefone}/pedidos`, {
+        validateStatus: function(status) {
+          return status < 500; // Resolve apenas se o código de status for menor que 500
+        }
+      });
+
+      if (response.status === 404) {
+        toast.error("Nenhum pedido encontrado para este telefone.");
+        return;
+      }
+
+      if (response.status !== 200) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      }
+
+      setOrdersData({
+        pedidos: response.data.pedidos,
+        totalPedidos: response.data.totalPedidos
+      });
+      setShowOrdersModal(true);
+    } catch (error) {
+      console.error("Erro ao buscar pedidos:", error);
+      toast.error(error.response?.data?.error || "Erro ao buscar pedidos da empresa.");
+    }
   };
 
   const handleEdit = async (empresa) => {
@@ -124,6 +162,7 @@ const CompanyTable = () => {
         </NavLink>
       </div>
 
+
       <table>
         <thead>
           <tr>
@@ -160,12 +199,29 @@ const CompanyTable = () => {
                   >
                     <FaTrash size={16} />
                   </button>
+                  <button
+                    className="orders-btn"
+                    onClick={() => handleListOrders(empresa)}
+                  >
+                    Pedidos
+                  </button>
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Modal de pedidos */}
+      {
+        showOrdersModal && (
+          <CompanyOrders
+            onClose={() => setShowOrdersModal(false)}
+            orders={ordersData.pedidos}
+            totalOrders={ordersData.totalPedidos}
+          />
+        )
+      }
 
       <PopupModal
         showModal={showDeleteModal}
