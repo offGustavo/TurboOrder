@@ -145,7 +145,13 @@ const EditOrderDialog = ({ id, open, onClose, onStatusChange }) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`http://localhost:8800/pedidos/${id}`, form);
+      await axios.put(`http://localhost:8800/pedidos/${id}`, form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true
+        });
       toast.success("Pedido atualizado com sucesso!");
       onClose();
       if (onStatusChange) onStatusChange();
