@@ -6,17 +6,16 @@ import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
-import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 import "./styles/Global.css";
 
-import axios from "axios";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import Breadcrumb from "./components/Breadcrumb";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import { AuthContext, AuthProvider } from "./context/AuthContext";
 import AddClient from "./pages/AddClient";
 import AddOrder from "./pages/AddOrder";
 import Calendar from "./pages/Calendar";
@@ -28,25 +27,6 @@ import Historico from "./pages/Historico";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProductTable from "./pages/ProductTable";
-
-
-
-import Breadcrumb from "./components/Breadcrumb.js";
-import Header from "./components/Header.js";
-import Sidebar from "./components/Sidebar.js";
-import AddClient from "./pages/AddClient.js";
-import AddOrder from "./pages/AddOrder.js";
-import Calendar from "./pages/Calendar.js";
-import ClientTable from "./pages/ClientTable.js";
-import Dashboard from "./pages/Dashboard.js";
-import EditClient from "./pages/EditClient.js";
-import ProductTable from "./pages/ProductTable.js";
-/* importar o import desempenho do gráfico aqui */
-
-
-
-
-import { AuthContext, AuthProvider } from "./context/AuthContext";
 
 function ProtectedRoute({ children, role }) {
   const { auth } = useContext(AuthContext);
@@ -91,6 +71,13 @@ function AppContent() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:8800/produtos")
+      .then((response) => setProducts(response.data))
+      .catch(() => toast.error("Erro ao buscar produtos."));
+  }, []);
+
   if (!auth.isAuthenticated) {
     return (
       <Routes>
@@ -114,12 +101,6 @@ function AppContent() {
     );
   }
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8800/produtos")
-      .then((response) => setProducts(response.data))
-      .catch(() => toast.error("Erro ao buscar produtos."));
-  }, []);
 
   return (
     <div className="app">
