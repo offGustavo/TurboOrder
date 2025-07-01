@@ -15,7 +15,6 @@ import { toast } from "react-toastify";
 import Breadcrumb from "./components/Breadcrumb";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import { AuthContext, AuthProvider } from "./context/AuthContext";
 import AddClient from "./pages/AddClient";
 import AddOrder from "./pages/AddOrder";
 import Calendar from "./pages/Calendar";
