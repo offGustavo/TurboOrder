@@ -49,8 +49,9 @@ const CompanyTable = () => {
     }
 
     try {
-      const telefone = empresa.emp_funcionario_telefone.replace(/\D/g, '');
-      console.log('Buscando pedidos para telefone:', telefone); // Log para depuração
+      // Remove todos os caracteres não numéricos e pega apenas os últimos 10 dígitos
+      const telefone = empresa.emp_funcionario_telefone.replace(/\D/g, '').slice(-10);
+      console.log('Buscando pedidos para telefone:', telefone);
 
       const response = await axios.get(`http://localhost:8800/empresa/${telefone}/pedidos`, {
         validateStatus: function(status) {
@@ -58,23 +59,31 @@ const CompanyTable = () => {
         }
       });
 
+      console.log('Resposta da API:', response); // Log completo da resposta
+
       if (response.status === 404) {
-        toast.error("Nenhum pedido encontrado para este telefone.");
+        toast.info("Nenhum pedido encontrado para este telefone no mês atual.");
         return;
       }
 
       if (response.status !== 200) {
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        throw new Error(`Erro ${response.status}: ${response.data?.message || response.statusText}`);
       }
 
+      if (!response.data?.pedidos) {
+        throw new Error("Dados de pedidos não encontrados na resposta");
+      }
+
+      console.log('Dados dos pedidos recebidos:', response.data);
+
       setOrdersData({
-        pedidos: response.data.pedidos,
-        totalPedidos: response.data.totalPedidos
+        pedidos: Array.isArray(response.data.pedidos) ? response.data.pedidos : [],
+        totalPedidos: response.data.totalPedidos || 0
       });
       setShowOrdersModal(true);
     } catch (error) {
       console.error("Erro ao buscar pedidos:", error);
-      toast.error(error.response?.data?.error || "Erro ao buscar pedidos da empresa.");
+      toast.error(error.response?.data?.error || error.message || "Erro ao buscar pedidos da empresa.");
     }
   };
 
