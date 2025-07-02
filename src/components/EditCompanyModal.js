@@ -1,9 +1,17 @@
 // components/EditCompanyModal.js
 import React, { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
-import "../styles/EditCompanyModal.css"
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Typography
+} from '@mui/material';
 
-const EditCompanyModal = ({ empresa, onClose, onSave }) => {
+const EditCompanyModal = ({ empresa, open, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     emp_razaoSocial: '',
     emp_cnpj: '',
@@ -77,154 +85,161 @@ const EditCompanyModal = ({ empresa, onClose, onSave }) => {
     onSave(updatedData);
   };
 
+  const inputFormat = {
+    "& .MuiOutlinedInput-root": {
+      "&:hover fieldset": { borderColor: "#FD1F4A" },
+      "&.Mui-focused fieldset": { borderColor: "#FD1F4A" },
+    },
+    "& .MuiInputBase-input": {
+      color: "black",
+    },
+    width: "100%",
+  };
+
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2>Editar Empresa</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
-        </div>
-
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle>Editar Empresa</DialogTitle>
+      <DialogContent dividers>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Razão Social*</label>
-            <input
-              type="text"
-              name="emp_razaoSocial"
-              value={formData.emp_razaoSocial}
+          <TextField
+            sx={inputFormat}
+            margin="normal"
+            label="Razão Social*"
+            name="emp_razaoSocial"
+            value={formData.emp_razaoSocial}
+            onChange={handleChange}
+            required
+            fullWidth
+          />
+
+          <TextField
+            sx={inputFormat}
+            margin="normal"
+            label="CNPJ*"
+            name="emp_cnpj"
+            value={formData.emp_cnpj}
+            onChange={handleChange}
+            required
+            fullWidth
+          />
+
+          <TextField
+            sx={inputFormat}
+            margin="normal"
+            label="Inscrição Estadual"
+            name="emp_inscricaoEstado"
+            value={formData.emp_inscricaoEstado}
+            onChange={handleChange}
+            fullWidth
+          />
+
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Telefone da Empresa*"
+              name="con_telefone"
+              value={formData.con_telefone}
               onChange={handleChange}
               required
+              fullWidth
             />
-          </div>
 
-          <div className="form-group">
-            <label>CNPJ*</label>
-            <input
-              type="text"
-              name="emp_cnpj"
-              value={formData.emp_cnpj}
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Telefone do Funcionário*"
+              name="emp_funcionario_telefone"
+              value={formData.emp_funcionario_telefone}
               onChange={handleChange}
               required
+              fullWidth
             />
           </div>
 
-          <div className="form-group">
-            <label>Inscrição Estadual</label>
-            <input
-              type="text"
-              name="emp_inscricaoEstado"
-              value={formData.emp_inscricaoEstado}
+          <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Endereço</Typography>
+
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="CEP*"
+              name="end_cep"
+              value={formData.end_cep}
               onChange={handleChange}
+              required
+              fullWidth
+            />
+
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Cidade*"
+              name="end_cidade"
+              value={formData.end_cidade}
+              onChange={handleChange}
+              required
+              fullWidth
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Telefone da Empresa*</label>
-              <input
-                type="text"
-                name="con_telefone"
-                value={formData.con_telefone}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Bairro*"
+              name="end_bairro"
+              value={formData.end_bairro}
+              onChange={handleChange}
+              required
+              fullWidth
+            />
 
-            <div className="form-group">
-              <label>Telefone do Funcionário*</label>
-              <input
-                type="text"
-                name="emp_funcionario_telefone"
-                value={formData.emp_funcionario_telefone}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Rua*"
+              name="end_rua"
+              value={formData.end_rua}
+              onChange={handleChange}
+              required
+              fullWidth
+            />
           </div>
 
-          <h3>Endereço</h3>
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Número"
+              name="emp_numero"
+              value={formData.emp_numero}
+              onChange={handleChange}
+              fullWidth
+            />
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>CEP*</label>
-              <input
-                type="text"
-                name="end_cep"
-                value={formData.end_cep}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Cidade*</label>
-              <input
-                type="text"
-                name="end_cidade"
-                value={formData.end_cidade}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Bairro*</label>
-              <input
-                type="text"
-                name="end_bairro"
-                value={formData.end_bairro}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Rua*</label>
-              <input
-                type="text"
-                name="end_rua"
-                value={formData.end_rua}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Número</label>
-              <input
-                type="text"
-                name="emp_numero"
-                value={formData.emp_numero}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Complemento</label>
-              <input
-                type="text"
-                name="emp_complemento"
-                value={formData.emp_complemento}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <div className="modal-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
-              Cancelar
-            </button>
-            <button type="submit" className="save-btn">
-              Salvar Alterações
-            </button>
+            <TextField
+              sx={inputFormat}
+              margin="normal"
+              label="Complemento"
+              name="emp_complemento"
+              value={formData.emp_complemento}
+              onChange={handleChange}
+              fullWidth
+            />
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+
+      <DialogActions>
+        <button className="btn-cancel" onClick={onClose}>
+          Cancelar
+        </button>
+        <button className="btn-add" onClick={handleSubmit}>
+          Salvar Alterações
+        </button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

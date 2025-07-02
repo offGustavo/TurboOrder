@@ -243,6 +243,7 @@ const CompanyTable = () => {
         showEditModal && editingEmpresa && (
           <EditCompanyModal
             empresa={editingEmpresa}
+            open={showEditModal}
             onClose={() => setShowEditModal(false)}
             onSave={handleSaveEdit}
           />
